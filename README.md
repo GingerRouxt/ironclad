@@ -19,6 +19,7 @@
 </p>
 
 <p align="center">
+  <a href="#watch-the-preview">Watch</a> ·
   <a href="#inside-ironclad">Explore</a> ·
   <a href="#see-it-in-action">Screenshots</a> ·
   <a href="#get-ironclad">Release status</a> ·
@@ -33,6 +34,12 @@
 Ironclad brings system findings, behavior monitoring, automatic Downloads malware scanning, one-off file scans, software checks, and AI explanations into one desktop panel. Findings come with context and a next step you can review.
 
 **You stay in control.** Review an observation, ignore it when appropriate, or choose a supported action. Ironclad does not automatically delete your files, quarantine applications, or execute AI suggestions.
+
+## Watch the preview
+
+https://github.com/user-attachments/assets/f65ab5a7-105f-4f9a-9671-d90e7fe9a603
+
+A 73-second walkthrough of the development build on the real Omarchy desktop. **Preview only:** the plugin source, installer, and release packages are not available here yet.
 
 ## See it in action
 
