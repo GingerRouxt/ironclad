@@ -17,6 +17,16 @@ jobs:
         uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db
         with:
           version: 2026.10.17
+      - name: Prepare disposable runner for real sandbox tests
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y bubblewrap
+          sudo install -d -m 755 /etc/clamav/certs
+          # GitHub's disposable Ubuntu runner restricts user namespaces by default.
+          # This affects the test runner only, never the user's workstation.
+          if test -e /proc/sys/kernel/apparmor_restrict_unprivileged_userns; then
+            sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+          fi
       - name: Offline Python contracts
         run: mise exec -- uv run --offline python -m unittest discover -s tests -v
       - name: UI model contracts

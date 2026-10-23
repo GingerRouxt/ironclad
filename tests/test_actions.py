@@ -35,7 +35,8 @@ class ActionTests(unittest.TestCase):
         with self.assertRaises(ValueError): actions.apply(self.store,other,p.digest())
         with self.assertRaises(ValueError): actions.apply(self.store,other,other.digest())
     def test_expired(self):
-        p=replace(actions.preview(actions.ACTION_ID),created=0)
+        p=actions.preview(actions.ACTION_ID)
+        p=replace(p,created=p.created-121)
         with self.assertRaises(ValueError): actions.apply(self.store,p,p.digest())
     def test_metadata_changed(self):
         p=actions.preview(actions.ACTION_ID); self.home.chmod(0o722)
