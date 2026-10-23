@@ -1,0 +1,23 @@
+name: Local contracts
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Project runtimes
+        uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db
+        with:
+          version: 2026.10.17
+      - name: Python contracts without downloads
+        run: mise exec -- uv run --offline python -m unittest discover -s tests -v
+      - name: UI data contracts
+        run: node --test tests/model.test.cjs
+      - name: Publication privacy checks
+        run: mise exec -- uv run --offline python tools/verify_publication.py

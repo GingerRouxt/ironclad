@@ -2,7 +2,7 @@
 
 ## Release status
 
-This public repository currently contains presentation assets and documentation. There is no published plugin release or supported-version matrix here yet.
+Ironclad 0.2.36 is an initial beta. Compatibility and detection coverage are limited; see TEST_RESULTS.md and docs/THREAT_MODEL.md.
 
 ## Reporting a vulnerability
 

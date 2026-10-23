@@ -1,0 +1,5 @@
+#!/usr/bin/python3 -I
+"""Portable checkout/installed-plugin CLI; no PATH-dependent runtime lookup."""
+import runpy
+from pathlib import Path
+runpy.run_path(str(Path(__file__).resolve().with_name('engine.py')), run_name='__main__')

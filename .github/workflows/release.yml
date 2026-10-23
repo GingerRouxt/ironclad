@@ -1,0 +1,38 @@
+name: Build reviewable release candidate
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*']
+permissions:
+  contents: read
+jobs:
+  candidate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Install project runtimes
+        uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db
+        with:
+          version: 2026.10.17
+      - name: Offline Python contracts
+        run: mise exec -- uv run --offline python -m unittest discover -s tests -v
+      - name: UI model contracts
+        run: node --test tests/model.test.cjs
+      - name: Compile policy with hash-pinned official Falco
+        run: mise exec -- uv run --offline python tools/verify_detection_policy.py --download
+      - name: Build exact clean source
+        shell: bash
+        run: |
+          release_args=()
+          if [[ "$GITHUB_REF_TYPE" == tag ]]; then release_args=(--tag "$GITHUB_REF_NAME"); fi
+          mise exec -- uv run --offline python tools/prepare_release.py --require-clean --output dist/candidate "${release_args[@]}"
+      - name: Retain candidate for maintainer review
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ironclad-candidate-${{ github.sha }}
+          path: dist/candidate/
+          if-no-files-found: error
+          retention-days: 30

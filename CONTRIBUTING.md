@@ -1,15 +1,7 @@
-# Help shape Ironclad
+# Contributing
 
-This repository is currently a project preview. Runtime source and build instructions will arrive with the public release.
+Use synthetic reproductions and keep credentials, personal reports and private machine details out of issues and commits. Report vulnerabilities through [SECURITY.md](SECURITY.md).
 
-## Useful contributions today
+Use mise runtimes and uv for Python. Run `mise exec -- uv run --offline python -m unittest discover -s tests -v` and `node --test tests/model.test.cjs`. Full local validation is documented in [releasing](docs/RELEASING.md). Do not run privileged tests or change services without explicit authorization.
 
-- Report confusing wording or accessibility problems in the previews.
-- Suggest a concrete workflow with the outcome you need.
-- Improve public documentation through a focused pull request.
-
-Include what you expected, what happened, and a minimal reproduction when possible. Use synthetic examples. Remove usernames, paths, tokens, network details, and other private information from screenshots or logs before sharing them.
-
-For a suspected vulnerability, follow [SECURITY.md](SECURITY.md). Do not post sensitive security details in a public issue.
-
-Contributions should make user choices clear, and describe detection limits honestly.
+Contributions should explain the problem, resulting behavior, tests and limits. Preserve upstream license notices and add positive, negative and legitimate-workload cases for detection changes.

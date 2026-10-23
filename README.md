@@ -2,9 +2,7 @@
   <img src="assets/brand/hero.png" alt="Ironclad — Your machine. Your call. Local-first security for Omarchy." width="100%">
 </p>
 
-> **PREVIEW ONLY — no plugin download yet.**
-> Ironclad is being prepared for release as an Omarchy plugin. This public repository contains project information and preview media only. The plugin source, installer, and release packages are not published here. Please wait for the official release before trying to install it.
-
+> **BETA — 0.2.36.** Installable source with explicit coverage limits. Marketplace approval is pending; this is not security certification.
 
 <p align="center">
   <strong>Know what needs attention. Understand why. Choose what happens next.</strong><br>
@@ -14,7 +12,7 @@
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-96b8ec?style=flat-square&amp;labelColor=151e2d" alt="MIT license"></a>
   <img src="https://img.shields.io/badge/platform-Omarchy-96b8ec?style=flat-square&amp;labelColor=151e2d" alt="Built for Omarchy">
-  <img src="https://img.shields.io/badge/status-project_preview-e7bc79?style=flat-square&amp;labelColor=151e2d" alt="Project preview">
+  <img src="https://img.shields.io/badge/status-beta-e7bc79?style=flat-square&amp;labelColor=151e2d" alt="Beta">
 </p>
 
 <p align="center">
@@ -39,7 +37,7 @@ Ironclad brings system findings, behavior monitoring, automatic Downloads malwar
 
 https://github.com/user-attachments/assets/f65ab5a7-105f-4f9a-9671-d90e7fe9a603
 
-A 73-second walkthrough of the development build on the real Omarchy desktop. **Preview only:** the plugin source, installer, and release packages are not available here yet.
+A 73-second walkthrough of the development build on the real Omarchy desktop. The film predates this beta; its coming-soon wording describes the preview stage. Current installation instructions are below.
 
 ## See it in action
 
@@ -77,9 +75,19 @@ Local-first does not mean every optional feature is offline. Advisory lookups, p
 
 ## Get Ironclad
 
-> **Public release is being prepared.** This repository currently hosts the project presentation and previews. The plugin source, release package, and supported installation instructions have not been published here yet.
+Requires **Omarchy Quattro, Python 3.12+ and libseccomp**. Native monitoring currently targets **x86_64**. Optional ClamAV, Bubblewrap, polkit and supported agent dependencies are documented in [installation](docs/INSTALL.md).
 
-The interface above comes from the development build. GitHub’s Download ZIP and clone options currently retrieve presentation files only, not a working plugin. Please wait for an officially announced public release and supported installation instructions. Follow the [release checklist and roadmap](docs/ROADMAP.md) for what comes next.
+```sh
+omarchy plugin add https://github.com/GingerRouxt/ironclad.git --enable
+```
+
+Review optional engines and maintenance in Protection; installing the widget does not enable them. GUI scans request explanations through an available signed-in agent and send bounded redacted findings to its provider. Read [privacy](docs/PRIVACY.md) first.
+
+**Update:** `omarchy plugin update com.zerodaysecurity.ironclad`.
+
+**Remove:** first disable maintenance and remove the optional native components using the [removal instructions](docs/UNINSTALL.md), then run `omarchy plugin remove com.zerodaysecurity.ironclad`. Local user data is retained.
+
+See [test results](TEST_RESULTS.md), [security review scope](SECURITY_REVIEW.md), [license notices](THIRD_PARTY_NOTICES.md) and [release process](docs/RELEASING.md). Fresh-machine/reboot testing and independent review remain outstanding.
 
 ## What protection means here
 

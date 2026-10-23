@@ -1,0 +1,9 @@
+[Unit]
+Description=Ironclad automatic protection updates
+[Timer]
+OnCalendar=*-*-* 00/4:00:00
+OnActiveSec=5min
+RandomizedDelaySec=15min
+Persistent=true
+[Install]
+WantedBy=timers.target

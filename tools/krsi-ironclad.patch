@@ -1,0 +1,617 @@
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -41,3 +41,6 @@
+ [profile.release.package.krsi-ebpf]
+ debug = 2
+ codegen-units = 1
++
++[patch.crates-io]
++aya-obj = { path = "../../../aya-obj" }
+--- a/krsi/Cargo.toml
++++ b/krsi/Cargo.toml
+@@ -26,8 +26,8 @@
+ aya-log = { workspace = true }
+ bincode = { version = "2.0", features = ["serde"] }
+ env_logger = { workspace = true }
+-falco_plugin = "0.5.1"
+-falco_event_schema = "0.5.1"
++falco_plugin = { path = "../../../../sdk/falco_plugin" }
++falco_event_schema = { path = "../../../../sdk/falco_event_schema" }
+ libc = { workspace = true }
+ log = { workspace = true }
+ serde = "1.0.228"
+@@ -39,24 +39,8 @@
+ paste = {workspace = true}
+ zerocopy = { workspace = true }
+ 
+-[build-dependencies]
+-# TODO(https://github.com/rust-lang/cargo/issues/12375): this should be an artifact dependency, but
+-# it's not possible to tell cargo to use `-Z build-std` to build it. We cargo-in-cargo in the build
+-# script to build this, but we want to teach cargo about the dependecy so that cache invalidation
+-# works properly.
+-#
+-# Note also that https://github.com/rust-lang/cargo/issues/10593 occurs when `target = ...` is added
+-# to an artifact dependency; it seems possible to work around that by setting `resolver = "1"` in
+-# Cargo.toml in the workspace root.
+-#
+-# Finally note that *any* usage of `artifact = ...` in *any* Cargo.toml in the workspace breaks
+-# workflows with stable cargo; stable cargo outright refuses to load manifests that use unstable
+-# features.
+-krsi-ebpf = { path = "../krsi-ebpf" }
+-
+-anyhow = { workspace = true }
+-aya-build = { workspace = true }
+-cargo_metadata = { version = "0.23.1" , default-features = false}
+-
+ [lib]
+ crate-type = ["cdylib"]
++
++[dev-dependencies]
++aya-obj = "0.2.1"
+--- a/krsi/build.rs
++++ b/krsi/build.rs
+@@ -1,138 +1,8 @@
+-// SPDX-License-Identifier: Apache-2.0
+-/*
+-Copyright (C) 2025 The Falco Authors.
+-
+-Licensed under the Apache License, Version 2.0 (the "License");
+-you may not use this file except in compliance with the License.
+-You may obtain a copy of the License at
+-
+-    http://www.apache.org/licenses/LICENSE-2.0
+-
+-Unless required by applicable law or agreed to in writing, software
+-distributed under the License is distributed on an "AS IS" BASIS,
+-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-See the License for the specific language governing permissions and
+-limitations under the License.
+-*/
+-
+-use std::{
+-    env, fs,
+-    io::{BufRead as _, BufReader},
+-    path::PathBuf,
+-    process::{Child, Command, Stdio},
+-};
+-
+-use cargo_metadata::{
+-    Artifact, CompilerMessage, Message, Metadata, MetadataCommand, Package, Target,
+-};
+-
++// Ironclad ABI rebuild: pinned upstream instructions with reviewed ELF hook aliases.
+ fn main() {
+-    let out_dir = PathBuf::from(env::var_os("OUT_DIR").unwrap());
+-
+-    // Add dependency on eBPF dir.
+-    let Metadata { packages, .. } = MetadataCommand::new().no_deps().exec().unwrap();
+-    let ebpf_package = packages
+-        .into_iter()
+-        .find(|Package { name, .. }| name.as_str() == "krsi-ebpf")
+-        .unwrap();
+-    let Package { manifest_path, .. } = ebpf_package;
+-    let ebpf_dir = manifest_path.parent().unwrap();
+-    println!("cargo:rerun-if-changed={}", ebpf_dir.as_str());
+-
+-    // Evaluate bpf target (i.e.: bpf(eb|el)-unknown-none).
+-    let endian = env::var_os("CARGO_CFG_TARGET_ENDIAN").unwrap();
+-    let target = if endian == "big" {
+-        "bpfeb"
+-    } else if endian == "little" {
+-        "bpfel"
+-    } else {
+-        panic!("unsupported endian={:?}", endian)
+-    };
+-    let target = format!("{target}-unknown-none");
+-
+-    // Create build command.
+-    let mut cmd = Command::new("cargo");
+-    cmd.env("CARGO_ENCODED_RUSTFLAGS", "-Cdebuginfo=2");
+-    cmd.args([
+-        "+nightly-2025-03-15",
+-        "build",
+-        "-Z",
+-        "build-std=core",
+-        "--bins",
+-        "--message-format=json",
+-        "--release",
+-        "--target",
+-        &target,
+-    ]);
+-
+-    // Set bpf target arch on build command.
+-    let arch = env::var_os("CARGO_CFG_TARGET_ARCH").unwrap();
+-    cmd.env("CARGO_CFG_BPF_TARGET_ARCH", arch);
+-
+-    // Workaround to make sure that the rust-toolchain.toml is respected.
+-    for key in ["RUSTUP_TOOLCHAIN", "RUSTC"] {
+-        cmd.env_remove(key);
+-    }
+-    cmd.current_dir(ebpf_dir);
+-
+-    // Workaround for https://github.com/rust-lang/cargo/issues/6412 where cargo flocks itself.
+-    let ebpf_target_dir = out_dir.join("ebpf");
+-    cmd.arg("--target-dir").arg(&ebpf_target_dir);
+-
+-    let mut child = cmd
+-        .stdout(Stdio::piped())
+-        .stderr(Stdio::piped())
+-        .spawn()
+-        .unwrap_or_else(|err| panic!("failed to spawn {cmd:?}: {err}"));
+-    let Child { stdout, stderr, .. } = &mut child;
+-
+-    // Trampoline stdout to cargo warnings.
+-    let stderr = stderr.take().unwrap();
+-    let stderr = BufReader::new(stderr);
+-    let stderr = std::thread::spawn(move || {
+-        for line in stderr.lines() {
+-            let line = line.unwrap();
+-            println!("cargo:warning={line}");
+-        }
+-    });
+-
+-    let stdout = stdout.take().unwrap();
+-    let stdout = BufReader::new(stdout);
+-    let mut executables = Vec::new();
+-    for message in Message::parse_stream(stdout) {
+-        #[allow(clippy::collapsible_match)]
+-        match message.expect("valid JSON") {
+-            Message::CompilerArtifact(Artifact {
+-                executable,
+-                target: Target { name, .. },
+-                ..
+-            }) => {
+-                if let Some(executable) = executable {
+-                    executables.push((name, executable.into_std_path_buf()));
+-                }
+-            }
+-            Message::CompilerMessage(CompilerMessage { message, .. }) => {
+-                for line in message.rendered.unwrap_or_default().split('\n') {
+-                    println!("cargo:warning={line}");
+-                }
+-            }
+-            Message::TextLine(line) => {
+-                println!("cargo:warning={line}");
+-            }
+-            _ => {}
+-        }
+-    }
+-
+-    let status = child
+-        .wait()
+-        .unwrap_or_else(|err| panic!("failed to wait for {cmd:?}: {err}"));
+-    assert_eq!(status.code(), Some(0), "{cmd:?} failed: {status:?}");
+-
+-    stderr.join().map_err(std::panic::resume_unwind).unwrap();
+-
+-    for (name, binary) in executables {
+-        let dst = out_dir.join(name);
+-        let _: u64 = fs::copy(&binary, &dst)
+-            .unwrap_or_else(|err| panic!("failed to copy {binary:?} to {dst:?}: {err}"));
+-    }
++ println!("cargo:rerun-if-env-changed=IRONCLAD_UPSTREAM_BPF");
++ let source=std::env::var("IRONCLAD_UPSTREAM_BPF").expect("pinned BPF input required");
++ let dest=std::path::PathBuf::from(std::env::var("OUT_DIR").unwrap()).join("krsi");
++ std::fs::copy(&source,dest).expect("copy pinned BPF input");
++ println!("cargo:rerun-if-changed={}",source);
+ }
+--- a/krsi/src/lib.rs
++++ b/krsi/src/lib.rs
+@@ -19,11 +19,11 @@
+     ffi::{CStr, CString},
+     net::IpAddr,
+     sync::{
+-        atomic::{AtomicBool, Ordering},
++        atomic::{AtomicBool, AtomicU64, Ordering},
+         Arc,
+     },
+     thread::JoinHandle,
+-    time::{Duration, SystemTime},
++    time::Duration,
+ };
+ 
+ use falco_event_schema::{events::PPME_SYSCALL_CLONE_20_X, fields::types::PT_PID};
+@@ -31,7 +31,7 @@
+     anyhow::Error,
+     async_event::{AsyncEvent, AsyncEventPlugin, AsyncHandler},
+     async_event_plugin,
+-    base::{Json, Plugin},
++    base::{Json, Plugin, Metric, MetricLabel, MetricType, MetricValue},
+     event::events::{Event, EventMetadata, RawEvent},
+     extract::{field, EventInput, ExtractFieldInfo, ExtractPlugin, ExtractRequest},
+     extract_plugin,
+@@ -51,7 +51,7 @@
+ mod krsi_event;
+ 
+ use crate::krsi_event::{
+-    ConnectData, KrsiEvent, KrsiEventContent, LinkatData, MkdiratData, OpenData, RenameatData,
++    ConnectData, KrsiEvent, KrsiEventContent, LinkatData, MkdiratData, RenameatData,
+     SocketData, SymlinkatData, UnlinkatData,
+ };
+ 
+@@ -105,13 +105,19 @@
+ type ImportedThreadTable = Table<i64, ImportedThread>;
+ 
+ pub struct KrsiPlugin {
+-    ebpf: ebpf::Ebpf,
++    ebpf: Option<ebpf::Ebpf>,
++    feature_flags: FeatureFlags,
+     threads: ImportedThreadTable,
+     async_handler: Option<Arc<AsyncHandler>>,
+     missing_events: Cache<i64, Vec<KrsiEvent>>,
+ 
+     bt_thread: Option<JoinHandle<Result<(), Error>>>,
+     bt_stop: Arc<AtomicBool>,
++    events_seen: Arc<AtomicU64>,
++    processing_errors: Arc<AtomicU64>,
++    raw_parsed: AtomicU64,
++    open_emitted: AtomicU64,
++    unattributed: AtomicU64,
+ }
+ 
+ #[derive(JsonSchema, Deserialize)]
+@@ -129,7 +135,7 @@
+ /// Plugin metadata
+ impl Plugin for KrsiPlugin {
+     const NAME: &'static CStr = c"krsi";
+-    const PLUGIN_VERSION: &'static CStr = c"0.2.0";
++    const PLUGIN_VERSION: &'static CStr = c"0.2.0-ironclad.1";
+     const DESCRIPTION: &'static CStr = c"Falco support for Kernel Runtime Security Instrumentation";
+     const CONTACT: &'static CStr = c"https://falco.org";
+     type ConfigType = Json<Config>;
+@@ -145,19 +151,36 @@
+         if config.syscalls {
+             feature_flags |= FeatureFlags::SYSCALLS;
+         }
+-        let op_flags = OpFlags::all();
+-
+-        let ebpf = ebpf::Ebpf::try_new(false, feature_flags, op_flags)?;
+-
++        // Rule validation must not create kernel maps or require privileges.
++        // Kernel loading is deferred until the engine starts event capture.
+         Ok(Self {
+-            ebpf,
++            ebpf: None,
++            feature_flags,
+             threads,
+             async_handler: None,
+             missing_events: Cache::new(1024),
+ 
+             bt_thread: None,
+             bt_stop: Arc::new(AtomicBool::new(false)),
++            events_seen: Arc::new(AtomicU64::new(0)),
++            processing_errors: Arc::new(AtomicU64::new(0)),
++            raw_parsed: AtomicU64::new(0),
++            open_emitted: AtomicU64::new(0),
++            unattributed: AtomicU64::new(0),
+         })
++    }
++
++    fn get_metrics(&mut self) -> impl IntoIterator<Item=Metric> {
++        let alive = self.bt_thread.as_ref().is_some_and(|t| !t.is_finished()) && !self.bt_stop.load(Ordering::Relaxed);
++        [
++            Metric::new(MetricLabel::new(c"ironclad_async_reader_alive", MetricType::NonMonotonic), MetricValue::U64(u64::from(alive))),
++            Metric::new(MetricLabel::new(c"ironclad_async_events", MetricType::Monotonic), MetricValue::U64(self.events_seen.load(Ordering::Relaxed))),
++            Metric::new(MetricLabel::new(c"ironclad_async_errors", MetricType::Monotonic), MetricValue::U64(self.processing_errors.load(Ordering::Relaxed))),
++            Metric::new(MetricLabel::new(c"ironclad_async_parsed", MetricType::Monotonic), MetricValue::U64(self.raw_parsed.load(Ordering::Relaxed))),
++            Metric::new(MetricLabel::new(c"ironclad_async_emitted", MetricType::Monotonic), MetricValue::U64(self.open_emitted.load(Ordering::Relaxed))),
++            Metric::new(MetricLabel::new(c"ironclad_async_unattributed", MetricType::Monotonic), MetricValue::U64(self.unattributed.load(Ordering::Relaxed))),
++            Metric::new(MetricLabel::new(c"ironclad_async_pending", MetricType::NonMonotonic), MetricValue::U64(self.missing_events.values().map(Vec::len).sum::<usize>() as u64)),
++        ]
+     }
+ 
+     fn set_config(&mut self, _config: Self::ConfigType) -> Result<(), Error> {
+@@ -171,10 +194,8 @@
+     event_name: &CStr,
+ ) -> Result<(), Error> {
+     let serialized = bincode::serde::encode_to_vec(&event, bincode::config::legacy()).unwrap();
+-    let ts = SystemTime::now()
+-        .duration_since(SystemTime::UNIX_EPOCH)
+-        .unwrap()
+-        .as_nanos() as u64;
++    // Preserve the kernel event time; reader scheduling can happen after exit.
++    let ts = event.ts;
+     let tid = event.tid;
+ 
+     let event = AsyncEvent {
+@@ -208,7 +229,9 @@
+         let raw = event.event()?;
+ 
+         if let Ok(async_event) = raw.load::<AsyncEvent<&[u8]>>() {
+-            return self.parse_krsi_event(async_event, parse_input);
++            let result = self.parse_krsi_event(async_event, parse_input);
++            if result.is_err() { self.processing_errors.fetch_add(1, Ordering::Relaxed); }
++            return result;
+         }
+ 
+         if let Ok(clone_event) = raw.load::<PPME_SYSCALL_CLONE_20_X<'_>>() {
+@@ -278,24 +301,29 @@
+             self.stop_async()?;
+         }
+ 
+-        self.ebpf.load_and_attach_programs()?;
+-        let mut ring_buf = self.ebpf.ring_buffer()?;
++        let mut ebpf = ebpf::Ebpf::try_new(false, self.feature_flags, OpFlags::OPEN)?;
++        ebpf.load_and_attach_programs()?;
++        let mut ring_buf = ebpf.ring_buffer()?;
++        self.ebpf = Some(ebpf);
+ 
+         let handler = Arc::new(handler);
+         self.async_handler = Some(handler.clone());
+ 
+         self.bt_stop.store(false, Ordering::Relaxed);
+         let bt_stop = self.bt_stop.clone();
++        let events_seen = self.events_seen.clone();
++        let processing_errors = self.processing_errors.clone();
+ 
+         self.bt_thread = Some(std::thread::spawn(move || {
+             let mut retry_interval = RETRY_INTERVAL_START;
+             while !bt_stop.load(Ordering::Relaxed) {
+                 if let Some(item) = ring_buf.next() {
+                     let buf = &*item;
++                    events_seen.fetch_add(1, Ordering::Relaxed);
+                     if let Ok(event) = krsi_event::parse_ringbuf_event(buf) {
+                         emit_async_event(handler.as_ref(), &event, c"krsi")?;
+                         retry_interval = RETRY_INTERVAL_START;
+-                    }
++                    } else { processing_errors.fetch_add(1, Ordering::Relaxed); }
+                 } else {
+                     std::thread::sleep(retry_interval);
+                     retry_interval =
+@@ -310,8 +338,9 @@
+     fn stop_async(&mut self) -> Result<(), Error> {
+         self.bt_stop.store(true, Ordering::Relaxed);
+         if let Some(thread) = self.bt_thread.take() {
+-            thread.join().unwrap()?;
+-        }
++            thread.join().map_err(|_| anyhow::anyhow!("async reader panicked"))??;
++        }
++        self.ebpf.take();
+         Ok(())
+     }
+ }
+@@ -405,6 +434,7 @@
+ 
+         let buf = event.params.data;
+         let ev: KrsiEvent = bincode::serde::decode_from_slice(buf, bincode::config::legacy())?.0;
++        self.raw_parsed.fetch_add(1, Ordering::Relaxed);
+         let tid = ev.tid as i64;
+         let pid = ev.pid as i64;
+ 
+@@ -421,24 +451,37 @@
+             thread_exists = true;
+         }
+ 
++        if !thread_exists && matches!(&ev.content, KrsiEventContent::Open(_)) {
++            // These rules extract path/flags from the kernel event itself. Do
++            // not lose a real open just because its process has already exited.
++            // Falco may report unavailable process context; never invent it.
++            self.unattributed.fetch_add(1, Ordering::Relaxed);
++            return self.emit_open_event(event);
++        }
++
+         if !thread_exists {
+             // No thread available, wait for it to be created.
+             let entry = if let Some(entry) = self.missing_events.get_mut(&tid) {
+                 entry
+             } else {
++                if self.missing_events.len() >= 1024 {
++                    if let Some((_, lost)) = self.missing_events.pop_lru() { self.processing_errors.fetch_add(lost.len() as u64, Ordering::Relaxed); }
++                }
+                 self.missing_events.insert(tid, Vec::new());
+                 self.missing_events.get_mut(&tid).unwrap()
+             };
+ 
++            // Bound unknown-thread queues as well as the outer 1024-entry LRU.
++            if entry.len() >= 8 { self.processing_errors.fetch_add(1, Ordering::Relaxed); return Ok(()); }
+             entry.push(ev);
+             return Ok(());
+         }
+ 
+         // There is a thread, update the fd table and create the event.
+         match ev.content {
+-            KrsiEventContent::Open(ref data) => {
+-                self.parse_krsi_open_event(&parse_input, pid, tid, event, data)
+-            }
++            // Ironclad rules use only the event's kernel path and flags. Do
++            // not mutate Falco's fd table after this open may already be closed.
++            KrsiEventContent::Open(_) => self.emit_open_event(event),
+             KrsiEventContent::Connect(ref data) => {
+                 self.parse_krsi_connect_event(&parse_input, pid, tid, event, data)
+             }
+@@ -451,63 +494,11 @@
+         }
+     }
+ 
+-    fn parse_krsi_open_event<'a>(
+-        &self,
+-        parse_input: &ParseInput,
+-        _pid: i64,
+-        tid: i64,
+-        mut event: Event<AsyncEvent<'a, &'a [u8]>>,
+-        data: &OpenData,
+-    ) -> Result<(), Error> {
+-        let OpenData {
+-            fd,
+-            file_index: _,
+-            name,
+-            flags,
+-            mode: _,
+-            dev,
+-            ino,
+-            iou_ret: _,
+-        } = data;
+-        let r = &parse_input.reader;
+-        let w = &parse_input.writer;
+-
+-        if let Some(fd) = fd {
+-            let thread = self.threads.get_entry(r, &tid)?;
+-            let fds = thread.get_file_descriptors(r)?;
+-            let fd_entry = if let Ok(existing_fd) = fds.get_entry(r, &fd) {
+-                existing_fd
+-            } else {
+-                let new_fd = fds.create_entry(w)?;
+-                fds.insert(r, w, &fd, new_fd)?;
+-                fds.get_entry(r, &fd)?
+-            };
+-
+-            fd_entry.set_fd(w, &fd)?;
+-            if let Some(name) = name {
+-                fd_entry.set_name(w, &name)?;
+-            }
+-
+-            if let Some(dev) = dev {
+-                fd_entry.set_dev(w, &dev)?;
+-            }
+-
+-            if let Some(ino) = ino {
+-                fd_entry.set_ino(w, &ino)?;
+-            }
+-
+-            if let Some(flags) = flags {
+-                // keep flags added by the syscall exit probe if present
+-                let mask: u32 = !(krsi_common::scap::PPM_O_F_CREATED - 1);
+-                let added_flags: u32 = flags & mask;
+-                let flags = flags | added_flags;
+-                fd_entry.set_flags(w, &flags)?;
+-            }
+-        }
+-
++    fn emit_open_event<'a>(&self, mut event: Event<AsyncEvent<'a, &'a [u8]>>) -> Result<(), Error> {
+         event.params.name = c"krsi_open";
+         if let Some(handler) = self.async_handler.as_ref() {
+             handler.emit(event)?;
++            self.open_emitted.fetch_add(1, Ordering::Relaxed);
+         }
+         Ok(())
+     }
+@@ -660,6 +651,11 @@
+     gen_extract_int_impl!(fd);
+     gen_extract_int_impl!(file_index);
+     gen_extract_int_impl!(flags);
++    fn extract_write_open(&mut self, req: ExtractRequest<Self>) -> Result<u64, Error> {
++        let ev = self.extract_krsi_event(req.context, req.event)?;
++        let flags = ev.content.flags().ok_or(anyhow::anyhow!("missing open flags"))?;
++        Ok(ironclad_write_open(flags))
++    }
+     gen_extract_int_impl!(mode);
+     gen_extract_int_impl!(dev);
+     gen_extract_int_impl!(ino);
+@@ -702,6 +698,9 @@
+             "Availability: `krsi_open`, `krsi_socket`, `krsi_connect`.
+             Description: file index number (if available)",
+         ),
++        field("krsi.write_open", &Self::extract_write_open).with_description(
++            "Ironclad: 1 for write-capable, create or truncate open flags; 0 for read-only. Gate with evt.type=krsi_open.",
++        ),
+         field("krsi.flags", &Self::extract_flags).with_description(
+             "Availability: `krsi_open`, `krsi_linkat`, `krsi_unlinkat`, `krsi_renameat`.
+             Per-event descriptions:
+@@ -827,3 +826,21 @@
+ async_event_plugin!(KrsiPlugin);
+ parse_plugin!(KrsiPlugin);
+ extract_plugin!(KrsiPlugin);
++
++// SCAP access mode encoding is RDONLY=1, WRONLY=2, RDWR=3. O_TRUNC and
++// creation can mutate policy even without a write-capable descriptor.
++fn ironclad_write_open(flags: u32) -> u64 {
++    use krsi_common::scap::{PPM_O_WRONLY, PPM_O_CREAT, PPM_O_TRUNC, PPM_O_F_CREATED};
++    u64::from(flags & (PPM_O_WRONLY | PPM_O_CREAT | PPM_O_TRUNC | PPM_O_F_CREATED) != 0)
++}
++#[cfg(test)]
++mod ironclad_tests {
++    use super::ironclad_write_open;
++    use krsi_common::scap::*;
++    #[test] fn reads_and_metadata_flags_do_not_become_writes() {
++        for flags in [0, PPM_O_RDONLY, PPM_O_RDONLY|PPM_O_CLOEXEC|PPM_O_LARGEFILE, PPM_O_RDONLY|PPM_O_NONBLOCK] { assert_eq!(ironclad_write_open(flags),0); }
++    }
++    #[test] fn writes_create_and_truncate_remain_visible() {
++        for flags in [PPM_O_WRONLY, PPM_O_RDWR, PPM_O_RDWR|PPM_O_CLOEXEC, PPM_O_RDONLY|PPM_O_TRUNC, PPM_O_RDONLY|PPM_O_CREAT, PPM_O_F_CREATED] { assert_eq!(ironclad_write_open(flags),1); }
++    }
++}
+--- a/krsi/src/ebpf.rs
++++ b/krsi/src/ebpf.rs
+@@ -122,6 +122,10 @@
+         FeatureFlags::SYSCALLS,
+         OpFlags::OPEN,
+     ),
++    // Linux may inline io_openat2 into io_openat. Attach the same handler
++    // instructions at both entry points, sharing the existing operation maps.
++    ProgDef::new(ProgKind::Fexit, "io_openat_x", "io_openat", FeatureFlags::IO_URING, OpFlags::OPEN),
++    ProgDef::new(ProgKind::Fentry, "io_openat_e", "io_openat", FeatureFlags::IO_URING, OpFlags::OPEN),
+     // Socket programs.
+     ProgDef::new(
+         ProgKind::Fexit,
+@@ -375,7 +379,9 @@
+         }
+ 
+         let btf = aya::Btf::from_sys_fs()?;
+-        let cpus = num_cpus::get();
++        // BPF indexes this ordinary array by the kernel CPU ID. CPU quotas and
++        // affinity reduce num_cpus::get(), but do not reduce those IDs.
++        let cpus = aya::util::nr_cpus().map_err(|(path, error)| anyhow::anyhow!("CPU topology {}: {}", path, error))?;
+         let boot_time = Self::get_precise_boot_time()?;
+         let feature_flags_bits = feature_flags.bits();
+         let op_flags_bits = op_flags.bits();
+@@ -470,6 +476,19 @@
+ mod tests {
+     use super::*;
+     #[test]
++    fn open_aliases_keep_identical_instructions_and_shared_maps() {
++        let mut object = aya_obj::Object::parse(aya::include_bytes_aligned!(concat!(env!("OUT_DIR"), "/krsi"))).unwrap();
++        for (original, alias) in [("io_openat2_e", "io_openat_e"), ("io_openat2_x", "io_openat_x")] {
++            let original = object.programs.get(original).unwrap();
++            let alias = object.programs.get(alias).unwrap();
++            assert_eq!(original.function_key(), alias.function_key());
++            assert!(!object.functions[&alias.function_key()].instructions.is_empty());
++        }
++        assert!(object.maps.contains_key("EVENTS"));
++        let sections = object.functions.keys().map(|(section, _)| *section).collect();
++        object.relocate_calls(&sections).unwrap();
++    }
++    #[test]
+     #[ignore]
+     fn load_and_attach_programs() {
+         let feature_flags = FeatureFlags::all();
+--- a/krsi/src/krsi_event.rs
++++ b/krsi/src/krsi_event.rs
+@@ -28,6 +28,7 @@
+ 
+ #[derive(Serialize, Deserialize, Debug)]
+ pub struct KrsiEvent {
++    pub ts: u64,
+     pub pid: u32,
+     pub tid: u32,
+     pub content: KrsiEventContent,
+@@ -556,7 +557,7 @@
+     let tgid_pid = evt_hdr.tgid_pid.get();
+     let pid = (tgid_pid >> 32) as u32;
+     let tid = (tgid_pid & 0xffffffff) as u32;
+-    Ok(KrsiEvent { pid, tid, content })
++    Ok(KrsiEvent { ts: evt_hdr.ts.get(), pid, tid, content })
+ }
+ 
+ fn read_event_header(buf: &mut &[u8]) -> Result<EventHeader, RingbufParseError> {
+@@ -732,6 +733,22 @@
+ 
+ #[cfg(test)]
+ mod tests {
++    #[test]
++    fn kernel_timestamp_survives_ring_parse_and_async_serialization() {
++        let ts = 1_800_000_000_123_456_789u64;
++        let mut raw = Vec::new();
++        raw.extend_from_slice(&ts.to_ne_bytes());
++        raw.extend_from_slice(&((7u64 << 32) | 8).to_ne_bytes());
++        raw.extend_from_slice(&42u32.to_ne_bytes());
++        raw.extend_from_slice(&(krsi_common::EventType::Open as u16).to_ne_bytes());
++        raw.extend_from_slice(&8u32.to_ne_bytes());
++        raw.extend_from_slice(&[0u8; 16]);
++        let event = super::parse_ringbuf_event(&raw).unwrap();
++        assert_eq!((event.ts, event.pid, event.tid), (ts, 7, 8));
++        let bytes = bincode::serde::encode_to_vec(&event, bincode::config::legacy()).unwrap();
++        let restored: super::KrsiEvent = bincode::serde::decode_from_slice(&bytes, bincode::config::legacy()).unwrap().0;
++        assert_eq!(restored.ts, ts);
++    }
+     use super::*;
+ 
+     #[test]

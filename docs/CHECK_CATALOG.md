@@ -1,0 +1,866 @@
+# Ironclad diagnostic check catalog
+
+Quick has 90 registered checks; Full has 180; Super Scan has 420. Full includes every Quick check, and Super Scan includes every Full check. Counts do not multiply by CPU, device, process or files discovered.
+
+These are workstation diagnostics and exposure/configuration checks, not 420 malware detectors or a security certification. A profile reports catalog size and assessed outcomes separately. Missing permissions, unsupported controls, absent optional services and skipped deadlines never count as passes. `observed` means a configuration/inventory fact, not a protection verdict. Build configuration does not prove runtime enforcement. Core hardening features have explicit build-support predicates; optional, mutually exclusive or workload-dependent features remain observations. Service configuration is queried from systemd without reading unit contents or exercising its sandbox.
+
+All probes are local, unprivileged and read-only, with bounded inputs and a shared scan deadline. No private keys, credentials, user documents, process arguments or application database contents are read. Sensitive system files are checked using stat metadata only. Namespace and io_uring restrictions are observed without recommending changes that could break browsers, Codex, Falco or the one-off scanner. No remediation is automatically authorized by a scan.
+
+AI explanations cover every check in the selected 90/180/420 profile, with verified progress and per-check AI follow-up. The complete evidence stays in Diagnostics. Firewall rule enforcement, effective SSH configuration, screen lock enforcement, backup restore success, CPU exploit resistance and complete malware coverage are not certified. Three old unsupported coverage-declaration placeholders were removed from the diagnostic count.
+
+List the machine-readable registry without scanning:
+
+```sh
+zds-ironclad catalog --profile super
+```
+
+The catalog is defined in `ironclad/check_catalog.py`. Sources are reviewed against official Linux and systemd documentation; kernel build symbols link to their upstream definition file.
+
+## Quick (90)
+
+- **Operating system and kernel inventory** — `system.os`
+  - Source/target: `system.os`; predicate: `explicit legacy collector`. Read OS release metadata and uname, never user identity. [Official reference](https://docs.kernel.org/admin-guide/index.html).
+- **CPU load and capacity** — `performance.cpu.load`
+  - Source/target: `performance.cpu.load`; predicate: `explicit legacy collector`. Compare load average with logical CPU capacity; one sample is advisory. [Official reference](https://docs.kernel.org/admin-guide/index.html).
+- **Memory headroom** — `performance.memory`
+  - Source/target: `performance.memory`; predicate: `explicit legacy collector`. Compare available memory against total memory. [Official reference](https://docs.kernel.org/admin-guide/index.html).
+- **Root filesystem headroom** — `system.disk.free_space`
+  - Source/target: `system.disk.free_space`; predicate: `explicit legacy collector`. Assess available blocks and inodes using statvfs. [Official reference](https://docs.kernel.org/admin-guide/index.html).
+- **Home write permissions** — `security.home.permissions`
+  - Source/target: `security.home.permissions`; predicate: `explicit legacy collector`. Inspect directory metadata for other-user write access; do not read home contents. [Official reference](https://docs.kernel.org/admin-guide/index.html).
+- **Full userspace ASLR** — `security.kernel.aslr`
+  - Source/target: `security.kernel.aslr`; predicate: `explicit legacy collector`. Read randomize_va_space and check the full-randomization setting. [Official reference](https://docs.kernel.org/admin-guide/index.html).
+- **Memory pressure** — `performance.pressure.memory`
+  - Source/target: `performance.pressure.memory`; predicate: `explicit legacy collector`. Read memory stall counters; one observation does not prove sustained pressure. [Official reference](https://docs.kernel.org/admin-guide/index.html).
+- **System uptime** — `system.uptime`
+  - Source/target: `system.uptime`; predicate: `explicit legacy collector`. Read elapsed uptime without identifying running applications. [Official reference](https://docs.kernel.org/admin-guide/index.html).
+- **Failed user services** — `startup.units.user_failed`
+  - Source/target: `startup.units.user_failed`; predicate: `explicit legacy collector`. Query failed-unit counts with safe platform names only. [Official reference](https://docs.kernel.org/admin-guide/index.html).
+- **Failed system services** — `startup.units.system_failed`
+  - Source/target: `startup.units.system_failed`; predicate: `explicit legacy collector`. Query system failed-unit counts independently of user services. [Official reference](https://docs.kernel.org/admin-guide/index.html).
+- **Boot duration** — `startup.boot`
+  - Source/target: `startup.boot`; predicate: `explicit legacy collector`. Query systemd boot timing; boot speed alone is not a safety verdict. [Official reference](https://docs.kernel.org/admin-guide/index.html).
+- **Installed package inventory** — `packages.installed`
+  - Source/target: `packages.installed`; predicate: `explicit legacy collector`. Count package-manager inventory without reading package database contents directly. [Official reference](https://docs.kernel.org/admin-guide/index.html).
+- **Foreign package inventory** — `packages.foreign`
+  - Source/target: `packages.foreign`; predicate: `explicit legacy collector`. Count packages outside current sync databases; foreign does not mean malicious. [Official reference](https://docs.kernel.org/admin-guide/index.html).
+- **Cached package updates** — `packages.cached_updates`
+  - Source/target: `packages.cached_updates`; predicate: `explicit legacy collector`. Query local cached update metadata; zero does not prove freshness or absence of advisories. [Official reference](https://docs.kernel.org/admin-guide/index.html).
+- **Listening socket inventory** — `network.listeners`
+  - Source/target: `network.listeners`; predicate: `explicit legacy collector`. Record protocol, port and bind scope; never retain addresses or process identities. [Official reference](https://docs.kernel.org/admin-guide/index.html).
+- **Filesystem and crypt-mapping visibility** — `storage.filesystems`
+  - Source/target: `storage.filesystems`; predicate: `explicit legacy collector`. Query filesystem types and encryption-container visibility, not encryption assurance. [Official reference](https://docs.kernel.org/admin-guide/index.html).
+- **Backup tool discovery** — `recovery.backup.discovery`
+  - Source/target: `recovery.backup.discovery`; predicate: `explicit legacy collector`. Discover supported binaries; backup success and restore ability remain unverified. [Official reference](https://docs.kernel.org/admin-guide/index.html).
+- **Startup persistence inventory** — `security.persistence.inventory`
+  - Source/target: `security.persistence.inventory`; predicate: `explicit legacy collector`. Count fixed startup directories without reading their contents. [Official reference](https://docs.kernel.org/admin-guide/index.html).
+- **UEFI Secure Boot state** — `security.boot.secure_boot`
+  - Source/target: `security.boot.secure_boot`; predicate: `explicit legacy collector`. Read the firmware SecureBoot variable when available; no TPM mutation. [Official reference](https://docs.kernel.org/admin-guide/index.html).
+- **Thermal sensor readings** — `hardware.thermal`
+  - Source/target: `hardware.thermal`; predicate: `explicit legacy collector`. Read bounded sysfs temperatures without claiming universal vendor thresholds. [Official reference](https://docs.kernel.org/admin-guide/index.html).
+- **Kernel pointer disclosure** — `sysctl.kernel.kptr_restrict`
+  - Source/target: `kernel/kptr_restrict`; predicate: `ge:1`. Restrict kernel addresses exposed through formatted kernel interfaces. [Official reference](https://docs.kernel.org/admin-guide/sysctl/kernel.html).
+- **Kernel log access** — `sysctl.kernel.dmesg_restrict`
+  - Source/target: `kernel/dmesg_restrict`; predicate: `eq:1`. Restrict unprivileged access to kernel log data. [Official reference](https://docs.kernel.org/admin-guide/sysctl/kernel.html).
+- **Process tracing restrictions** — `sysctl.kernel.yama.ptrace_scope`
+  - Source/target: `kernel/yama/ptrace_scope`; predicate: `ge:1`. Reduce unrelated-process tracing; debugger workflows may need exceptions. [Official reference](https://docs.kernel.org/admin-guide/sysctl/kernel.html).
+- **Unprivileged BPF loading** — `sysctl.kernel.unprivileged_bpf_disabled`
+  - Source/target: `kernel/unprivileged_bpf_disabled`; predicate: `ge:1`. Limit unprivileged kernel bytecode attack surface without disabling privileged Falco. [Official reference](https://docs.kernel.org/admin-guide/sysctl/kernel.html).
+- **Performance counter access** — `sysctl.kernel.perf_event_paranoid`
+  - Source/target: `kernel/perf_event_paranoid`; predicate: `ge:2`. Limit unprivileged profiling of kernel execution. [Official reference](https://docs.kernel.org/admin-guide/sysctl/kernel.html).
+- **Runtime kernel replacement** — `sysctl.kernel.kexec_load_disabled`
+  - Source/target: `kernel/kexec_load_disabled`; predicate: `observe`. Restrict kexec after boot; crash dump and administrator workflows can require it. [Official reference](https://docs.kernel.org/admin-guide/sysctl/kernel.html).
+- **Runtime module loading** — `sysctl.kernel.modules_disabled`
+  - Source/target: `kernel/modules_disabled`; predicate: `observe`. Observe irreversible-until-reboot module lockdown; ordinary desktops commonly need dynamic modules. [Official reference](https://docs.kernel.org/admin-guide/sysctl/kernel.html).
+- **Unprivileged user namespaces** — `sysctl.kernel.unprivileged_userns_clone`
+  - Source/target: `kernel/unprivileged_userns_clone`; predicate: `observe`. Report namespace exposure; browsers and bubblewrap can require user namespaces, so do not disable automatically. [Official reference](https://docs.kernel.org/admin-guide/sysctl/kernel.html).
+- **Magic SysRq permissions** — `sysctl.kernel.sysrq`
+  - Source/target: `kernel/sysrq`; predicate: `mask:176`. Limit debug/control operations while retaining deliberate recovery capabilities. [Official reference](https://docs.kernel.org/admin-guide/sysctl/kernel.html).
+- **Console kernel log level** — `sysctl.kernel.printk`
+  - Source/target: `kernel/printk`; predicate: `observe`. Inspect console verbosity without collecting any kernel log contents. [Official reference](https://docs.kernel.org/admin-guide/sysctl/kernel.html).
+- **Hard-link ownership protection** — `sysctl.fs.protected_hardlinks`
+  - Source/target: `fs/protected_hardlinks`; predicate: `eq:1`. Reduce privileged hard-link attacks against files not owned by the caller. [Official reference](https://docs.kernel.org/admin-guide/sysctl/fs.html).
+- **Sticky-directory symlink protection** — `sysctl.fs.protected_symlinks`
+  - Source/target: `fs/protected_symlinks`; predicate: `eq:1`. Reduce symlink races in shared sticky directories. [Official reference](https://docs.kernel.org/admin-guide/sysctl/fs.html).
+- **Sticky-directory FIFO protection** — `sysctl.fs.protected_fifos`
+  - Source/target: `fs/protected_fifos`; predicate: `ge:1`. Reduce privileged opens of attacker-owned FIFO objects. [Official reference](https://docs.kernel.org/admin-guide/sysctl/fs.html).
+- **Sticky-directory regular-file protection** — `sysctl.fs.protected_regular`
+  - Source/target: `fs/protected_regular`; predicate: `ge:1`. Reduce privileged creation/open races in shared temporary directories. [Official reference](https://docs.kernel.org/admin-guide/sysctl/fs.html).
+- **Privileged core dumps** — `sysctl.fs.suid_dumpable`
+  - Source/target: `fs/suid_dumpable`; predicate: `eq:0`. Check whether changed-privilege processes may generate sensitive core dumps; managed root-only dumps can be intentional. [Official reference](https://docs.kernel.org/admin-guide/sysctl/fs.html).
+- **Low-address mapping barrier** — `sysctl.vm.mmap_min_addr`
+  - Source/target: `vm/mmap_min_addr`; predicate: `ge:65536`. Limit user mappings at low addresses often involved in null-dereference exploitation. [Official reference](https://docs.kernel.org/admin-guide/sysctl/vm.html).
+- **Unprivileged userfaultfd** — `sysctl.vm.unprivileged_userfaultfd`
+  - Source/target: `vm/unprivileged_userfaultfd`; predicate: `eq:0`. Restrict userfaultfd attack surface; some runtimes require explicit exceptions. [Official reference](https://docs.kernel.org/admin-guide/sysctl/vm.html).
+- **Native mmap randomization bits** — `sysctl.vm.mmap_rnd_bits`
+  - Source/target: `vm/mmap_rnd_bits`; predicate: `observe`. Record the architecture-specific ASLR entropy setting; no universal cross-architecture threshold. [Official reference](https://docs.kernel.org/admin-guide/sysctl/vm.html).
+- **Compatibility mmap randomization bits** — `sysctl.vm.mmap_rnd_compat_bits`
+  - Source/target: `vm/mmap_rnd_compat_bits`; predicate: `observe`. Record entropy for compatibility processes separately from native mappings. [Official reference](https://docs.kernel.org/admin-guide/sysctl/vm.html).
+- **TCP SYN cookies** — `sysctl.net.ipv4.tcp_syncookies`
+  - Source/target: `net/ipv4/tcp_syncookies`; predicate: `ge:1`. Check availability of SYN-flood fallback; not proof of DDoS resistance. [Official reference](https://docs.kernel.org/networking/ip-sysctl.html).
+- **TCP TIME_WAIT assassination defense** — `sysctl.net.ipv4.tcp_rfc1337`
+  - Source/target: `net/ipv4/tcp_rfc1337`; predicate: `eq:1`. Check protection against a class of premature TIME_WAIT termination. [Official reference](https://docs.kernel.org/networking/ip-sysctl.html).
+- **Broadcast ICMP replies** — `sysctl.net.ipv4.icmp_echo_ignore_broadcasts`
+  - Source/target: `net/ipv4/icmp_echo_ignore_broadcasts`; predicate: `eq:1`. Avoid responding to broadcast echo requests. [Official reference](https://docs.kernel.org/networking/ip-sysctl.html).
+- **Bogus ICMP error handling** — `sysctl.net.ipv4.icmp_ignore_bogus_error_responses`
+  - Source/target: `net/ipv4/icmp_ignore_bogus_error_responses`; predicate: `eq:1`. Suppress bogus broadcast ICMP errors. [Official reference](https://docs.kernel.org/networking/ip-sysctl.html).
+- **IPv4 aggregate redirect acceptance** — `sysctl.net.ipv4.conf.all.accept_redirects`
+  - Source/target: `net/ipv4/conf/all/accept_redirects`; predicate: `eq:0`. Review redirect processing policy; effective interface settings require separate review. [Official reference](https://docs.kernel.org/networking/ip-sysctl.html).
+- **IPv4 new-interface redirect policy** — `sysctl.net.ipv4.conf.default.accept_redirects`
+  - Source/target: `net/ipv4/conf/default/accept_redirects`; predicate: `eq:0`. Check the template inherited by future interfaces. [Official reference](https://docs.kernel.org/networking/ip-sysctl.html).
+- **IPv4 aggregate redirect transmission** — `sysctl.net.ipv4.conf.all.send_redirects`
+  - Source/target: `net/ipv4/conf/all/send_redirects`; predicate: `eq:0`. Review router redirect behavior; forwarding roles may differ. [Official reference](https://docs.kernel.org/networking/ip-sysctl.html).
+- **IPv4 source routing** — `sysctl.net.ipv4.conf.all.accept_source_route`
+  - Source/target: `net/ipv4/conf/all/accept_source_route`; predicate: `eq:0`. Review acceptance of source-routed packets. [Official reference](https://docs.kernel.org/networking/ip-sysctl.html).
+- **IPv6 aggregate redirect acceptance** — `sysctl.net.ipv6.conf.all.accept_redirects`
+  - Source/target: `net/ipv6/conf/all/accept_redirects`; predicate: `eq:0`. Review IPv6 redirect policy; interface-specific overrides are not certified. [Official reference](https://docs.kernel.org/networking/ip-sysctl.html).
+- **IPv6 new-interface redirect policy** — `sysctl.net.ipv6.conf.default.accept_redirects`
+  - Source/target: `net/ipv6/conf/default/accept_redirects`; predicate: `eq:0`. Check the IPv6 redirect template separately from current aggregate settings. [Official reference](https://docs.kernel.org/networking/ip-sysctl.html).
+- **IPv4 reverse-path filtering** — `sysctl.net.ipv4.conf.all.rp_filter`
+  - Source/target: `net/ipv4/conf/all/rp_filter`; predicate: `ge:1`. Review source validation; asymmetric routing and VPNs may require loose filtering. [Official reference](https://docs.kernel.org/networking/ip-sysctl.html).
+- **System configuration directory** — `metadata.etc`
+  - Source/target: `/etc`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **Packaged userspace root** — `metadata.usr`
+  - Source/target: `/usr`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **Packaged executable directory** — `metadata.usr.bin`
+  - Source/target: `/usr/bin`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **Packaged library directory** — `metadata.usr.lib`
+  - Source/target: `/usr/lib`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **Boot configuration directory** — `metadata.boot`
+  - Source/target: `/boot`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **Account database metadata** — `metadata.etc.passwd`
+  - Source/target: `/etc/passwd`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **Group database metadata** — `metadata.etc.group`
+  - Source/target: `/etc/group`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **Shadow password database metadata** — `metadata.etc.shadow`
+  - Source/target: `/etc/shadow`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **Shadow group database metadata** — `metadata.etc.gshadow`
+  - Source/target: `/etc/gshadow`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **Administrator policy metadata** — `metadata.etc.sudoers`
+  - Source/target: `/etc/sudoers`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **Administrator policy directory** — `metadata.etc.sudoers.d`
+  - Source/target: `/etc/sudoers.d`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **Authentication policy directory** — `metadata.etc.pam.d`
+  - Source/target: `/etc/pam.d`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **SSH policy directory** — `metadata.etc.ssh`
+  - Source/target: `/etc/ssh`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **System service override directory** — `metadata.etc.systemd.system`
+  - Source/target: `/etc/systemd/system`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **System cron directory** — `metadata.etc.cron.d`
+  - Source/target: `/etc/cron.d`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **Kernel parameter override directory** — `metadata.etc.sysctl.d`
+  - Source/target: `/etc/sysctl.d`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **Device-rule override directory** — `metadata.etc.udev.rules.d`
+  - Source/target: `/etc/udev/rules.d`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **Preloaded-library policy metadata** — `metadata.etc.ld.so.preload`
+  - Source/target: `/etc/ld.so.preload`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **Dynamic loader policy metadata** — `metadata.etc.ld.so.conf`
+  - Source/target: `/etc/ld.so.conf`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **Package manager policy metadata** — `metadata.etc.pacman.conf`
+  - Source/target: `/etc/pacman.conf`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **Kernel code/data permissions** — `kconfig.strict_kernel_rwx`
+  - Source/target: `STRICT_KERNEL_RWX`; predicate: `enabled`. Separate writable data from executable kernel code. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/arch/Kconfig).
+- **Module code/data permissions** — `kconfig.strict_module_rwx`
+  - Source/target: `STRICT_MODULE_RWX`; predicate: `enabled`. Apply write/execute separation to loadable kernel modules. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/arch/Kconfig).
+- **Kernel stack canaries** — `kconfig.stackprotector_strong`
+  - Source/target: `STACKPROTECTOR_STRONG`; predicate: `enabled`. Instrument vulnerable stack layouts against overwrite exploitation. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/arch/Kconfig).
+- **Guarded kernel stacks** — `kconfig.vmap_stack`
+  - Source/target: `VMAP_STACK`; predicate: `enabled`. Use virtually mapped stacks with guard-page overflow detection. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/arch/Kconfig).
+- **Separated thread metadata** — `kconfig.thread_info_in_task`
+  - Source/target: `THREAD_INFO_IN_TASK`; predicate: `enabled`. Keep thread metadata away from the kernel stack. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/init/Kconfig).
+- **Hardened user copies** — `kconfig.hardened_usercopy`
+  - Source/target: `HARDENED_USERCOPY`; predicate: `enabled`. Check object boundaries during kernel/user memory copies. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/security/Kconfig.hardening).
+- **Fortified kernel memory operations** — `kconfig.fortify_source`
+  - Source/target: `FORTIFY_SOURCE`; predicate: `enabled`. Add compile-time/runtime checks to supported memory operations. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/security/Kconfig.hardening).
+- **Linked-list integrity** — `kconfig.list_hardened`
+  - Source/target: `LIST_HARDENED`; predicate: `enabled`. Check list operations for corruption. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/security/Kconfig.hardening).
+- **Corruption fail-stop support** — `kconfig.bug_on_data_corruption`
+  - Source/target: `BUG_ON_DATA_CORRUPTION`; predicate: `observe`. Observe fail-stop behavior for detected corruption; availability costs need review. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/security/Kconfig.hardening).
+- **Page allocator shuffling** — `kconfig.shuffle_page_allocator`
+  - Source/target: `SHUFFLE_PAGE_ALLOCATOR`; predicate: `observe`. Reduce predictability of physical-page reuse where enabled at runtime. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/mm/Kconfig).
+- **Slab freelist randomization** — `kconfig.slab_freelist_random`
+  - Source/target: `SLAB_FREELIST_RANDOM`; predicate: `enabled`. Reduce allocator reuse predictability. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/mm/Kconfig).
+- **Slab freelist integrity** — `kconfig.slab_freelist_hardened`
+  - Source/target: `SLAB_FREELIST_HARDENED`; predicate: `enabled`. Harden allocator metadata against exploitation. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/mm/Kconfig).
+- **Allocation initialization default** — `kconfig.init_on_alloc_default_on`
+  - Source/target: `INIT_ON_ALLOC_DEFAULT_ON`; predicate: `observe`. Reduce uninitialized heap data exposure; runtime overrides may differ. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/security/Kconfig.hardening).
+- **Freed-memory clearing default** — `kconfig.init_on_free_default_on`
+  - Source/target: `INIT_ON_FREE_DEFAULT_ON`; predicate: `observe`. Reduce stale heap data lifetime; runtime overrides may differ. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/security/Kconfig.hardening).
+- **Call-used register clearing** — `kconfig.zero_call_used_regs`
+  - Source/target: `ZERO_CALL_USED_REGS`; predicate: `observe`. Reduce stale register data after function return where compiler support exists. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/security/Kconfig.hardening).
+- **Behavior monitor health** — `protection.falco`
+  - Source/target: `falco`; predicate: `healthy`. Verify actual protection readiness; installed binaries alone do not establish active coverage. [Official reference](https://falco.org/docs/).
+- **Automatic Downloads scanner health** — `protection.automatic`
+  - Source/target: `automatic`; predicate: `healthy`. Verify actual protection readiness; installed binaries alone do not establish active coverage. [Official reference](https://docs.clamav.net/manual/Usage/Scanning.html).
+- **One-off scanner readiness** — `protection.manual`
+  - Source/target: `manual`; predicate: `healthy`. Verify actual protection readiness; installed binaries alone do not establish active coverage. [Official reference](https://docs.clamav.net/manual/Usage/Scanning.html).
+- **One-off signature freshness** — `protection.signatures`
+  - Source/target: `signatures`; predicate: `healthy`. Verify actual protection readiness; installed binaries alone do not establish active coverage. [Official reference](https://docs.clamav.net/manual/Usage/Scanning.html).
+- **Automatic protection maintenance health** — `protection.updates`
+  - Source/target: `updates`; predicate: `healthy`. Verify actual protection readiness; installed binaries alone do not establish active coverage. [Official reference](https://docs.clamav.net/manual/Usage/Scanning.html).
+
+## Full additions (90)
+
+- **Active security-module names** — `security.lsm`
+  - Source/target: `security.lsm`; predicate: `explicit legacy collector`. Read the kernel LSM list; loaded module names alone do not prove policy enforcement. [Official reference](https://docs.kernel.org/admin-guide/index.html).
+- **Network byte counters** — `network.counters`
+  - Source/target: `network.counters`; predicate: `explicit legacy collector`. Read aggregate interface counters without addresses or traffic contents. [Official reference](https://docs.kernel.org/admin-guide/index.html).
+- **Resolver configuration presence** — `network.resolver`
+  - Source/target: `network.resolver`; predicate: `explicit legacy collector`. Count nameserver entries without retaining addresses or search domains; no online DNS probe. [Official reference](https://docs.kernel.org/admin-guide/index.html).
+- **Running executable metadata** — `security.process.metadata`
+  - Source/target: `security.process.metadata`; predicate: `explicit legacy collector`. Bounded process executable metadata only; never read arguments, environment or memory. [Official reference](https://docs.kernel.org/admin-guide/index.html).
+- **Set-ID executable inventory** — `security.privileged_binaries`
+  - Source/target: `security.privileged_binaries`; predicate: `explicit legacy collector`. Bounded nonrecursive executable metadata inventory; presence alone is not malicious. [Official reference](https://docs.kernel.org/admin-guide/index.html).
+- **Docker privilege exposure** — `developer.container.access`
+  - Source/target: `developer.container.access`; predicate: `explicit legacy collector`. Check caller group and socket metadata without querying containers. [Official reference](https://docs.kernel.org/admin-guide/index.html).
+- **Firmware update client discovery** — `hardware.firmware.support`
+  - Source/target: `hardware.firmware.support`; predicate: `explicit legacy collector`. Inspect supported client presence; no feed query or firmware changes. [Official reference](https://docs.kernel.org/admin-guide/index.html).
+- **Battery readings** — `hardware.battery`
+  - Source/target: `hardware.battery`; predicate: `explicit legacy collector`. Read battery capacity/status where applicable; not a design-health certification. [Official reference](https://docs.kernel.org/admin-guide/index.html).
+- **Package rollback cache inventory** — `storage.package_cache`
+  - Source/target: `storage.package_cache`; predicate: `explicit legacy collector`. Count bounded package cache metadata; retained versions are not declared safe to delete. [Official reference](https://docs.kernel.org/admin-guide/index.html).
+- **Enabled user services** — `startup.units.enabled`
+  - Source/target: `startup.units.enabled`; predicate: `explicit legacy collector`. Query enabled unit counts without recommending blanket disablement. [Official reference](https://docs.kernel.org/admin-guide/index.html).
+- **User timer inventory** — `startup.timers`
+  - Source/target: `startup.timers`; predicate: `explicit legacy collector`. Query timer counts without changing schedules. [Official reference](https://docs.kernel.org/admin-guide/index.html).
+- **Active power profile** — `hardware.power.profile`
+  - Source/target: `hardware.power.profile`; predicate: `explicit legacy collector`. Query the current power profile without changing it. [Official reference](https://docs.kernel.org/admin-guide/index.html).
+- **Clock synchronization** — `network.clock`
+  - Source/target: `network.clock`; predicate: `explicit legacy collector`. Query systemd synchronization state; no remote network test. [Official reference](https://docs.kernel.org/admin-guide/index.html).
+- **Display controller inventory** — `hardware.gpu`
+  - Source/target: `hardware.gpu`; predicate: `explicit legacy collector`. Count PCI display controllers; driver acceleration remains unverified. [Official reference](https://docs.kernel.org/admin-guide/index.html).
+- **New-interface IPv4 redirect transmission** — `sysctl.net.ipv4.conf.default.send_redirects`
+  - Source/target: `net/ipv4/conf/default/send_redirects`; predicate: `eq:0`. Check redirect transmission inherited by new interfaces. [Official reference](https://docs.kernel.org/networking/ip-sysctl.html).
+- **New-interface IPv4 source routing** — `sysctl.net.ipv4.conf.default.accept_source_route`
+  - Source/target: `net/ipv4/conf/default/accept_source_route`; predicate: `eq:0`. Check source-routing acceptance inherited by new interfaces. [Official reference](https://docs.kernel.org/networking/ip-sysctl.html).
+- **New-interface reverse-path filtering** — `sysctl.net.ipv4.conf.default.rp_filter`
+  - Source/target: `net/ipv4/conf/default/rp_filter`; predicate: `ge:1`. Check source-validation defaults without changing VPN or router behavior. [Official reference](https://docs.kernel.org/networking/ip-sysctl.html).
+- **IPv4 secure redirect acceptance** — `sysctl.net.ipv4.conf.all.secure_redirects`
+  - Source/target: `net/ipv4/conf/all/secure_redirects`; predicate: `eq:0`. Even gateway-listed redirects may alter routing; interpret with accept_redirects. [Official reference](https://docs.kernel.org/networking/ip-sysctl.html).
+- **New-interface secure redirect policy** — `sysctl.net.ipv4.conf.default.secure_redirects`
+  - Source/target: `net/ipv4/conf/default/secure_redirects`; predicate: `eq:0`. Check secure-redirect defaults independently of active interfaces. [Official reference](https://docs.kernel.org/networking/ip-sysctl.html).
+- **IPv4 martian logging** — `sysctl.net.ipv4.conf.all.log_martians`
+  - Source/target: `net/ipv4/conf/all/log_martians`; predicate: `eq:1`. Observe logging of impossible source addresses; busy networks may limit logging. [Official reference](https://docs.kernel.org/networking/ip-sysctl.html).
+- **New-interface martian logging** — `sysctl.net.ipv4.conf.default.log_martians`
+  - Source/target: `net/ipv4/conf/default/log_martians`; predicate: `eq:1`. Check logging inherited by future IPv4 interfaces. [Official reference](https://docs.kernel.org/networking/ip-sysctl.html).
+- **IPv4 loopback routing** — `sysctl.net.ipv4.conf.all.route_localnet`
+  - Source/target: `net/ipv4/conf/all/route_localnet`; predicate: `eq:0`. Review routing of loopback addresses beyond loopback; container networking may need exceptions. [Official reference](https://docs.kernel.org/networking/ip-sysctl.html).
+- **IPv4 local-source acceptance** — `sysctl.net.ipv4.conf.all.accept_local`
+  - Source/target: `net/ipv4/conf/all/accept_local`; predicate: `eq:0`. Review externally received packets with local source addresses. [Official reference](https://docs.kernel.org/networking/ip-sysctl.html).
+- **IPv4 ARP reply filtering** — `sysctl.net.ipv4.conf.all.arp_filter`
+  - Source/target: `net/ipv4/conf/all/arp_filter`; predicate: `observe`. Record multihomed ARP behavior; correct values depend on routing topology. [Official reference](https://docs.kernel.org/networking/ip-sysctl.html).
+- **IPv4 ARP reply selection** — `sysctl.net.ipv4.conf.all.arp_ignore`
+  - Source/target: `net/ipv4/conf/all/arp_ignore`; predicate: `observe`. Record ARP reply policy without assuming a universal multihoming setting. [Official reference](https://docs.kernel.org/networking/ip-sysctl.html).
+- **IPv4 ARP source selection** — `sysctl.net.ipv4.conf.all.arp_announce`
+  - Source/target: `net/ipv4/conf/all/arp_announce`; predicate: `observe`. Record source-address selection policy for multihomed diagnosis. [Official reference](https://docs.kernel.org/networking/ip-sysctl.html).
+- **IPv6 source-route handling** — `sysctl.net.ipv6.conf.all.accept_source_route`
+  - Source/target: `net/ipv6/conf/all/accept_source_route`; predicate: `le:0`. Review routing-header acceptance; disabled protocols are handled separately. [Official reference](https://docs.kernel.org/networking/ip-sysctl.html).
+- **New-interface IPv6 source routes** — `sysctl.net.ipv6.conf.default.accept_source_route`
+  - Source/target: `net/ipv6/conf/default/accept_source_route`; predicate: `le:0`. Check future-interface routing-header policy. [Official reference](https://docs.kernel.org/networking/ip-sysctl.html).
+- **IPv6 router advertisements** — `sysctl.net.ipv6.conf.all.accept_ra`
+  - Source/target: `net/ipv6/conf/all/accept_ra`; predicate: `observe`. Record SLAAC/router-advertisement behavior; disabling it can break normal connectivity. [Official reference](https://docs.kernel.org/networking/ip-sysctl.html).
+- **New-interface router advertisements** — `sysctl.net.ipv6.conf.default.accept_ra`
+  - Source/target: `net/ipv6/conf/default/accept_ra`; predicate: `observe`. Record the SLAAC template separately from active interfaces. [Official reference](https://docs.kernel.org/networking/ip-sysctl.html).
+- **IPv4 forwarding role** — `sysctl.net.ipv4.ip_forward`
+  - Source/target: `net/ipv4/ip_forward`; predicate: `observe`. Record host/router behavior; containers and VPNs may legitimately enable forwarding. [Official reference](https://docs.kernel.org/networking/ip-sysctl.html).
+- **IPv6 forwarding role** — `sysctl.net.ipv6.conf.all.forwarding`
+  - Source/target: `net/ipv6/conf/all/forwarding`; predicate: `observe`. Record IPv6 host/router behavior separately from IPv4. [Official reference](https://docs.kernel.org/networking/ip-sysctl.html).
+- **BPF JIT hardening** — `sysctl.net.core.bpf_jit_harden`
+  - Source/target: `net/core/bpf_jit_harden`; predicate: `ge:1`. Check constant blinding against JIT spraying, accounting for performance tradeoffs. [Official reference](https://docs.kernel.org/networking/ip-sysctl.html).
+- **BPF JIT symbol exposure** — `sysctl.net.core.bpf_jit_kallsyms`
+  - Source/target: `net/core/bpf_jit_kallsyms`; predicate: `eq:0`. Review visibility of JIT addresses for profiling/debugging. [Official reference](https://docs.kernel.org/networking/ip-sysctl.html).
+- **Restricted kernel-log default** — `kconfig.security_dmesg_restrict`
+  - Source/target: `SECURITY_DMESG_RESTRICT`; predicate: `observe`. Build in restricted dmesg defaults; live sysctl is checked separately. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/security/Kconfig).
+- **Unprivileged BPF default** — `kconfig.bpf_unpriv_default_off`
+  - Source/target: `BPF_UNPRIV_DEFAULT_OFF`; predicate: `observe`. Build in restricted unprivileged BPF defaults; live sysctl is checked separately. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/kernel/bpf/Kconfig).
+- **Yama security module support** — `kconfig.security_yama`
+  - Source/target: `SECURITY_YAMA`; predicate: `observe`. Provide ptrace restriction support; module activation is separate. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/security/yama/Kconfig).
+- **Landlock sandbox support** — `kconfig.security_landlock`
+  - Source/target: `SECURITY_LANDLOCK`; predicate: `observe`. Provide application-managed sandboxing support; applications must opt in. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/security/landlock/Kconfig).
+- **Secure computing support** — `kconfig.seccomp`
+  - Source/target: `SECCOMP`; predicate: `enabled`. Provide process syscall restriction support. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/arch/Kconfig).
+- **Syscall filter support** — `kconfig.seccomp_filter`
+  - Source/target: `SECCOMP_FILTER`; predicate: `enabled`. Provide programmable process syscall filtering; this does not prove every process uses it. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/arch/Kconfig).
+- **Kernel address randomization support** — `kconfig.randomize_base`
+  - Source/target: `RANDOMIZE_BASE`; predicate: `enabled`. Provide kernel image address randomization; runtime overrides may differ. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/arch/arm64/Kconfig).
+- **Kernel memory-region randomization** — `kconfig.randomize_memory`
+  - Source/target: `RANDOMIZE_MEMORY`; predicate: `enabled`. Provide additional kernel-region layout randomization. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/arch/x86/Kconfig).
+- **User-mode instruction prevention support** — `kconfig.x86_umip`
+  - Source/target: `X86_UMIP`; predicate: `observe`. Restrict selected sensitive instructions on supported x86 processors. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/arch/x86/Kconfig).
+- **Spectre v1 runtime mitigation** — `cpu_mitigation.spectre_v1`
+  - Source/target: `spectre_v1`; predicate: `mitigation`. Inspect the running kernel mitigation report for this CPU vulnerability class; mitigation does not certify exploit resistance or cover every CPU vulnerability. [Official reference](https://docs.kernel.org/admin-guide/hw-vuln/index.html).
+- **Spectre v2 runtime mitigation** — `cpu_mitigation.spectre_v2`
+  - Source/target: `spectre_v2`; predicate: `mitigation`. Inspect the running kernel mitigation report for this CPU vulnerability class; mitigation does not certify exploit resistance or cover every CPU vulnerability. [Official reference](https://docs.kernel.org/admin-guide/hw-vuln/index.html).
+- **Meltdown runtime mitigation** — `cpu_mitigation.meltdown`
+  - Source/target: `meltdown`; predicate: `mitigation`. Inspect the running kernel mitigation report for this CPU vulnerability class; mitigation does not certify exploit resistance or cover every CPU vulnerability. [Official reference](https://docs.kernel.org/admin-guide/hw-vuln/index.html).
+- **/tmp: nosuid mount restriction** — `mount.tmp.nosuid`
+  - Source/target: `/tmp/nosuid`; predicate: `nosuid`. Prevent set-ID and file capability elevation on this mount. Effective covering mount is evaluated; no mount changes. [Official reference](https://www.kernel.org/doc/html/latest/filesystems/proc.html).
+- **/tmp: nodev mount restriction** — `mount.tmp.nodev`
+  - Source/target: `/tmp/nodev`; predicate: `nodev`. Prevent device-node interpretation on this mount. Effective covering mount is evaluated; no mount changes. [Official reference](https://www.kernel.org/doc/html/latest/filesystems/proc.html).
+- **/tmp: noexec mount restriction** — `mount.tmp.noexec`
+  - Source/target: `/tmp/noexec`; predicate: `noexec`. Restrict direct executable loading on this mount; interpreters can still read scripts, and installers may need execution. Effective covering mount is evaluated; no mount changes. [Official reference](https://www.kernel.org/doc/html/latest/filesystems/proc.html).
+- **/var/tmp: nosuid mount restriction** — `mount.var.tmp.nosuid`
+  - Source/target: `/var/tmp/nosuid`; predicate: `nosuid`. Prevent set-ID and file capability elevation on this mount. Effective covering mount is evaluated; no mount changes. [Official reference](https://www.kernel.org/doc/html/latest/filesystems/proc.html).
+- **/var/tmp: nodev mount restriction** — `mount.var.tmp.nodev`
+  - Source/target: `/var/tmp/nodev`; predicate: `nodev`. Prevent device-node interpretation on this mount. Effective covering mount is evaluated; no mount changes. [Official reference](https://www.kernel.org/doc/html/latest/filesystems/proc.html).
+- **/var/tmp: noexec mount restriction** — `mount.var.tmp.noexec`
+  - Source/target: `/var/tmp/noexec`; predicate: `noexec`. Restrict direct executable loading on this mount; interpreters can still read scripts, and installers may need execution. Effective covering mount is evaluated; no mount changes. [Official reference](https://www.kernel.org/doc/html/latest/filesystems/proc.html).
+- **/dev/shm: nosuid mount restriction** — `mount.dev.shm.nosuid`
+  - Source/target: `/dev/shm/nosuid`; predicate: `nosuid`. Prevent set-ID and file capability elevation on this mount. Effective covering mount is evaluated; no mount changes. [Official reference](https://www.kernel.org/doc/html/latest/filesystems/proc.html).
+- **/dev/shm: nodev mount restriction** — `mount.dev.shm.nodev`
+  - Source/target: `/dev/shm/nodev`; predicate: `nodev`. Prevent device-node interpretation on this mount. Effective covering mount is evaluated; no mount changes. [Official reference](https://www.kernel.org/doc/html/latest/filesystems/proc.html).
+- **/dev/shm: noexec mount restriction** — `mount.dev.shm.noexec`
+  - Source/target: `/dev/shm/noexec`; predicate: `noexec`. Restrict direct executable loading on this mount; interpreters can still read scripts, and installers may need execution. Effective covering mount is evaluated; no mount changes. [Official reference](https://www.kernel.org/doc/html/latest/filesystems/proc.html).
+- **/run: nosuid mount restriction** — `mount.run.nosuid`
+  - Source/target: `/run/nosuid`; predicate: `nosuid`. Prevent set-ID and file capability elevation on this mount. Effective covering mount is evaluated; no mount changes. [Official reference](https://www.kernel.org/doc/html/latest/filesystems/proc.html).
+- **/run: nodev mount restriction** — `mount.run.nodev`
+  - Source/target: `/run/nodev`; predicate: `nodev`. Prevent device-node interpretation on this mount. Effective covering mount is evaluated; no mount changes. [Official reference](https://www.kernel.org/doc/html/latest/filesystems/proc.html).
+- **/boot: nosuid mount restriction** — `mount.boot.nosuid`
+  - Source/target: `/boot/nosuid`; predicate: `nosuid`. Prevent set-ID and file capability elevation on this mount. Effective covering mount is evaluated; no mount changes. [Official reference](https://www.kernel.org/doc/html/latest/filesystems/proc.html).
+- **/boot: nodev mount restriction** — `mount.boot.nodev`
+  - Source/target: `/boot/nodev`; predicate: `nodev`. Prevent device-node interpretation on this mount. Effective covering mount is evaluated; no mount changes. [Official reference](https://www.kernel.org/doc/html/latest/filesystems/proc.html).
+- **/boot: noexec mount restriction** — `mount.boot.noexec`
+  - Source/target: `/boot/noexec`; predicate: `noexec`. Restrict direct executable loading on this mount; interpreters can still read scripts, and installers may need execution. Effective covering mount is evaluated; no mount changes. [Official reference](https://www.kernel.org/doc/html/latest/filesystems/proc.html).
+- **/efi: nosuid mount restriction** — `mount.efi.nosuid`
+  - Source/target: `/efi/nosuid`; predicate: `nosuid`. Prevent set-ID and file capability elevation on this mount. Effective covering mount is evaluated; no mount changes. [Official reference](https://www.kernel.org/doc/html/latest/filesystems/proc.html).
+- **/efi: nodev mount restriction** — `mount.efi.nodev`
+  - Source/target: `/efi/nodev`; predicate: `nodev`. Prevent device-node interpretation on this mount. Effective covering mount is evaluated; no mount changes. [Official reference](https://www.kernel.org/doc/html/latest/filesystems/proc.html).
+- **/efi: noexec mount restriction** — `mount.efi.noexec`
+  - Source/target: `/efi/noexec`; predicate: `noexec`. Restrict direct executable loading on this mount; interpreters can still read scripts, and installers may need execution. Effective covering mount is evaluated; no mount changes. [Official reference](https://www.kernel.org/doc/html/latest/filesystems/proc.html).
+- **/proc: nosuid mount restriction** — `mount.proc.nosuid`
+  - Source/target: `/proc/nosuid`; predicate: `nosuid`. Prevent set-ID and file capability elevation on this mount. Effective covering mount is evaluated; no mount changes. [Official reference](https://www.kernel.org/doc/html/latest/filesystems/proc.html).
+- **/proc: nodev mount restriction** — `mount.proc.nodev`
+  - Source/target: `/proc/nodev`; predicate: `nodev`. Prevent device-node interpretation on this mount. Effective covering mount is evaluated; no mount changes. [Official reference](https://www.kernel.org/doc/html/latest/filesystems/proc.html).
+- **/proc: noexec mount restriction** — `mount.proc.noexec`
+  - Source/target: `/proc/noexec`; predicate: `noexec`. Restrict direct executable loading on this mount; interpreters can still read scripts, and installers may need execution. Effective covering mount is evaluated; no mount changes. [Official reference](https://www.kernel.org/doc/html/latest/filesystems/proc.html).
+- **sshd.service: Prevent privilege gain on exec** — `service.sshd.service.nonewprivileges`
+  - Source/target: `sshd.service/NoNewPrivileges`; predicate: `bool`. Limit set-ID and capability privilege acquisition after service start. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **sshd.service: System filesystem write barrier** — `service.sshd.service.protectsystem`
+  - Source/target: `sshd.service/ProtectSystem`; predicate: `protectsystem`. Restrict service writes to OS/package files; explicit writable exceptions still matter. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **sshd.service: Home directory access barrier** — `service.sshd.service.protecthome`
+  - Source/target: `sshd.service/ProtectHome`; predicate: `protecthome`. Limit service access to private home data; authenticated login/printing roles may need exceptions. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **sshd.service: Private temporary directories** — `service.sshd.service.privatetmp`
+  - Source/target: `sshd.service/PrivateTmp`; predicate: `bool`. Separate service temporary files from shared host temporary paths. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **sshd.service: Private device view** — `service.sshd.service.privatedevices`
+  - Source/target: `sshd.service/PrivateDevices`; predicate: `bool`. Reduce service access to host devices; device-facing services may need exceptions. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **sshd.service: Kernel tunable write barrier** — `service.sshd.service.protectkerneltunables`
+  - Source/target: `sshd.service/ProtectKernelTunables`; predicate: `bool`. Restrict service access to kernel configuration interfaces. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **cups.service: Prevent privilege gain on exec** — `service.cups.service.nonewprivileges`
+  - Source/target: `cups.service/NoNewPrivileges`; predicate: `bool`. Limit set-ID and capability privilege acquisition after service start. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **cups.service: System filesystem write barrier** — `service.cups.service.protectsystem`
+  - Source/target: `cups.service/ProtectSystem`; predicate: `protectsystem`. Restrict service writes to OS/package files; explicit writable exceptions still matter. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **cups.service: Home directory access barrier** — `service.cups.service.protecthome`
+  - Source/target: `cups.service/ProtectHome`; predicate: `protecthome`. Limit service access to private home data; authenticated login/printing roles may need exceptions. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **cups.service: Private temporary directories** — `service.cups.service.privatetmp`
+  - Source/target: `cups.service/PrivateTmp`; predicate: `bool`. Separate service temporary files from shared host temporary paths. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **cups.service: Private device view** — `service.cups.service.privatedevices`
+  - Source/target: `cups.service/PrivateDevices`; predicate: `bool`. Reduce service access to host devices; device-facing services may need exceptions. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **cups.service: Kernel tunable write barrier** — `service.cups.service.protectkerneltunables`
+  - Source/target: `cups.service/ProtectKernelTunables`; predicate: `bool`. Restrict service access to kernel configuration interfaces. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **avahi-daemon.service: Prevent privilege gain on exec** — `service.avahi_daemon.service.nonewprivileges`
+  - Source/target: `avahi-daemon.service/NoNewPrivileges`; predicate: `bool`. Limit set-ID and capability privilege acquisition after service start. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **avahi-daemon.service: System filesystem write barrier** — `service.avahi_daemon.service.protectsystem`
+  - Source/target: `avahi-daemon.service/ProtectSystem`; predicate: `protectsystem`. Restrict service writes to OS/package files; explicit writable exceptions still matter. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **avahi-daemon.service: Home directory access barrier** — `service.avahi_daemon.service.protecthome`
+  - Source/target: `avahi-daemon.service/ProtectHome`; predicate: `protecthome`. Limit service access to private home data; authenticated login/printing roles may need exceptions. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **avahi-daemon.service: Private temporary directories** — `service.avahi_daemon.service.privatetmp`
+  - Source/target: `avahi-daemon.service/PrivateTmp`; predicate: `bool`. Separate service temporary files from shared host temporary paths. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **avahi-daemon.service: Private device view** — `service.avahi_daemon.service.privatedevices`
+  - Source/target: `avahi-daemon.service/PrivateDevices`; predicate: `bool`. Reduce service access to host devices; device-facing services may need exceptions. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **avahi-daemon.service: Kernel tunable write barrier** — `service.avahi_daemon.service.protectkerneltunables`
+  - Source/target: `avahi-daemon.service/ProtectKernelTunables`; predicate: `bool`. Restrict service access to kernel configuration interfaces. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **ironclad-antimalware-engine.service: Prevent privilege gain on exec** — `service.ironclad_antimalware_engine.service.nonewprivileges`
+  - Source/target: `ironclad-antimalware-engine.service/NoNewPrivileges`; predicate: `bool`. Limit set-ID and capability privilege acquisition after service start. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **ironclad-antimalware-engine.service: System filesystem write barrier** — `service.ironclad_antimalware_engine.service.protectsystem`
+  - Source/target: `ironclad-antimalware-engine.service/ProtectSystem`; predicate: `protectsystem`. Restrict service writes to OS/package files; explicit writable exceptions still matter. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **ironclad-antimalware-engine.service: Home directory access barrier** — `service.ironclad_antimalware_engine.service.protecthome`
+  - Source/target: `ironclad-antimalware-engine.service/ProtectHome`; predicate: `protecthome`. Limit service access to private home data; authenticated login/printing roles may need exceptions. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **ironclad-antimalware-engine.service: Private temporary directories** — `service.ironclad_antimalware_engine.service.privatetmp`
+  - Source/target: `ironclad-antimalware-engine.service/PrivateTmp`; predicate: `bool`. Separate service temporary files from shared host temporary paths. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **ironclad-antimalware-engine.service: Private device view** — `service.ironclad_antimalware_engine.service.privatedevices`
+  - Source/target: `ironclad-antimalware-engine.service/PrivateDevices`; predicate: `bool`. Reduce service access to host devices; device-facing services may need exceptions. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **ironclad-antimalware-engine.service: Kernel tunable write barrier** — `service.ironclad_antimalware_engine.service.protectkerneltunables`
+  - Source/target: `ironclad-antimalware-engine.service/ProtectKernelTunables`; predicate: `bool`. Restrict service access to kernel configuration interfaces. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+
+## Super Scan additions (240)
+
+- **Core-dump PID suffix** — `sysctl.kernel.core_uses_pid`
+  - Source/target: `kernel/core_uses_pid`; predicate: `eq:1`. Avoid ambiguous legacy core names; piped core handlers have separate naming semantics. [Official reference](https://docs.kernel.org/admin-guide/sysctl/kernel.html).
+- **Concurrent piped core dumps** — `sysctl.kernel.core_pipe_limit`
+  - Source/target: `kernel/core_pipe_limit`; predicate: `observe`. Record the concurrency bound for core handlers without reading core dumps. [Official reference](https://docs.kernel.org/admin-guide/sysctl/kernel.html).
+- **Panic reboot delay** — `sysctl.kernel.panic`
+  - Source/target: `kernel/panic`; predicate: `observe`. Record recovery policy; unattended reboot and forensic needs differ. [Official reference](https://docs.kernel.org/admin-guide/sysctl/kernel.html).
+- **Oops recovery policy** — `sysctl.kernel.panic_on_oops`
+  - Source/target: `kernel/panic_on_oops`; predicate: `observe`. Record whether kernel oops forces a panic; availability tradeoffs are workload-specific. [Official reference](https://docs.kernel.org/admin-guide/sysctl/kernel.html).
+- **Warning panic policy** — `sysctl.kernel.panic_on_warn`
+  - Source/target: `kernel/panic_on_warn`; predicate: `observe`. Record whether warnings force a panic; enabled settings may reduce availability. [Official reference](https://docs.kernel.org/admin-guide/sysctl/kernel.html).
+- **NMI lockup watchdog** — `sysctl.kernel.nmi_watchdog`
+  - Source/target: `kernel/nmi_watchdog`; predicate: `observe`. Record lockup detection without enabling a watchdog or forcing a failure. [Official reference](https://docs.kernel.org/admin-guide/sysctl/kernel.html).
+- **Hung-task detection timeout** — `sysctl.kernel.hung_task_timeout_secs`
+  - Source/target: `kernel/hung_task_timeout_secs`; predicate: `observe`. Record blocked-task detection policy without reading task identities. [Official reference](https://docs.kernel.org/admin-guide/sysctl/kernel.html).
+- **Soft-lockup recovery** — `sysctl.kernel.softlockup_panic`
+  - Source/target: `kernel/softlockup_panic`; predicate: `observe`. Record panic behavior for scheduler lockups. [Official reference](https://docs.kernel.org/admin-guide/sysctl/kernel.html).
+- **Hard-lockup recovery** — `sysctl.kernel.hardlockup_panic`
+  - Source/target: `kernel/hardlockup_panic`; predicate: `observe`. Record panic behavior for hard lockups separately from soft lockups. [Official reference](https://docs.kernel.org/admin-guide/sysctl/kernel.html).
+- **io_uring exposure** — `sysctl.kernel.io_uring_disabled`
+  - Source/target: `kernel/io_uring_disabled`; predicate: `observe`. Review asynchronous-I/O attack surface; runtimes may depend on io_uring, and this scan does not disable it. [Official reference](https://docs.kernel.org/admin-guide/sysctl/kernel.html).
+- **Kernel entropy availability** — `sysctl.kernel.random.entropy_avail`
+  - Source/target: `kernel/random/entropy_avail`; predicate: `observe`. Record the entropy estimate; this alone does not establish random-number weakness. [Official reference](https://docs.kernel.org/admin-guide/sysctl/kernel.html).
+- **Per-user key-count limit** — `sysctl.kernel.keys.maxkeys`
+  - Source/target: `kernel/keys/maxkeys`; predicate: `observe`. Inspect keyring resource limits without enumerating keys or reading key material. [Official reference](https://docs.kernel.org/admin-guide/sysctl/kernel.html).
+- **Per-user key-byte limit** — `sysctl.kernel.keys.maxbytes`
+  - Source/target: `kernel/keys/maxbytes`; predicate: `observe`. Inspect keyring memory limits without reading keys. [Official reference](https://docs.kernel.org/admin-guide/sysctl/kernel.html).
+- **Per-user pipe hard limit** — `sysctl.fs.pipe_user_pages_hard`
+  - Source/target: `fs/pipe-user-pages-hard`; predicate: `observe`. Inspect denial-of-service resource bounds; zero may intentionally mean unlimited. [Official reference](https://docs.kernel.org/admin-guide/sysctl/fs.html).
+- **Per-user pipe soft limit** — `sysctl.fs.pipe_user_pages_soft`
+  - Source/target: `fs/pipe-user-pages-soft`; predicate: `observe`. Record the pipe allocation soft limit independently of the hard limit. [Official reference](https://docs.kernel.org/admin-guide/sysctl/fs.html).
+- **Maximum unprivileged pipe size** — `sysctl.fs.pipe_max_size`
+  - Source/target: `fs/pipe-max-size`; predicate: `observe`. Record per-pipe memory exposure without allocating pipes. [Official reference](https://docs.kernel.org/admin-guide/sysctl/fs.html).
+- **Asynchronous-I/O request capacity** — `sysctl.fs.aio_max_nr`
+  - Source/target: `fs/aio-max-nr`; predicate: `observe`. Record global AIO capacity without issuing I/O requests. [Official reference](https://docs.kernel.org/admin-guide/sysctl/fs.html).
+- **Per-process file-descriptor ceiling** — `sysctl.fs.nr_open`
+  - Source/target: `fs/nr_open`; predicate: `observe`. Record the kernel descriptor ceiling; actual process limits are separate. [Official reference](https://docs.kernel.org/admin-guide/sysctl/fs.html).
+- **Global file-handle ceiling** — `sysctl.fs.file_max`
+  - Source/target: `fs/file-max`; predicate: `observe`. Record global handle capacity separately from per-process limits. [Official reference](https://docs.kernel.org/admin-guide/sysctl/fs.html).
+- **Virtual-memory overcommit policy** — `sysctl.vm.overcommit_memory`
+  - Source/target: `vm/overcommit_memory`; predicate: `observe`. Record allocator policy; strict overcommit can break expected workloads. [Official reference](https://docs.kernel.org/admin-guide/sysctl/vm.html).
+- **Overcommit accounting ratio** — `sysctl.vm.overcommit_ratio`
+  - Source/target: `vm/overcommit_ratio`; predicate: `observe`. Record the ratio used by strict overcommit rather than labeling a universal safe value. [Official reference](https://docs.kernel.org/admin-guide/sysctl/vm.html).
+- **Swap preference** — `sysctl.vm.swappiness`
+  - Source/target: `vm/swappiness`; predicate: `observe`. Record reclaim behavior; appropriate settings depend on swap/zram and workload. [Official reference](https://docs.kernel.org/admin-guide/sysctl/vm.html).
+- **Dirty-page writeback ceiling** — `sysctl.vm.dirty_ratio`
+  - Source/target: `vm/dirty_ratio`; predicate: `observe`. Inspect dirty-memory limits relevant to stalls and writeback pressure. [Official reference](https://docs.kernel.org/admin-guide/sysctl/vm.html).
+- **Background dirty-page threshold** — `sysctl.vm.dirty_background_ratio`
+  - Source/target: `vm/dirty_background_ratio`; predicate: `observe`. Inspect background writeback separately from the hard dirty ratio. [Official reference](https://docs.kernel.org/admin-guide/sysctl/vm.html).
+- **Dirty-page expiration** — `sysctl.vm.dirty_expire_centisecs`
+  - Source/target: `vm/dirty_expire_centisecs`; predicate: `observe`. Record writeback age policy without claiming power-loss durability. [Official reference](https://docs.kernel.org/admin-guide/sysctl/vm.html).
+- **Periodic writeback cadence** — `sysctl.vm.dirty_writeback_centisecs`
+  - Source/target: `vm/dirty_writeback_centisecs`; predicate: `observe`. Record flusher cadence separately from page expiration. [Official reference](https://docs.kernel.org/admin-guide/sysctl/vm.html).
+- **Process mapping capacity** — `sysctl.vm.max_map_count`
+  - Source/target: `vm/max_map_count`; predicate: `observe`. Record mapping capacity relevant to large applications and games. [Official reference](https://docs.kernel.org/admin-guide/sysctl/vm.html).
+- **Filesystem metadata reclaim preference** — `sysctl.vm.vfs_cache_pressure`
+  - Source/target: `vm/vfs_cache_pressure`; predicate: `observe`. Record inode/dentry reclaim policy without recommending blanket tuning. [Official reference](https://docs.kernel.org/admin-guide/sysctl/vm.html).
+- **TCP timestamp policy** — `sysctl.net.ipv4.tcp_timestamps`
+  - Source/target: `net/ipv4/tcp_timestamps`; predicate: `observe`. Record timestamp behavior; performance and fingerprinting tradeoffs differ. [Official reference](https://docs.kernel.org/networking/ip-sysctl.html).
+- **TCP selective acknowledgments** — `sysctl.net.ipv4.tcp_sack`
+  - Source/target: `net/ipv4/tcp_sack`; predicate: `observe`. Record SACK support without applying obsolete blanket-disable advice. [Official reference](https://docs.kernel.org/networking/ip-sysctl.html).
+- **Authorization rule directory** — `metadata.etc.polkit_1.rules.d`
+  - Source/target: `/etc/polkit-1/rules.d`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **Packaged authorization rules** — `metadata.usr.share.polkit_1.rules.d`
+  - Source/target: `/usr/share/polkit-1/rules.d`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **Packaged system services** — `metadata.usr.lib.systemd.system`
+  - Source/target: `/usr/lib/systemd/system`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **Packaged user services** — `metadata.usr.lib.systemd.user`
+  - Source/target: `/usr/lib/systemd/user`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **Administrator user-service policy** — `metadata.etc.systemd.user`
+  - Source/target: `/etc/systemd/user`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **Module parameter overrides** — `metadata.etc.modprobe.d`
+  - Source/target: `/etc/modprobe.d`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **Boot module-load overrides** — `metadata.etc.modules_load.d`
+  - Source/target: `/etc/modules-load.d`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **Temporary-file policy overrides** — `metadata.etc.tmpfiles.d`
+  - Source/target: `/etc/tmpfiles.d`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **Network manager configuration metadata** — `metadata.etc.networkmanager`
+  - Source/target: `/etc/NetworkManager`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **Network profile directory metadata** — `metadata.etc.networkmanager.system_connections`
+  - Source/target: `/etc/NetworkManager/system-connections`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **System trust-store directory** — `metadata.etc.ssl.certs`
+  - Source/target: `/etc/ssl/certs`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **Certificate policy directory** — `metadata.etc.ca_certificates`
+  - Source/target: `/etc/ca-certificates`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **Login security policy directory** — `metadata.etc.security`
+  - Source/target: `/etc/security`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **Audit policy directory** — `metadata.etc.audit`
+  - Source/target: `/etc/audit`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **Firewall configuration metadata** — `metadata.etc.nftables.conf`
+  - Source/target: `/etc/nftables.conf`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **Legacy firewall policy directory** — `metadata.etc.iptables`
+  - Source/target: `/etc/iptables`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **Filesystem policy metadata** — `metadata.etc.fstab`
+  - Source/target: `/etc/fstab`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **Encrypted-volume policy metadata** — `metadata.etc.crypttab`
+  - Source/target: `/etc/crypttab`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **Bootloader defaults metadata** — `metadata.etc.default.grub`
+  - Source/target: `/etc/default/grub`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **Kernel-install policy directory** — `metadata.etc.kernel`
+  - Source/target: `/etc/kernel`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **Locally installed executable directory** — `metadata.usr.local.bin`
+  - Source/target: `/usr/local/bin`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **Locally installed library directory** — `metadata.usr.local.lib`
+  - Source/target: `/usr/local/lib`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **Local administrator executable directory** — `metadata.usr.local.sbin`
+  - Source/target: `/usr/local/sbin`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **Administrator executable entry directory** — `metadata.usr.sbin`
+  - Source/target: `/usr/sbin`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **Package database directory metadata** — `metadata.var.lib.pacman`
+  - Source/target: `/var/lib/pacman`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **Package cache parent metadata** — `metadata.var.cache.pacman`
+  - Source/target: `/var/cache/pacman`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **System log directory metadata** — `metadata.var.log`
+  - Source/target: `/var/log`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **Administrator home directory metadata** — `metadata.root`
+  - Source/target: `/root`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **System login profile metadata** — `metadata.etc.profile`
+  - Source/target: `/etc/profile`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **System login script directory metadata** — `metadata.etc.profile.d`
+  - Source/target: `/etc/profile.d`; predicate: `root_no_write`. Check root ownership and absence of group/world write access using metadata only; an intentional delegated directory needs local review. Symlink targets are evaluated, not file contents. [Official reference](https://man7.org/linux/man-pages/man2/stat.2.html).
+- **Security hook framework** — `kconfig.security`
+  - Source/target: `SECURITY`; predicate: `enabled`. Provide Linux security-module hooks. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/security/Kconfig).
+- **Security policy filesystem support** — `kconfig.securityfs`
+  - Source/target: `SECURITYFS`; predicate: `observe`. Expose security-module control interfaces when mounted. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/security/Kconfig).
+- **AppArmor support** — `kconfig.security_apparmor`
+  - Source/target: `SECURITY_APPARMOR`; predicate: `observe`. Provide path-based confinement support; loaded policy enforcement is separate. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/security/apparmor/Kconfig).
+- **SELinux support** — `kconfig.security_selinux`
+  - Source/target: `SECURITY_SELINUX`; predicate: `observe`. Provide label-based confinement support; loaded policy enforcement is separate. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/security/selinux/Kconfig).
+- **Smack support** — `kconfig.security_smack`
+  - Source/target: `SECURITY_SMACK`; predicate: `observe`. Provide Smack confinement where a deployment uses it. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/security/smack/Kconfig).
+- **TOMOYO support** — `kconfig.security_tomoyo`
+  - Source/target: `SECURITY_TOMOYO`; predicate: `observe`. Provide TOMOYO policy support where deployed. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/security/tomoyo/Kconfig).
+- **Kernel lockdown support** — `kconfig.security_lockdown_lsm`
+  - Source/target: `SECURITY_LOCKDOWN_LSM`; predicate: `observe`. Provide lockdown hooks; active lockdown is a runtime decision. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/security/lockdown/Kconfig).
+- **Forced integrity lockdown build policy** — `kconfig.lock_down_kernel_force_integrity`
+  - Source/target: `LOCK_DOWN_KERNEL_FORCE_INTEGRITY`; predicate: `observe`. Observe build-time integrity lockdown, distinct from merely compiling lockdown support. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/security/lockdown/Kconfig).
+- **Forced confidentiality lockdown build policy** — `kconfig.lock_down_kernel_force_confidentiality`
+  - Source/target: `LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY`; predicate: `observe`. Observe build-time confidentiality lockdown; debugging compatibility differs. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/security/lockdown/Kconfig).
+- **Kernel module signature verification support** — `kconfig.module_sig`
+  - Source/target: `MODULE_SIG`; predicate: `observe`. Provide cryptographic module signature checks. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/kernel/module/Kconfig).
+- **Mandatory module signature build policy** — `kconfig.module_sig_force`
+  - Source/target: `MODULE_SIG_FORCE`; predicate: `observe`. Require trusted module signatures by build policy; custom modules need signing. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/kernel/module/Kconfig).
+- **Build-time module signing** — `kconfig.module_sig_all`
+  - Source/target: `MODULE_SIG_ALL`; predicate: `observe`. Observe whether the build signs all installed modules; enforcement is separate. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/kernel/module/Kconfig).
+- **SHA-256 module signing** — `kconfig.module_sig_sha256`
+  - Source/target: `MODULE_SIG_SHA256`; predicate: `observe`. Observe the selected module signing hash option, not proof of trusted key provenance. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/kernel/module/Kconfig).
+- **Integrity measurement support** — `kconfig.ima`
+  - Source/target: `IMA`; predicate: `observe`. Provide integrity measurement support; runtime policy and attestation are separate. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/security/integrity/ima/Kconfig).
+- **Integrity appraisal support** — `kconfig.ima_appraise`
+  - Source/target: `IMA_APPRAISE`; predicate: `observe`. Provide file-integrity appraisal support; loaded appraisal policy is separate. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/security/integrity/ima/Kconfig).
+- **Extended verification support** — `kconfig.evm`
+  - Source/target: `EVM`; predicate: `observe`. Provide metadata-integrity verification support where keys and policy are configured. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/security/integrity/evm/Kconfig).
+- **Kernel integrity framework** — `kconfig.integrity`
+  - Source/target: `INTEGRITY`; predicate: `observe`. Provide the common integrity framework used by measurement/appraisal. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/security/integrity/Kconfig).
+- **Integrity signature support** — `kconfig.integrity_signature`
+  - Source/target: `INTEGRITY_SIGNATURE`; predicate: `observe`. Provide integrity-signature verification support. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/security/integrity/Kconfig).
+- **Asymmetric integrity keys** — `kconfig.integrity_asymmetric_keys`
+  - Source/target: `INTEGRITY_ASYMMETRIC_KEYS`; predicate: `observe`. Provide asymmetric verification keys for the integrity subsystem. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/security/integrity/Kconfig).
+- **Kernel audit support** — `kconfig.audit`
+  - Source/target: `AUDIT`; predicate: `observe`. Provide audit event generation; auditd state and rule coverage are separate. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/init/Kconfig).
+- **Syscall audit support** — `kconfig.auditsyscall`
+  - Source/target: `AUDITSYSCALL`; predicate: `observe`. Provide syscall auditing hooks. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/init/Kconfig).
+- **Full structure layout randomization** — `kconfig.randstruct_full`
+  - Source/target: `RANDSTRUCT_FULL`; predicate: `observe`. Observe full structure layout randomization; compiler and module compatibility matter. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/security/Kconfig.hardening).
+- **Selective structure layout randomization** — `kconfig.randstruct_performance`
+  - Source/target: `RANDSTRUCT_PERFORMANCE`; predicate: `observe`. Observe the alternative performance-oriented layout randomization mode. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/security/Kconfig.hardening).
+- **GCC structure randomization support** — `kconfig.gcc_plugin_randstruct`
+  - Source/target: `GCC_PLUGIN_RANDSTRUCT`; predicate: `observe`. Record compiler-plugin support where the kernel uses this option. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/security/Kconfig.hardening).
+- **Latent entropy instrumentation** — `kconfig.gcc_plugin_latent_entropy`
+  - Source/target: `GCC_PLUGIN_LATENT_ENTROPY`; predicate: `observe`. Record additional entropy instrumentation; this alone is not RNG validation. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/scripts/gcc-plugins/Kconfig).
+- **Zero-initialized stack variables** — `kconfig.init_stack_all_zero`
+  - Source/target: `INIT_STACK_ALL_ZERO`; predicate: `observe`. Observe compiler automatic-variable zero initialization. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/security/Kconfig.hardening).
+- **Pattern-initialized stack variables** — `kconfig.init_stack_all_pattern`
+  - Source/target: `INIT_STACK_ALL_PATTERN`; predicate: `observe`. Observe the alternative pattern initialization mode, not a required parallel mode. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/security/Kconfig.hardening).
+- **Kernel stack erasure** — `kconfig.kstack_erase`
+  - Source/target: `KSTACK_ERASE`; predicate: `observe`. Provide stack clearing on syscall return where runtime policy enables it. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/security/Kconfig.hardening).
+- **Random kernel-stack offset default** — `kconfig.randomize_kstack_offset_default`
+  - Source/target: `RANDOMIZE_KSTACK_OFFSET_DEFAULT`; predicate: `observe`. Observe the default stack-offset randomization policy; runtime overrides may differ. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/arch/Kconfig).
+- **Core scheduling support** — `kconfig.sched_core`
+  - Source/target: `SCHED_CORE`; predicate: `observe`. Provide same-core workload separation support; this does not prove active core cookies. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/kernel/Kconfig.preempt).
+- **Userspace shadow stack support** — `kconfig.x86_user_shadow_stack`
+  - Source/target: `X86_USER_SHADOW_STACK`; predicate: `observe`. Provide x86 userspace shadow-stack support; applications must enable it. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/arch/x86/Kconfig).
+- **Kernel indirect branch tracking** — `kconfig.x86_kernel_ibt`
+  - Source/target: `X86_KERNEL_IBT`; predicate: `observe`. Provide kernel control-flow landing-pad checks on supported x86 hardware. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/arch/x86/Kconfig).
+- **Clang control-flow integrity** — `kconfig.cfi_clang`
+  - Source/target: `CFI_CLANG`; predicate: `observe`. Observe compiler control-flow checks where supported. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/arch/Kconfig).
+- **Permissive control-flow checks** — `kconfig.cfi_permissive`
+  - Source/target: `CFI_PERMISSIVE`; predicate: `observe`. Record permissive CFI mode, which can report rather than halt violations. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/arch/Kconfig).
+- **Shadow call stack support** — `kconfig.shadow_call_stack`
+  - Source/target: `SHADOW_CALL_STACK`; predicate: `observe`. Provide a protected return-address stack on supported architectures. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/arch/Kconfig).
+- **ARM64 pointer authentication** — `kconfig.arm64_ptr_auth`
+  - Source/target: `ARM64_PTR_AUTH`; predicate: `observe`. Provide pointer authentication support on applicable hardware. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/arch/arm64/Kconfig).
+- **ARM64 kernel branch target identification** — `kconfig.arm64_bti_kernel`
+  - Source/target: `ARM64_BTI_KERNEL`; predicate: `observe`. Provide ARM64 kernel indirect-branch landing-pad checks. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/arch/arm64/Kconfig).
+- **ARM64 memory tagging support** — `kconfig.arm64_mte`
+  - Source/target: `ARM64_MTE`; predicate: `observe`. Provide hardware memory tagging support; applications/runtime policy determine use. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/arch/arm64/Kconfig).
+- **ARM64 software PAN fallback** — `kconfig.arm64_sw_ttbr0_pan`
+  - Source/target: `ARM64_SW_TTBR0_PAN`; predicate: `observe`. Provide software PAN where selected for supported ARM64 configurations. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/arch/arm64/Kconfig).
+- **Page-table isolation mitigation option** — `kconfig.mitigation_page_table_isolation`
+  - Source/target: `MITIGATION_PAGE_TABLE_ISOLATION`; predicate: `observe`. Observe newer-kernel page-table isolation support where this symbol exists. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/arch/x86/Kconfig).
+- **Retpoline mitigation option** — `kconfig.mitigation_retpoline`
+  - Source/target: `MITIGATION_RETPOLINE`; predicate: `observe`. Observe newer-kernel retpoline support where this symbol exists. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/arch/x86/Kconfig).
+- **Return thunk mitigation option** — `kconfig.mitigation_rethunk`
+  - Source/target: `MITIGATION_RETHUNK`; predicate: `observe`. Provide return-thunk mitigation support where supported. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/arch/x86/Kconfig).
+- **Entry return predictor mitigation** — `kconfig.mitigation_unret_entry`
+  - Source/target: `MITIGATION_UNRET_ENTRY`; predicate: `observe`. Provide entry-time return predictor untraining support. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/arch/x86/Kconfig).
+- **Call-depth tracking mitigation** — `kconfig.mitigation_call_depth_tracking`
+  - Source/target: `MITIGATION_CALL_DEPTH_TRACKING`; predicate: `observe`. Provide call-depth-based return prediction mitigation support. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/arch/x86/Kconfig).
+- **Entry indirect branch predictor barrier** — `kconfig.mitigation_ibpb_entry`
+  - Source/target: `MITIGATION_IBPB_ENTRY`; predicate: `observe`. Provide predictor barrier mitigation support on applicable processors. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/arch/x86/Kconfig).
+- **Speculative return stack overflow mitigation** — `kconfig.mitigation_srso`
+  - Source/target: `MITIGATION_SRSO`; predicate: `observe`. Provide SRSO mitigation support where applicable. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/arch/x86/Kconfig).
+- **Branch history injection mitigation** — `kconfig.mitigation_spectre_bhi`
+  - Source/target: `MITIGATION_SPECTRE_BHI`; predicate: `observe`. Provide BHI mitigation support where applicable. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/arch/x86/Kconfig).
+- **Register file data sampling mitigation** — `kconfig.mitigation_rfds`
+  - Source/target: `MITIGATION_RFDS`; predicate: `observe`. Provide RFDS mitigation support where applicable. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/arch/x86/Kconfig).
+- **Microarchitectural data sampling mitigation** — `kconfig.mitigation_mds`
+  - Source/target: `MITIGATION_MDS`; predicate: `observe`. Provide MDS mitigation support where applicable. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/arch/x86/Kconfig).
+- **TSX asynchronous abort mitigation** — `kconfig.mitigation_taa`
+  - Source/target: `MITIGATION_TAA`; predicate: `observe`. Provide TAA mitigation support where applicable. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/arch/x86/Kconfig).
+- **MMIO stale data mitigation** — `kconfig.mitigation_mmio_stale_data`
+  - Source/target: `MITIGATION_MMIO_STALE_DATA`; predicate: `observe`. Provide MMIO stale-data mitigation support where applicable. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/arch/x86/Kconfig).
+- **L1 terminal fault mitigation** — `kconfig.mitigation_l1tf`
+  - Source/target: `MITIGATION_L1TF`; predicate: `observe`. Provide L1TF mitigation support where applicable. Build evidence is not runtime enforcement. [Official reference](https://github.com/torvalds/linux/blob/master/arch/x86/Kconfig).
+- **Speculative store bypass runtime mitigation** — `cpu_mitigation.spec_store_bypass`
+  - Source/target: `spec_store_bypass`; predicate: `mitigation`. Inspect the running kernel mitigation report for this CPU vulnerability class; mitigation does not certify exploit resistance or cover every CPU vulnerability. [Official reference](https://docs.kernel.org/admin-guide/hw-vuln/index.html).
+- **L1 terminal fault runtime mitigation** — `cpu_mitigation.l1tf`
+  - Source/target: `l1tf`; predicate: `mitigation`. Inspect the running kernel mitigation report for this CPU vulnerability class; mitigation does not certify exploit resistance or cover every CPU vulnerability. [Official reference](https://docs.kernel.org/admin-guide/hw-vuln/index.html).
+- **Microarchitectural data sampling runtime mitigation** — `cpu_mitigation.mds`
+  - Source/target: `mds`; predicate: `mitigation`. Inspect the running kernel mitigation report for this CPU vulnerability class; mitigation does not certify exploit resistance or cover every CPU vulnerability. [Official reference](https://docs.kernel.org/admin-guide/hw-vuln/index.html).
+- **TSX asynchronous abort runtime mitigation** — `cpu_mitigation.tsx_async_abort`
+  - Source/target: `tsx_async_abort`; predicate: `mitigation`. Inspect the running kernel mitigation report for this CPU vulnerability class; mitigation does not certify exploit resistance or cover every CPU vulnerability. [Official reference](https://docs.kernel.org/admin-guide/hw-vuln/index.html).
+- **Instruction TLB multihit runtime mitigation** — `cpu_mitigation.itlb_multihit`
+  - Source/target: `itlb_multihit`; predicate: `mitigation`. Inspect the running kernel mitigation report for this CPU vulnerability class; mitigation does not certify exploit resistance or cover every CPU vulnerability. [Official reference](https://docs.kernel.org/admin-guide/hw-vuln/index.html).
+- **Special register buffer data sampling runtime mitigation** — `cpu_mitigation.srbds`
+  - Source/target: `srbds`; predicate: `mitigation`. Inspect the running kernel mitigation report for this CPU vulnerability class; mitigation does not certify exploit resistance or cover every CPU vulnerability. [Official reference](https://docs.kernel.org/admin-guide/hw-vuln/index.html).
+- **MMIO stale data runtime mitigation** — `cpu_mitigation.mmio_stale_data`
+  - Source/target: `mmio_stale_data`; predicate: `mitigation`. Inspect the running kernel mitigation report for this CPU vulnerability class; mitigation does not certify exploit resistance or cover every CPU vulnerability. [Official reference](https://docs.kernel.org/admin-guide/hw-vuln/index.html).
+- **Retbleed runtime mitigation** — `cpu_mitigation.retbleed`
+  - Source/target: `retbleed`; predicate: `mitigation`. Inspect the running kernel mitigation report for this CPU vulnerability class; mitigation does not certify exploit resistance or cover every CPU vulnerability. [Official reference](https://docs.kernel.org/admin-guide/hw-vuln/index.html).
+- **sshd.service: Module control barrier** — `service.sshd.service.protectkernelmodules`
+  - Source/target: `sshd.service/ProtectKernelModules`; predicate: `bool`. Restrict kernel-module loading and unloading from the service. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **sshd.service: Kernel log isolation** — `service.sshd.service.protectkernellogs`
+  - Source/target: `sshd.service/ProtectKernelLogs`; predicate: `bool`. Restrict access to kernel logs from a compromised service. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **sshd.service: Control-group write barrier** — `service.sshd.service.protectcontrolgroups`
+  - Source/target: `sshd.service/ProtectControlGroups`; predicate: `bool`. Restrict service changes to cgroup policy. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **sshd.service: Clock modification barrier** — `service.sshd.service.protectclock`
+  - Source/target: `sshd.service/ProtectClock`; predicate: `bool`. Restrict time-setting interfaces and clock device access. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **sshd.service: Hostname modification barrier** — `service.sshd.service.protecthostname`
+  - Source/target: `sshd.service/ProtectHostname`; predicate: `bool`. Restrict changes to hostname/domain-name identity. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **sshd.service: Set-ID creation restriction** — `service.sshd.service.restrictsuidsgid`
+  - Source/target: `sshd.service/RestrictSUIDSGID`; predicate: `bool`. Prevent creation of setuid/setgid files by this service. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **sshd.service: Real-time scheduling restriction** — `service.sshd.service.restrictrealtime`
+  - Source/target: `sshd.service/RestrictRealtime`; predicate: `bool`. Reduce scheduler denial-of-service capability. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **sshd.service: Namespace creation restriction** — `service.sshd.service.restrictnamespaces`
+  - Source/target: `sshd.service/RestrictNamespaces`; predicate: `namespaces`. Reduce unnecessary namespace creation/entry; sandboxing services may need exceptions. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **sshd.service: Execution personality lock** — `service.sshd.service.lockpersonality`
+  - Source/target: `sshd.service/LockPersonality`; predicate: `bool`. Restrict alternate execution personality changes. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **sshd.service: Writable/executable mapping restriction** — `service.sshd.service.memorydenywriteexecute`
+  - Source/target: `sshd.service/MemoryDenyWriteExecute`; predicate: `bool`. Limit simultaneous writable and executable mappings; JIT workloads may need exceptions. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **sshd.service: IPC lifecycle cleanup** — `service.sshd.service.removeipc`
+  - Source/target: `sshd.service/RemoveIPC`; predicate: `observe`. Observe IPC cleanup on service-user exit; shared IPC can need exceptions. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **sshd.service: Network namespace isolation** — `service.sshd.service.privatenetwork`
+  - Source/target: `sshd.service/PrivateNetwork`; predicate: `observe`. Separate service networking; network-facing services naturally require access or explicit sockets. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **sshd.service: User namespace isolation** — `service.sshd.service.privateusers`
+  - Source/target: `sshd.service/PrivateUsers`; predicate: `bool`. Limit host user identity exposure; kernel support and service roles differ. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **sshd.service: Other-process visibility restriction** — `service.sshd.service.protectproc`
+  - Source/target: `sshd.service/ProtectProc`; predicate: `protectproc`. Limit access to process metadata belonging to other users. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **sshd.service: Process-only procfs view** — `service.sshd.service.procsubset`
+  - Source/target: `sshd.service/ProcSubset`; predicate: `procsubset`. Hide non-process procfs interfaces from the service where appropriate. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **sshd.service: Created-file permission mask** — `service.sshd.service.umask`
+  - Source/target: `sshd.service/UMask`; predicate: `umask`. Check whether newly created files default to excluding access by other users. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **sshd.service: Unprivileged service identity** — `service.sshd.service.user`
+  - Source/target: `sshd.service/User`; predicate: `observe`. Reduce ambient root authority; root management and login services can need privileges. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **sshd.service: Ephemeral service identity** — `service.sshd.service.dynamicuser`
+  - Source/target: `sshd.service/DynamicUser`; predicate: `observe`. Observe dynamic identity allocation; static dedicated accounts are a valid alternative. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **sshd.service: Capability ceiling** — `service.sshd.service.capabilityboundingset`
+  - Source/target: `sshd.service/CapabilityBoundingSet`; predicate: `caps`. Observe whether the service has a narrower capability ceiling than all kernel capabilities. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **sshd.service: Ambient privilege propagation** — `service.sshd.service.ambientcapabilities`
+  - Source/target: `sshd.service/AmbientCapabilities`; predicate: `ambient`. Review nonempty ambient capabilities inherited by executed programs. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **sshd.service: Socket-family restriction** — `service.sshd.service.restrictaddressfamilies`
+  - Source/target: `sshd.service/RestrictAddressFamilies`; predicate: `families`. Observe allowlisting of address families; broad networking requirements can be intentional. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **sshd.service: Syscall filtering policy** — `service.sshd.service.systemcallfilter`
+  - Source/target: `sshd.service/SystemCallFilter`; predicate: `filter`. Observe nonempty syscall filter policy; presence alone does not measure filter completeness. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **sshd.service: Syscall ABI restriction** — `service.sshd.service.systemcallarchitectures`
+  - Source/target: `sshd.service/SystemCallArchitectures`; predicate: `arch`. Observe an allowed architecture list; compatibility executables may require multiple ABIs. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **sshd.service: Service keyring isolation** — `service.sshd.service.keyringmode`
+  - Source/target: `sshd.service/KeyringMode`; predicate: `keyring`. Observe private service keyring policy without reading any keys. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **sshd.service: Filesystem type restriction** — `service.sshd.service.restrictfilesystems`
+  - Source/target: `sshd.service/RestrictFileSystems`; predicate: `filesystems`. Observe filesystem type restriction support/policy; ordinary filesystems still need access. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **cups.service: Module control barrier** — `service.cups.service.protectkernelmodules`
+  - Source/target: `cups.service/ProtectKernelModules`; predicate: `bool`. Restrict kernel-module loading and unloading from the service. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **cups.service: Kernel log isolation** — `service.cups.service.protectkernellogs`
+  - Source/target: `cups.service/ProtectKernelLogs`; predicate: `bool`. Restrict access to kernel logs from a compromised service. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **cups.service: Control-group write barrier** — `service.cups.service.protectcontrolgroups`
+  - Source/target: `cups.service/ProtectControlGroups`; predicate: `bool`. Restrict service changes to cgroup policy. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **cups.service: Clock modification barrier** — `service.cups.service.protectclock`
+  - Source/target: `cups.service/ProtectClock`; predicate: `bool`. Restrict time-setting interfaces and clock device access. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **cups.service: Hostname modification barrier** — `service.cups.service.protecthostname`
+  - Source/target: `cups.service/ProtectHostname`; predicate: `bool`. Restrict changes to hostname/domain-name identity. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **cups.service: Set-ID creation restriction** — `service.cups.service.restrictsuidsgid`
+  - Source/target: `cups.service/RestrictSUIDSGID`; predicate: `bool`. Prevent creation of setuid/setgid files by this service. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **cups.service: Real-time scheduling restriction** — `service.cups.service.restrictrealtime`
+  - Source/target: `cups.service/RestrictRealtime`; predicate: `bool`. Reduce scheduler denial-of-service capability. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **cups.service: Namespace creation restriction** — `service.cups.service.restrictnamespaces`
+  - Source/target: `cups.service/RestrictNamespaces`; predicate: `namespaces`. Reduce unnecessary namespace creation/entry; sandboxing services may need exceptions. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **cups.service: Execution personality lock** — `service.cups.service.lockpersonality`
+  - Source/target: `cups.service/LockPersonality`; predicate: `bool`. Restrict alternate execution personality changes. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **cups.service: Writable/executable mapping restriction** — `service.cups.service.memorydenywriteexecute`
+  - Source/target: `cups.service/MemoryDenyWriteExecute`; predicate: `bool`. Limit simultaneous writable and executable mappings; JIT workloads may need exceptions. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **cups.service: IPC lifecycle cleanup** — `service.cups.service.removeipc`
+  - Source/target: `cups.service/RemoveIPC`; predicate: `observe`. Observe IPC cleanup on service-user exit; shared IPC can need exceptions. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **cups.service: Network namespace isolation** — `service.cups.service.privatenetwork`
+  - Source/target: `cups.service/PrivateNetwork`; predicate: `observe`. Separate service networking; network-facing services naturally require access or explicit sockets. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **cups.service: User namespace isolation** — `service.cups.service.privateusers`
+  - Source/target: `cups.service/PrivateUsers`; predicate: `bool`. Limit host user identity exposure; kernel support and service roles differ. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **cups.service: Other-process visibility restriction** — `service.cups.service.protectproc`
+  - Source/target: `cups.service/ProtectProc`; predicate: `protectproc`. Limit access to process metadata belonging to other users. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **cups.service: Process-only procfs view** — `service.cups.service.procsubset`
+  - Source/target: `cups.service/ProcSubset`; predicate: `procsubset`. Hide non-process procfs interfaces from the service where appropriate. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **cups.service: Created-file permission mask** — `service.cups.service.umask`
+  - Source/target: `cups.service/UMask`; predicate: `umask`. Check whether newly created files default to excluding access by other users. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **cups.service: Unprivileged service identity** — `service.cups.service.user`
+  - Source/target: `cups.service/User`; predicate: `observe`. Reduce ambient root authority; root management and login services can need privileges. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **cups.service: Ephemeral service identity** — `service.cups.service.dynamicuser`
+  - Source/target: `cups.service/DynamicUser`; predicate: `observe`. Observe dynamic identity allocation; static dedicated accounts are a valid alternative. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **cups.service: Capability ceiling** — `service.cups.service.capabilityboundingset`
+  - Source/target: `cups.service/CapabilityBoundingSet`; predicate: `caps`. Observe whether the service has a narrower capability ceiling than all kernel capabilities. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **cups.service: Ambient privilege propagation** — `service.cups.service.ambientcapabilities`
+  - Source/target: `cups.service/AmbientCapabilities`; predicate: `ambient`. Review nonempty ambient capabilities inherited by executed programs. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **cups.service: Socket-family restriction** — `service.cups.service.restrictaddressfamilies`
+  - Source/target: `cups.service/RestrictAddressFamilies`; predicate: `families`. Observe allowlisting of address families; broad networking requirements can be intentional. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **cups.service: Syscall filtering policy** — `service.cups.service.systemcallfilter`
+  - Source/target: `cups.service/SystemCallFilter`; predicate: `filter`. Observe nonempty syscall filter policy; presence alone does not measure filter completeness. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **cups.service: Syscall ABI restriction** — `service.cups.service.systemcallarchitectures`
+  - Source/target: `cups.service/SystemCallArchitectures`; predicate: `arch`. Observe an allowed architecture list; compatibility executables may require multiple ABIs. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **cups.service: Service keyring isolation** — `service.cups.service.keyringmode`
+  - Source/target: `cups.service/KeyringMode`; predicate: `keyring`. Observe private service keyring policy without reading any keys. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **cups.service: Filesystem type restriction** — `service.cups.service.restrictfilesystems`
+  - Source/target: `cups.service/RestrictFileSystems`; predicate: `filesystems`. Observe filesystem type restriction support/policy; ordinary filesystems still need access. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **avahi-daemon.service: Module control barrier** — `service.avahi_daemon.service.protectkernelmodules`
+  - Source/target: `avahi-daemon.service/ProtectKernelModules`; predicate: `bool`. Restrict kernel-module loading and unloading from the service. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **avahi-daemon.service: Kernel log isolation** — `service.avahi_daemon.service.protectkernellogs`
+  - Source/target: `avahi-daemon.service/ProtectKernelLogs`; predicate: `bool`. Restrict access to kernel logs from a compromised service. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **avahi-daemon.service: Control-group write barrier** — `service.avahi_daemon.service.protectcontrolgroups`
+  - Source/target: `avahi-daemon.service/ProtectControlGroups`; predicate: `bool`. Restrict service changes to cgroup policy. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **avahi-daemon.service: Clock modification barrier** — `service.avahi_daemon.service.protectclock`
+  - Source/target: `avahi-daemon.service/ProtectClock`; predicate: `bool`. Restrict time-setting interfaces and clock device access. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **avahi-daemon.service: Hostname modification barrier** — `service.avahi_daemon.service.protecthostname`
+  - Source/target: `avahi-daemon.service/ProtectHostname`; predicate: `bool`. Restrict changes to hostname/domain-name identity. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **avahi-daemon.service: Set-ID creation restriction** — `service.avahi_daemon.service.restrictsuidsgid`
+  - Source/target: `avahi-daemon.service/RestrictSUIDSGID`; predicate: `bool`. Prevent creation of setuid/setgid files by this service. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **avahi-daemon.service: Real-time scheduling restriction** — `service.avahi_daemon.service.restrictrealtime`
+  - Source/target: `avahi-daemon.service/RestrictRealtime`; predicate: `bool`. Reduce scheduler denial-of-service capability. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **avahi-daemon.service: Namespace creation restriction** — `service.avahi_daemon.service.restrictnamespaces`
+  - Source/target: `avahi-daemon.service/RestrictNamespaces`; predicate: `namespaces`. Reduce unnecessary namespace creation/entry; sandboxing services may need exceptions. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **avahi-daemon.service: Execution personality lock** — `service.avahi_daemon.service.lockpersonality`
+  - Source/target: `avahi-daemon.service/LockPersonality`; predicate: `bool`. Restrict alternate execution personality changes. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **avahi-daemon.service: Writable/executable mapping restriction** — `service.avahi_daemon.service.memorydenywriteexecute`
+  - Source/target: `avahi-daemon.service/MemoryDenyWriteExecute`; predicate: `bool`. Limit simultaneous writable and executable mappings; JIT workloads may need exceptions. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **avahi-daemon.service: IPC lifecycle cleanup** — `service.avahi_daemon.service.removeipc`
+  - Source/target: `avahi-daemon.service/RemoveIPC`; predicate: `observe`. Observe IPC cleanup on service-user exit; shared IPC can need exceptions. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **avahi-daemon.service: Network namespace isolation** — `service.avahi_daemon.service.privatenetwork`
+  - Source/target: `avahi-daemon.service/PrivateNetwork`; predicate: `observe`. Separate service networking; network-facing services naturally require access or explicit sockets. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **avahi-daemon.service: User namespace isolation** — `service.avahi_daemon.service.privateusers`
+  - Source/target: `avahi-daemon.service/PrivateUsers`; predicate: `bool`. Limit host user identity exposure; kernel support and service roles differ. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **avahi-daemon.service: Other-process visibility restriction** — `service.avahi_daemon.service.protectproc`
+  - Source/target: `avahi-daemon.service/ProtectProc`; predicate: `protectproc`. Limit access to process metadata belonging to other users. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **avahi-daemon.service: Process-only procfs view** — `service.avahi_daemon.service.procsubset`
+  - Source/target: `avahi-daemon.service/ProcSubset`; predicate: `procsubset`. Hide non-process procfs interfaces from the service where appropriate. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **avahi-daemon.service: Created-file permission mask** — `service.avahi_daemon.service.umask`
+  - Source/target: `avahi-daemon.service/UMask`; predicate: `umask`. Check whether newly created files default to excluding access by other users. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **avahi-daemon.service: Unprivileged service identity** — `service.avahi_daemon.service.user`
+  - Source/target: `avahi-daemon.service/User`; predicate: `observe`. Reduce ambient root authority; root management and login services can need privileges. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **avahi-daemon.service: Ephemeral service identity** — `service.avahi_daemon.service.dynamicuser`
+  - Source/target: `avahi-daemon.service/DynamicUser`; predicate: `observe`. Observe dynamic identity allocation; static dedicated accounts are a valid alternative. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **avahi-daemon.service: Capability ceiling** — `service.avahi_daemon.service.capabilityboundingset`
+  - Source/target: `avahi-daemon.service/CapabilityBoundingSet`; predicate: `caps`. Observe whether the service has a narrower capability ceiling than all kernel capabilities. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **avahi-daemon.service: Ambient privilege propagation** — `service.avahi_daemon.service.ambientcapabilities`
+  - Source/target: `avahi-daemon.service/AmbientCapabilities`; predicate: `ambient`. Review nonempty ambient capabilities inherited by executed programs. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **avahi-daemon.service: Socket-family restriction** — `service.avahi_daemon.service.restrictaddressfamilies`
+  - Source/target: `avahi-daemon.service/RestrictAddressFamilies`; predicate: `families`. Observe allowlisting of address families; broad networking requirements can be intentional. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **avahi-daemon.service: Syscall filtering policy** — `service.avahi_daemon.service.systemcallfilter`
+  - Source/target: `avahi-daemon.service/SystemCallFilter`; predicate: `filter`. Observe nonempty syscall filter policy; presence alone does not measure filter completeness. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **avahi-daemon.service: Syscall ABI restriction** — `service.avahi_daemon.service.systemcallarchitectures`
+  - Source/target: `avahi-daemon.service/SystemCallArchitectures`; predicate: `arch`. Observe an allowed architecture list; compatibility executables may require multiple ABIs. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **avahi-daemon.service: Service keyring isolation** — `service.avahi_daemon.service.keyringmode`
+  - Source/target: `avahi-daemon.service/KeyringMode`; predicate: `keyring`. Observe private service keyring policy without reading any keys. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **avahi-daemon.service: Filesystem type restriction** — `service.avahi_daemon.service.restrictfilesystems`
+  - Source/target: `avahi-daemon.service/RestrictFileSystems`; predicate: `filesystems`. Observe filesystem type restriction support/policy; ordinary filesystems still need access. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **ironclad-antimalware-engine.service: Module control barrier** — `service.ironclad_antimalware_engine.service.protectkernelmodules`
+  - Source/target: `ironclad-antimalware-engine.service/ProtectKernelModules`; predicate: `bool`. Restrict kernel-module loading and unloading from the service. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **ironclad-antimalware-engine.service: Kernel log isolation** — `service.ironclad_antimalware_engine.service.protectkernellogs`
+  - Source/target: `ironclad-antimalware-engine.service/ProtectKernelLogs`; predicate: `bool`. Restrict access to kernel logs from a compromised service. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **ironclad-antimalware-engine.service: Control-group write barrier** — `service.ironclad_antimalware_engine.service.protectcontrolgroups`
+  - Source/target: `ironclad-antimalware-engine.service/ProtectControlGroups`; predicate: `bool`. Restrict service changes to cgroup policy. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **ironclad-antimalware-engine.service: Clock modification barrier** — `service.ironclad_antimalware_engine.service.protectclock`
+  - Source/target: `ironclad-antimalware-engine.service/ProtectClock`; predicate: `bool`. Restrict time-setting interfaces and clock device access. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **ironclad-antimalware-engine.service: Hostname modification barrier** — `service.ironclad_antimalware_engine.service.protecthostname`
+  - Source/target: `ironclad-antimalware-engine.service/ProtectHostname`; predicate: `bool`. Restrict changes to hostname/domain-name identity. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **ironclad-antimalware-engine.service: Set-ID creation restriction** — `service.ironclad_antimalware_engine.service.restrictsuidsgid`
+  - Source/target: `ironclad-antimalware-engine.service/RestrictSUIDSGID`; predicate: `bool`. Prevent creation of setuid/setgid files by this service. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **ironclad-antimalware-engine.service: Real-time scheduling restriction** — `service.ironclad_antimalware_engine.service.restrictrealtime`
+  - Source/target: `ironclad-antimalware-engine.service/RestrictRealtime`; predicate: `bool`. Reduce scheduler denial-of-service capability. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **ironclad-antimalware-engine.service: Namespace creation restriction** — `service.ironclad_antimalware_engine.service.restrictnamespaces`
+  - Source/target: `ironclad-antimalware-engine.service/RestrictNamespaces`; predicate: `namespaces`. Reduce unnecessary namespace creation/entry; sandboxing services may need exceptions. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **ironclad-antimalware-engine.service: Execution personality lock** — `service.ironclad_antimalware_engine.service.lockpersonality`
+  - Source/target: `ironclad-antimalware-engine.service/LockPersonality`; predicate: `bool`. Restrict alternate execution personality changes. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **ironclad-antimalware-engine.service: Writable/executable mapping restriction** — `service.ironclad_antimalware_engine.service.memorydenywriteexecute`
+  - Source/target: `ironclad-antimalware-engine.service/MemoryDenyWriteExecute`; predicate: `bool`. Limit simultaneous writable and executable mappings; JIT workloads may need exceptions. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **ironclad-antimalware-engine.service: IPC lifecycle cleanup** — `service.ironclad_antimalware_engine.service.removeipc`
+  - Source/target: `ironclad-antimalware-engine.service/RemoveIPC`; predicate: `observe`. Observe IPC cleanup on service-user exit; shared IPC can need exceptions. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **ironclad-antimalware-engine.service: Network namespace isolation** — `service.ironclad_antimalware_engine.service.privatenetwork`
+  - Source/target: `ironclad-antimalware-engine.service/PrivateNetwork`; predicate: `observe`. Separate service networking; network-facing services naturally require access or explicit sockets. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **ironclad-antimalware-engine.service: User namespace isolation** — `service.ironclad_antimalware_engine.service.privateusers`
+  - Source/target: `ironclad-antimalware-engine.service/PrivateUsers`; predicate: `bool`. Limit host user identity exposure; kernel support and service roles differ. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **ironclad-antimalware-engine.service: Other-process visibility restriction** — `service.ironclad_antimalware_engine.service.protectproc`
+  - Source/target: `ironclad-antimalware-engine.service/ProtectProc`; predicate: `protectproc`. Limit access to process metadata belonging to other users. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **ironclad-antimalware-engine.service: Process-only procfs view** — `service.ironclad_antimalware_engine.service.procsubset`
+  - Source/target: `ironclad-antimalware-engine.service/ProcSubset`; predicate: `procsubset`. Hide non-process procfs interfaces from the service where appropriate. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **ironclad-antimalware-engine.service: Created-file permission mask** — `service.ironclad_antimalware_engine.service.umask`
+  - Source/target: `ironclad-antimalware-engine.service/UMask`; predicate: `umask`. Check whether newly created files default to excluding access by other users. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **ironclad-antimalware-engine.service: Unprivileged service identity** — `service.ironclad_antimalware_engine.service.user`
+  - Source/target: `ironclad-antimalware-engine.service/User`; predicate: `observe`. Reduce ambient root authority; root management and login services can need privileges. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **ironclad-antimalware-engine.service: Ephemeral service identity** — `service.ironclad_antimalware_engine.service.dynamicuser`
+  - Source/target: `ironclad-antimalware-engine.service/DynamicUser`; predicate: `observe`. Observe dynamic identity allocation; static dedicated accounts are a valid alternative. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **ironclad-antimalware-engine.service: Capability ceiling** — `service.ironclad_antimalware_engine.service.capabilityboundingset`
+  - Source/target: `ironclad-antimalware-engine.service/CapabilityBoundingSet`; predicate: `caps`. Observe whether the service has a narrower capability ceiling than all kernel capabilities. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **ironclad-antimalware-engine.service: Ambient privilege propagation** — `service.ironclad_antimalware_engine.service.ambientcapabilities`
+  - Source/target: `ironclad-antimalware-engine.service/AmbientCapabilities`; predicate: `ambient`. Review nonempty ambient capabilities inherited by executed programs. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **ironclad-antimalware-engine.service: Socket-family restriction** — `service.ironclad_antimalware_engine.service.restrictaddressfamilies`
+  - Source/target: `ironclad-antimalware-engine.service/RestrictAddressFamilies`; predicate: `families`. Observe allowlisting of address families; broad networking requirements can be intentional. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **ironclad-antimalware-engine.service: Syscall filtering policy** — `service.ironclad_antimalware_engine.service.systemcallfilter`
+  - Source/target: `ironclad-antimalware-engine.service/SystemCallFilter`; predicate: `filter`. Observe nonempty syscall filter policy; presence alone does not measure filter completeness. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **ironclad-antimalware-engine.service: Syscall ABI restriction** — `service.ironclad_antimalware_engine.service.systemcallarchitectures`
+  - Source/target: `ironclad-antimalware-engine.service/SystemCallArchitectures`; predicate: `arch`. Observe an allowed architecture list; compatibility executables may require multiple ABIs. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **ironclad-antimalware-engine.service: Service keyring isolation** — `service.ironclad_antimalware_engine.service.keyringmode`
+  - Source/target: `ironclad-antimalware-engine.service/KeyringMode`; predicate: `keyring`. Observe private service keyring policy without reading any keys. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **ironclad-antimalware-engine.service: Filesystem type restriction** — `service.ironclad_antimalware_engine.service.restrictfilesystems`
+  - Source/target: `ironclad-antimalware-engine.service/RestrictFileSystems`; predicate: `filesystems`. Observe filesystem type restriction support/policy; ordinary filesystems still need access. Read-only configured policy; application needs and runtime exceptions require review. [Official reference](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+- **FTP TCP port 21 exposure** — `listener.tcp.21`
+  - Source/target: `tcp/21`; predicate: `nonloopback`. Check non-loopback listening scope; a port number does not identify the application or prove external reachability. Review intended service and firewall policy. [Official reference](https://www.kernel.org/doc/html/latest/networking/index.html).
+- **SSH TCP port 22 exposure** — `listener.tcp.22`
+  - Source/target: `tcp/22`; predicate: `nonloopback`. Check non-loopback listening scope; a port number does not identify the application or prove external reachability. Review intended service and firewall policy. [Official reference](https://www.kernel.org/doc/html/latest/networking/index.html).
+- **Telnet TCP port 23 exposure** — `listener.tcp.23`
+  - Source/target: `tcp/23`; predicate: `nonloopback`. Check non-loopback listening scope; a port number does not identify the application or prove external reachability. Review intended service and firewall policy. [Official reference](https://www.kernel.org/doc/html/latest/networking/index.html).
+- **SMTP TCP port 25 exposure** — `listener.tcp.25`
+  - Source/target: `tcp/25`; predicate: `nonloopback`. Check non-loopback listening scope; a port number does not identify the application or prove external reachability. Review intended service and firewall policy. [Official reference](https://www.kernel.org/doc/html/latest/networking/index.html).
+- **DNS TCP port 53 exposure** — `listener.tcp.53`
+  - Source/target: `tcp/53`; predicate: `nonloopback`. Check non-loopback listening scope; a port number does not identify the application or prove external reachability. Review intended service and firewall policy. [Official reference](https://www.kernel.org/doc/html/latest/networking/index.html).
+- **RPC TCP port 111 exposure** — `listener.tcp.111`
+  - Source/target: `tcp/111`; predicate: `nonloopback`. Check non-loopback listening scope; a port number does not identify the application or prove external reachability. Review intended service and firewall policy. [Official reference](https://www.kernel.org/doc/html/latest/networking/index.html).
+- **NetBIOS session TCP port 139 exposure** — `listener.tcp.139`
+  - Source/target: `tcp/139`; predicate: `nonloopback`. Check non-loopback listening scope; a port number does not identify the application or prove external reachability. Review intended service and firewall policy. [Official reference](https://www.kernel.org/doc/html/latest/networking/index.html).
+- **SMB TCP port 445 exposure** — `listener.tcp.445`
+  - Source/target: `tcp/445`; predicate: `nonloopback`. Check non-loopback listening scope; a port number does not identify the application or prove external reachability. Review intended service and firewall policy. [Official reference](https://www.kernel.org/doc/html/latest/networking/index.html).
+- **Remote desktop TCP port 3389 exposure** — `listener.tcp.3389`
+  - Source/target: `tcp/3389`; predicate: `nonloopback`. Check non-loopback listening scope; a port number does not identify the application or prove external reachability. Review intended service and firewall policy. [Official reference](https://www.kernel.org/doc/html/latest/networking/index.html).
+- **VNC TCP port 5900 exposure** — `listener.tcp.5900`
+  - Source/target: `tcp/5900`; predicate: `nonloopback`. Check non-loopback listening scope; a port number does not identify the application or prove external reachability. Review intended service and firewall policy. [Official reference](https://www.kernel.org/doc/html/latest/networking/index.html).
+- **DNS UDP port 53 exposure** — `listener.udp.53`
+  - Source/target: `udp/53`; predicate: `nonloopback`. Check non-loopback listening scope; a port number does not identify the application or prove external reachability. Review intended service and firewall policy. [Official reference](https://www.kernel.org/doc/html/latest/networking/index.html).
+- **DHCP server UDP port 67 exposure** — `listener.udp.67`
+  - Source/target: `udp/67`; predicate: `nonloopback`. Check non-loopback listening scope; a port number does not identify the application or prove external reachability. Review intended service and firewall policy. [Official reference](https://www.kernel.org/doc/html/latest/networking/index.html).
+- **TFTP UDP port 69 exposure** — `listener.udp.69`
+  - Source/target: `udp/69`; predicate: `nonloopback`. Check non-loopback listening scope; a port number does not identify the application or prove external reachability. Review intended service and firewall policy. [Official reference](https://www.kernel.org/doc/html/latest/networking/index.html).
+- **RPC UDP port 111 exposure** — `listener.udp.111`
+  - Source/target: `udp/111`; predicate: `nonloopback`. Check non-loopback listening scope; a port number does not identify the application or prove external reachability. Review intended service and firewall policy. [Official reference](https://www.kernel.org/doc/html/latest/networking/index.html).
+- **NTP UDP port 123 exposure** — `listener.udp.123`
+  - Source/target: `udp/123`; predicate: `nonloopback`. Check non-loopback listening scope; a port number does not identify the application or prove external reachability. Review intended service and firewall policy. [Official reference](https://www.kernel.org/doc/html/latest/networking/index.html).
+- **NetBIOS names UDP port 137 exposure** — `listener.udp.137`
+  - Source/target: `udp/137`; predicate: `nonloopback`. Check non-loopback listening scope; a port number does not identify the application or prove external reachability. Review intended service and firewall policy. [Official reference](https://www.kernel.org/doc/html/latest/networking/index.html).
+- **NetBIOS datagrams UDP port 138 exposure** — `listener.udp.138`
+  - Source/target: `udp/138`; predicate: `nonloopback`. Check non-loopback listening scope; a port number does not identify the application or prove external reachability. Review intended service and firewall policy. [Official reference](https://www.kernel.org/doc/html/latest/networking/index.html).
+- **SNMP UDP port 161 exposure** — `listener.udp.161`
+  - Source/target: `udp/161`; predicate: `nonloopback`. Check non-loopback listening scope; a port number does not identify the application or prove external reachability. Review intended service and firewall policy. [Official reference](https://www.kernel.org/doc/html/latest/networking/index.html).
+- **SSDP UDP port 1900 exposure** — `listener.udp.1900`
+  - Source/target: `udp/1900`; predicate: `nonloopback`. Check non-loopback listening scope; a port number does not identify the application or prove external reachability. Review intended service and firewall policy. [Official reference](https://www.kernel.org/doc/html/latest/networking/index.html).
+- **mDNS UDP port 5353 exposure** — `listener.udp.5353`
+  - Source/target: `udp/5353`; predicate: `nonloopback`. Check non-loopback listening scope; a port number does not identify the application or prove external reachability. Review intended service and firewall policy. [Official reference](https://www.kernel.org/doc/html/latest/networking/index.html).

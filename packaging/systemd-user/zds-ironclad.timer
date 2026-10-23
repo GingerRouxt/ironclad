@@ -1,0 +1,8 @@
+[Unit]
+Description=ZDS Ironclad optional daily local scan
+[Timer]
+OnCalendar=daily
+RandomizedDelaySec=30m
+Persistent=false
+[Install]
+WantedBy=timers.target

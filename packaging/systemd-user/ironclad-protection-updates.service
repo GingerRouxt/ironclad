@@ -1,0 +1,17 @@
+[Unit]
+Description=Ironclad official malware signatures and engine release checks
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 -I -B %h/.config/omarchy/plugins/com.zerodaysecurity.ironclad/companion.py --state %h/.local/state/ironclad protection-maintain --allow-network --json
+NoNewPrivileges=true
+RestrictSUIDSGID=true
+LockPersonality=true
+MemoryMax=1G
+CPUQuota=20%
+TasksMax=32
+Nice=15
+IOSchedulingClass=idle
+TimeoutStartSec=12min
+UMask=0077
+StandardOutput=null
+StandardError=null

@@ -1,22 +1,5 @@
-# The road to the first public release
+# Roadmap
 
-This roadmap describes release gates, not promised dates.
+The current beta includes local diagnostics, optional detection components, reviewed actions and AI explanations. Priorities are clean-machine install/update/removal and reboot testing, broader accessibility and performance checks, independent security review, complete dependency/SBOM review, and better measured detection coverage.
 
-## First public release
-
-- [ ] Publish the reviewed plugin source and dependency information.
-- [ ] Document supported Omarchy versions and installation / removal steps.
-- [ ] Publish reproducible validation instructions and detection coverage limits.
-- [ ] Verify behavior monitoring, selected-file scanning, and update health on the release package.
-- [ ] Provide tagged releases and a changelog.
-
-## Continuing work
-
-- Improve accessibility, readable findings, and guidance for missing components.
-- Keep detection rules and protection dependencies maintainable.
-- Make update failures and coverage gaps easy to understand.
-- Improve explanations and official documentation references in the optional advisor.
-
-## Beyond the plugin
-
-Ironclad is the first public step toward the broader Zero Day Security vision. Future ZDS Core plans will be announced separately.
+Marketplace submission and maintainer approval are separate from publishing source. A listing does not certify security. ZDS Core is a separate product direction; no fleet connector or permanent pricing commitment is promised here.

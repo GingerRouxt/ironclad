@@ -1,0 +1,23 @@
+[Unit]
+Description=ZDS Ironclad opt-in offline read-only scan
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 -I -B %h/.config/omarchy/plugins/com.zerodaysecurity.ironclad/engine.py --state %S/ironclad check --profile full --save
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+StateDirectory=ironclad
+StateDirectoryMode=0700
+RuntimeDirectory=ironclad
+RuntimeDirectoryMode=0700
+RuntimeDirectoryPreserve=yes
+RestrictAddressFamilies=AF_UNIX AF_NETLINK
+RestrictSUIDSGID=true
+LockPersonality=true
+MemoryMax=256M
+CPUQuota=20%
+TasksMax=32
+TimeoutStartSec=30
+UMask=0077
+StandardOutput=null

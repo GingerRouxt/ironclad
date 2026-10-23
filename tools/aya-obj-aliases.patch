@@ -1,0 +1,14 @@
+--- a/src/relocation.rs
++++ b/src/relocation.rs
+@@ -143,7 +143,11 @@
+         &mut self,
+         text_sections: &HashSet<usize>,
+     ) -> Result<(), EbpfRelocationError> {
++        // ELF aliases can refer to the same entry function. Link each function
++        // once: a second pass would treat already relocated calls as raw calls.
++        let mut linked = HashSet::new();
+         for (name, program) in self.programs.iter() {
++            if !linked.insert(program.function_key()) { continue; }
+             let linker = FunctionLinker::new(
+                 &self.functions,
+                 &self.relocations,
