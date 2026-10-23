@@ -23,7 +23,8 @@
   <a href="#see-it-in-action">Screenshots</a> ·
   <a href="#get-ironclad">Release status</a> ·
   <a href="docs/ROADMAP.md">Roadmap</a> ·
-  <a href="CONTRIBUTING.md">Contribute</a>
+  <a href="CONTRIBUTING.md">Contribute</a> ·
+  <a href="https://szdsecurity.com/">Zero Day Security ↗</a>
 </p>
 
 ---
@@ -99,6 +100,7 @@ Useful bug reports, clear documentation, accessible UI feedback, and reproducibl
 <h3>Saint Zero Day</h3>
 <p>Your machine. Your call.</p>
 <p>Ironclad is a Zero Day Security project, built for Omarchy. Saint Zero Day is the character behind the brand.</p>
+<p><strong><a href="https://szdsecurity.com/">Visit Zero Day Security — szdsecurity.com ↗</a></strong></p>
 <p>Built on the work of the <a href="https://omarchy.org/">Omarchy</a> community, with behavior monitoring from <a href="https://falco.org/">Falco</a> and malware scanning from <a href="https://www.clamav.net/">ClamAV</a>.</p>
 </td>
 </tr>
