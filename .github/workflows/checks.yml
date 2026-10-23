@@ -20,6 +20,10 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y bubblewrap
           sudo install -d -m 755 /etc/clamav/certs
+          # Emulate Arch's loader location for the production Arch sandbox layout.
+          if ! test -e /usr/lib/ld-linux-x86-64.so.2; then
+            sudo ln -s /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2 /usr/lib/ld-linux-x86-64.so.2
+          fi
           # GitHub's disposable Ubuntu runner restricts user namespaces by default.
           # This affects the test runner only, never the user's workstation.
           if test -e /proc/sys/kernel/apparmor_restrict_unprivileged_userns; then
