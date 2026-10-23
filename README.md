@@ -93,18 +93,17 @@ Useful bug reports, clear documentation, accessible UI feedback, and reproducibl
 
 ## From Zero Day Security
 
-<table>
-<tr>
-<td width="220"><img src="assets/brand/saint-zero-day.png" alt="Saint Zero Day, the hooded Zero Day Security character with a gold halo" width="200"></td>
-<td>
-<h3>Saint Zero Day</h3>
-<p>Your machine. Your call.</p>
-<p>Ironclad is a Zero Day Security project, built for Omarchy. Saint Zero Day is the character behind the brand.</p>
-<p><strong><a href="https://szdsecurity.com/">Visit Zero Day Security — szdsecurity.com ↗</a></strong></p>
-<p>Built on the work of the <a href="https://omarchy.org/">Omarchy</a> community, with behavior monitoring from <a href="https://falco.org/">Falco</a> and malware scanning from <a href="https://www.clamav.net/">ClamAV</a>.</p>
-</td>
-</tr>
-</table>
+<p align="center">
+  <img src="assets/brand/saint-zero-day.png" alt="Saint Zero Day facing forward, with a cyan halo and illuminated armor" width="280">
+  &nbsp;
+  <img src="assets/brand/saint-zero-day-gold.png" alt="Saint Zero Day with a gold halo, cyan armor, and SaintZeroDay lettering" width="280">
+</p>
+
+<p align="center"><strong>SAINT ZERO DAY</strong><br>Your machine. Your call.<br><br><a href="https://szdsecurity.com/"><strong>Visit Zero Day Security — szdsecurity.com ↗</strong></a></p>
+
+Ironclad is a Zero Day Security project, built for Omarchy. Saint Zero Day is the character behind the brand.
+
+Built on the work of the [Omarchy](https://omarchy.org/) community, with behavior monitoring from [Falco](https://falco.org/) and malware scanning from [ClamAV](https://www.clamav.net/).
 
 ---
 
