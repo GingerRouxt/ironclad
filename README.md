@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/brand/hero.png" alt="Ironclad — Your machine. Your call. Free, local-first security for Omarchy." width="100%">
+  <img src="assets/brand/hero.png" alt="Ironclad — Your machine. Your call. Local-first security for Omarchy." width="100%">
 </p>
 
 > **PREVIEW ONLY — no plugin download yet.**
@@ -8,14 +8,13 @@
 
 <p align="center">
   <strong>Know what needs attention. Understand why. Choose what happens next.</strong><br>
-  A free security companion built for the Omarchy desktop.
+  A security companion built for the Omarchy desktop.
 </p>
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-96b8ec?style=flat-square&amp;labelColor=151e2d" alt="MIT license"></a>
   <img src="https://img.shields.io/badge/platform-Omarchy-96b8ec?style=flat-square&amp;labelColor=151e2d" alt="Built for Omarchy">
   <img src="https://img.shields.io/badge/status-project_preview-e7bc79?style=flat-square&amp;labelColor=151e2d" alt="Project preview">
-  <img src="https://img.shields.io/badge/price-always_free-96b8ec?style=flat-square&amp;labelColor=151e2d" alt="Always free">
 </p>
 
 <p align="center">
@@ -68,7 +67,7 @@ The preview uses a fixture response. No AI request was made to create this scree
 
 ## Local first. Explicit choices.
 
-- **No Ironclad account or subscription.** This Omarchy plugin is always free.
+- **Built around your machine.** Review findings and supported actions from the Omarchy desktop.
 - **Optional components are visible.** Monitoring, malware scanning, maintenance, and AI have their own setup and status.
 - **AI is optional.** It can use your existing Codex or Claude Code account, subject to that provider's limits. Selected, redacted context is sent to the chosen provider when you request assistance.
 - **Evidence before action.** AI answers explain or propose; they do not execute changes on their own.
@@ -91,7 +90,19 @@ Read the [security policy](SECURITY.md) for reporting guidance. Learn about the 
 
 Useful bug reports, clear documentation, accessible UI feedback, and reproducible test cases all help. Start with [contributing](CONTRIBUTING.md).
 
-Ironclad is Zero Day Security's first public step. **This plugin stays free.** A future ZDS Core product may offer separate paid capabilities; that does not turn this plugin into a trial.
+## From Zero Day Security
+
+<table>
+<tr>
+<td width="220"><img src="assets/brand/saint-zero-day.png" alt="Saint Zero Day, the hooded Zero Day Security character with a gold halo" width="200"></td>
+<td>
+<h3>Saint Zero Day</h3>
+<p>Your machine. Your call.</p>
+<p>Ironclad is a Zero Day Security project, built for Omarchy. Saint Zero Day is the character behind the brand.</p>
+<p>Built on the work of the <a href="https://omarchy.org/">Omarchy</a> community, with behavior monitoring from <a href="https://falco.org/">Falco</a> and malware scanning from <a href="https://www.clamav.net/">ClamAV</a>.</p>
+</td>
+</tr>
+</table>
 
 ---
 

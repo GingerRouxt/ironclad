@@ -12,4 +12,4 @@ Include what you expected, what happened, and a minimal reproduction when possib
 
 For a suspected vulnerability, follow [SECURITY.md](SECURITY.md). Do not post sensitive security details in a public issue.
 
-Contributions should keep the plugin free, make user choices clear, and describe detection limits honestly.
+Contributions should make user choices clear, and describe detection limits honestly.

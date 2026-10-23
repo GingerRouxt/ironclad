@@ -1,6 +1,6 @@
 # The road to the first public release
 
-Ironclad's Omarchy plugin will remain free. This roadmap describes release gates, not promised dates.
+This roadmap describes release gates, not promised dates.
 
 ## First public release
 
@@ -19,4 +19,4 @@ Ironclad's Omarchy plugin will remain free. This roadmap describes release gates
 
 ## Beyond the plugin
 
-A future ZDS Core offering may be commercial. The free Omarchy plugin remains its own commitment; no paid plan is required for the plugin.
+Ironclad is the first public step toward the broader Zero Day Security vision. Future ZDS Core plans will be announced separately.

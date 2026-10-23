@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="640" viewBox="0 0 1600 640" role="img" aria-labelledby="title desc">
-<title id="title">Ironclad — Your machine. Your call.</title><desc id="desc">A steel shield on a midnight blue field. Free, local-first security for Omarchy.</desc>
+<title id="title">Ironclad — Your machine. Your call.</title><desc id="desc">A steel shield on a midnight blue field. Local-first security for Omarchy.</desc>
 <defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#080d16"/><stop offset="1" stop-color="#18273e"/></linearGradient><linearGradient id="steel" x2="1" y2="1"><stop stop-color="#d5e5ff"/><stop offset=".45" stop-color="#7294c4"/><stop offset="1" stop-color="#314967"/></linearGradient><pattern id="grid" width="64" height="64" patternUnits="userSpaceOnUse"><path d="M64 0H0V64" fill="none" stroke="#9abaff" stroke-opacity=".055"/></pattern></defs>
 <rect width="1600" height="640" rx="24" fill="url(#bg)"/><rect width="1600" height="640" rx="24" fill="url(#grid)"/>
 <path d="M64 70H100M64 70V106M1536 570H1500M1536 570V534" fill="none" stroke="#89aef0" stroke-width="2"/>
@@ -7,6 +7,6 @@
 <text x="92" y="307" font-family="sans-serif" font-weight="900" font-size="132" letter-spacing="-6" fill="#edf4ff">IRONCLAD</text>
 <text x="100" y="376" font-family="sans-serif" font-size="38" fill="#b5c9e8">Your machine. Your call.</text>
 <text x="100" y="426" font-family="sans-serif" font-size="24" fill="#91a7c6">Local-first security for Omarchy.</text>
-<g font-family="monospace" font-size="17" letter-spacing="2" fill="#b8ccee"><rect x="100" y="493" width="160" height="44" rx="8" fill="#8aaaff" fill-opacity=".09" stroke="#40577a"/><text x="122" y="521">ALWAYS FREE</text><text x="287" y="521">OPEN SOURCE · BUILT FOR LINUX</text></g>
+<g font-family="monospace" font-size="17" letter-spacing="2" fill="#b8ccee"><rect x="100" y="493" width="160" height="44" rx="8" fill="#8aaaff" fill-opacity=".09" stroke="#40577a"/><text x="122" y="521">PREVIEW</text><text x="287" y="521">BUILT FOR OMARCHY</text></g>
 <g transform="translate(1110 144)"><path d="M160 0 300 55v115c0 90-76 148-140 187C96 318 20 260 20 170V55Z" fill="#0d1726" stroke="url(#steel)" stroke-width="9"/><path d="M160 25 278 72v98c0 70-58 123-118 162C100 293 42 240 42 170V72Z" fill="#89aaff" fill-opacity=".035" stroke="#385170"/><path d="m94 170 46 46 93-115" fill="none" stroke="#a9c9ff" stroke-width="20" stroke-linecap="square"/><path d="M-15 165h-55M335 165h55M160-28v-32M160 385v32" stroke="#4c6c96" stroke-width="2"/></g>
 </svg>
