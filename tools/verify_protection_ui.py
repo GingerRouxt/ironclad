@@ -173,6 +173,18 @@ raise SystemExit(maintenance.main(['--state',{str(base/'state')!r},*sys.argv[1:]
         wait(app,lambda:root.property('monitorData') is not None,'embedded monitor status')
         press('enableMonitorButton')
         wait(app,lambda:root.property('monitorStage')=='review' and not root.property('busy'),'monitor exact review')
+        # Tab into an approval below the viewport without the mouse helper scrolling it.
+        page=find_item(view,'protectionView');flick=page.property('contentItem')
+        flick.setProperty('contentY',0)
+        previous=find_item(view,'falcoHelpButton');previous.forceActiveFocus(Qt.TabFocusReason)
+        QTest.qWait(100);QTest.keyClick(view,Qt.Key_Tab)
+        approve=find_item(view,'approveMonitorButton')
+        wait(app,lambda:approve.hasActiveFocus(),'keyboard approval focus')
+        QTest.qWait(100)
+        point=approve.mapToItem(page,QPointF(0,0))
+        assert point.y()>=0 and point.y()+approve.height()<=page.height(), (point.y(),approve.height(),page.height())
+        assert root.property('monitorStage')=='review' and not json.loads(monitor_file.read_text())['monitoring']
+        passed.append('keyboard-tab-reveals-monitor-approval-without-applying')
         press('dismissMonitorButton');assert not json.loads(monitor_file.read_text())['monitoring']
         passed.append('embedded-monitor-review-decline-no-service-change')
         for scenario in ('cancel','changed','ok'):
@@ -289,6 +301,8 @@ raise SystemExit(maintenance.main(['--state',{str(base/'state')!r},*sys.argv[1:]
         for enabled in (True,False):
             press('falcoRuleUpdatesButton')
             wait(app,lambda:root.property('malwareStage')=='setup-done' and not root.property('busy'),'rule update toggle')
+            assert find_item(view,'malwareHeading').property('text')=='Falco rule updates'
+            wait(app,lambda:root.property('opened'),'rule authentication restores panel')
             click(view,root,'closeMalwareButton')
             wait(app,lambda:root.property('protectionData').toVariant()['rule_updates']['enabled']==enabled,'rule update health')
             assert (base/'rule-updates').read_text()==('on' if enabled else 'off')
@@ -296,6 +310,7 @@ raise SystemExit(maintenance.main(['--state',{str(base/'state')!r},*sys.argv[1:]
         passed.append('falco-rules-off-by-default-separate-explicit-consent-and-disable')
         press('maintainProtectionButton')
         wait(app,lambda:root.property('malwareStage')=='setup-done' and not root.property('busy'),'maintenance now')
+        assert find_item(view,'malwareHeading').property('text')=='Scanner setup'
         click(view,root,'closeMalwareButton')
         assert any('protection-maintain' in command and '--allow-network' in command for command in runtime.started_commands)
         passed.append('protection-maintenance-now-explicit-network-no-engine-install')

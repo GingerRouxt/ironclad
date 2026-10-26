@@ -20,6 +20,24 @@ ScrollView {
     property int tab: 0
     property var scrollingContent: contentItem
     onTabChanged: if (scrollingContent) scrollingContent.contentY = 0
+    // Reveal keyboard focus inside this scroll view, including nested monitoring controls.
+    function revealFocus() {
+        const item = root.Window.activeFocusItem
+        const flick = root.scrollingContent
+        if (!root.visible || !item || !flick || !flick.contentItem) return
+        let ancestor = item
+        while (ancestor && ancestor !== flick.contentItem) ancestor = ancestor.parent
+        if (!ancestor) return
+        const y = item.mapToItem(flick.contentItem, 0, 0).y
+        let next = flick.contentY
+        if (y < next + 12) next = y - 12
+        else if (y + item.height > next + flick.height - 12) next = y + item.height - flick.height + 12
+        flick.contentY = Math.max(0, Math.min(next, Math.max(0, flick.contentHeight - flick.height)))
+    }
+    Connections {
+        target: root.Window.window
+        function onActiveFocusItemChanged() { Qt.callLater(root.revealFocus) }
+    }
     property var monitor: null
     property var monitorReview: null
     property string monitorStage: "idle"

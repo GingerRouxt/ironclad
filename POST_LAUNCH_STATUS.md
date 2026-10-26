@@ -237,7 +237,7 @@ source. This was an existing-machine test, not a clean Quattro installation.
   scroll area without revealing it. Review scrolling/focus behavior before broad
   release. The rule result also uses the generic “Scanner setup” heading; improve
   that wording and the initial “needs attention” state before the first scheduled
-  refresh. These are outstanding UI issues, not completed fixes.
+  refresh. These issues were observed in this acceptance run; the subsequent remediation below records their fixes.
 
 Private evidence is retained locally under `.local-evidence/falco-rules/host/`:
 `install.json`, `sensor-after-install.json`, `rule-result.json`,
@@ -256,3 +256,60 @@ worker, ClamAV detection of the standard harmless EICAR fixture, all sampled Cod
 processes alive and healthy sensor metrics throughout (`native-load-retry.json`).
 This short pass does not resolve the first failure or establish sustained-load
 reliability. The failure-reporting branch itself has not been fault-injected here.
+
+### Desktop remediation after owner review — October 26, 2026
+
+The Protection scroll view now reveals keyboard-focused controls, including a
+monitoring approval below the viewport, without activating them. Falco rule
+configuration has its own heading, cancellation/error messages and privacy text;
+subsequent scanner operations restore their scanner-specific wording. First-time
+rule enablement uses the active systemd timer timestamp to show a scheduled first
+check for a bounded 30-minute grace period. An in-progress check is identified for
+up to 10 minutes; failed, overdue and stale checks still require attention. These
+changes do not enable a timer or change privileged worker/service behavior.
+
+Investigation found a reproducible verifier defect: the old workload guard watched
+every process named `codex`, so an unrelated session exiting could abort an
+otherwise healthy run. It now watches only the invoking Codex ancestry, checks PID
+start time to reject PID reuse, rejects zombie processes and distinguishes memory
+pressure from session loss in saved evidence. Synthetic process records exercise
+unrelated exits, watched-process loss, PID reuse, zombies and both guard reasons.
+The first historical stop has insufficient evidence to prove which threshold
+triggered; that uncertainty remains recorded rather than retroactively called a
+pass. No kernel OOM/kill entry was found in the inspected failure-time window.
+
+Regression coverage includes actual Tab traversal through the production QML
+review, no activation on focus, rule-result wording, authentication restoration,
+and first-check/running/failed/stale status cases. Executed verification and live acceptance results follow.
+
+- The complete isolated verifier passed Python/JavaScript contracts, QML lint,
+  policy compilation, 36 workflow UI cases, **33 protection UI cases**, and a
+  reproducible 97-file package with fixture install/remove. That snapshot included
+  334 Python tests; the subsequent degraded-start regression adds one more, and
+  all four dedicated workload-guard tests passed. Publication checks passed for
+  169 files; raw host evidence remains excluded.
+- A 120-second diagnostic run revealed **27,162 pre-existing cumulative kernel
+  drops**, unchanged across all 59 samples, with the active session alive and
+  sufficient memory. It is correctly recorded as failed, not clean coverage.
+  The verifier previously accepted `monitoring=True` even with `state=degraded`;
+  it now requires the clean monitoring state. An actual preflight run rejected
+  that degraded state before starting the workload (`refuse-degraded.json`).
+- After recording those counters, the owner authenticated a controlled sensor
+  restart. The corrected **120-second** native run then passed all 59 samples,
+  zero kernel/output drops or asynchronous backlog, active-session liveness and
+  ClamAV EICAR detection (`fix-native-clean.json`). At least 8.6 GiB memory remained
+  available. The prior losses remain historical evidence; a restart does not
+  recover lost events or establish lossless behavior under arbitrary load.
+- The updated 97-file plugin was installed with a rollback backup and verified
+  against source. Only the shell was reloaded for QML cache invalidation. A second
+  manual keyboard takeover was avoided while the owner was actively using the
+  browser; the production-QML Tab regression above passed with real Qt focus.
+  No host reboot, root component replacement, automatic Falco timer enablement,
+  prevention-mode change, merge, release or website deployment occurred in this
+  remediation. Installed signed rules and existing ClamAV maintenance remain.
+
+The reproduced verifier defects and reported UI issues are fixed and covered by
+regressions. The exact cause of the first historical uninstrumented safety stop
+cannot be recovered. The changes can proceed to PR review; independent security
+review, clean desktop lifecycle and sustained workload calibration remain release
+considerations rather than claims established by this short acceptance run.

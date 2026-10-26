@@ -66,7 +66,7 @@ def status():
         trusted(HELPER);result['installed']=True
         try:consent=read_root(Path('/var/lib/ironclad-rules/consent.json'))
         except FileNotFoundError:consent={}
-        units=capture(['/usr/bin/systemctl','show','ironclad-rule-updates.timer','--property=ActiveState,UnitFileState'],timeout=3)
+        units=capture(['/usr/bin/systemctl','show','ironclad-rule-updates.timer','--property=ActiveState,UnitFileState,ActiveEnterTimestampMonotonic'],timeout=3)
         result['enabled']=consent.get('enabled') is True and 'ActiveState=active' in units and 'UnitFileState=enabled' in units
         try:record=read_root(Path('/var/lib/ironclad-rules/status.json'))
         except FileNotFoundError:record={}
@@ -76,8 +76,20 @@ def status():
         result['state']=record.get('state','not_checked')
         checked=record.get('checked_at')
         result['checked_at']=checked
-        if result['enabled'] and (not isinstance(checked,int) or not 0<=time.time()-checked<86400):result['state']='needs_attention'
+        if result['enabled'] and result['state'] != 'failed':
+            properties=dict(line.split('=',1) for line in units.splitlines() if '=' in line)
+            try: enabled_age=time.monotonic()-int(properties.get('ActiveEnterTimestampMonotonic','0'))/1000000
+            except ValueError: enabled_age=-1
+            attempted=record.get('attempted_at')
+            if result['state']=='checking' and type(attempted) is int and 0<=time.time()-attempted<600:
+                result['state']='checking'
+            elif checked is None and result['state']=='not_checked' and 0<=enabled_age<1800:
+                result['state']='scheduled'
+            elif result['state']=='checking' or type(checked) is not int or not 0<=time.time()-checked<86400:
+                result['state']='needs_attention'
         result['message']=('Automatic signed Falco host rules enabled.' if result['enabled'] else 'Automatic Falco rule updates are off.')
+        if result['state']=='scheduled':result['message']+=' First check is scheduled within 5–20 minutes while this machine is running.'
+        if result['state']=='checking':result['message']+=' Checking signed rules now.'
         if result['state'] in ('failed','needs_attention'):result['message']+=' Latest rule refresh needs attention; check monitoring health.'
         if result['rules']:result['message']+=f" {result['rules']} additional host rules installed."
     except (OSError,ValueError,TypeError):result['message']='Falco rule update health could not be verified.'

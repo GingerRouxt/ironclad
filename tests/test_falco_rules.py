@@ -141,6 +141,26 @@ assert child.returncode and 'PermissionError' in child.stderr
             self.assertTrue(result['installed']);self.assertTrue(result['enabled'])
             self.assertFalse(result['available'])
 
+    def test_rule_status_first_schedule_checking_stale_and_failed(self):
+        now=100000
+        cases=[({},100,'scheduled'),({},1900,'needs_attention'),
+               ({'state':'checking','attempted_at':now-20},100,'checking'),
+               ({'state':'checking','attempted_at':now-700,'checked_at':now-900},100,'needs_attention'),
+               ({'state':'failed'},100,'failed'),
+               ({'state':'ok','checked_at':now-10},100,'ok'),
+               ({'state':'ok','checked_at':now-90000},100,'needs_attention')]
+        for status,age,expected in cases:
+            def record(path):
+                if path.name=='consent.json':return {'enabled':True}
+                if path.name=='active.json':return None
+                return status
+            units=f'ActiveState=active\nUnitFileState=enabled\nActiveEnterTimestampMonotonic={(now-age)*1000000}'
+            with self.subTest(expected=expected,status=status),patch('ironclad.maintenance.trusted'),patch('ironclad.sensor.read_root',side_effect=record),patch('ironclad.maintenance.capture',return_value=units),patch.object(rule_updates.time,'time',return_value=now),patch.object(rule_updates.time,'monotonic',return_value=now):
+                result=rule_updates.status();self.assertEqual(result['state'],expected)
+                if expected=='scheduled':
+                    self.assertIn('First check is scheduled',result['message'])
+                    self.assertNotIn('needs attention',result['message'])
+
     def test_worker_mount_uses_owned_descriptor_without_parent_traversal(self):
         args=service.sandbox(Path('/private/stage/work'),17)
         self.assertIn('--bind-fd',args)

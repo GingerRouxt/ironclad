@@ -35,8 +35,10 @@ Ui.Panel {
     property var activityData: ({entries: [], limits: []})
     property var repairFollowUp: null
     property string repairScanState: ""
+    property bool ruleSetup: false
     function configureRuleUpdates(enabled) {
         if (busy || aiBusy) return
+        ruleSetup = true
         malwareStage = "setup"
         malwareMessage = "Changing automatic Falco detection updates…"
         scannerSetupRequest.command = ["/usr/bin/python3", "-I", "-B", companionPath, enabled ? "falco-rules-enable" : "falco-rules-disable", "--json"].concat(enabled ? ["--allow-network"] : [])
@@ -381,6 +383,7 @@ Ui.Panel {
     }
     function configureProtectionUpdates(enabled) {
         if (busy || aiBusy) return
+        ruleSetup = false
         scannerSetupRequest.command = ["/usr/bin/python3", "-I", "-B", companionPath, enabled ? "protection-updates-enable" : "protection-updates-disable", "--json"].concat(enabled ? ["--allow-network"] : [])
         malwareStage = "setup"
         malwareMessage = enabled ? "Enabling background signature updates and engine release checks…" : "Disabling future automatic updates…"
@@ -388,6 +391,7 @@ Ui.Panel {
     }
     function maintainProtection() {
         if (busy || aiBusy) return
+        ruleSetup = false
         scannerSetupRequest.command = ["/usr/bin/python3", "-I", "-B", companionPath, "protection-maintain", "--json", "--allow-network"]
         malwareStage = "setup"; malwareMessage = "Updating official signatures and checking engine releases…"
         scannerSetupRequest.running = true
@@ -398,6 +402,7 @@ Ui.Panel {
     }
     function reviewMalwareFile(path) {
         if (busy || aiBusy) { message = "Finish the current operation before reviewing a file scan."; return }
+        ruleSetup = false
         malwarePlan = null; malwareResult = null
         malwareStage = "loading"; malwareOperation = "plan"
         malwareMessage = "Checking the selected file, scanner and signatures. No file scan has started."
@@ -423,6 +428,7 @@ Ui.Panel {
     }
     function reviewScannerSetup(signatures) {
         if (busy || aiBusy) return
+        ruleSetup = false
         malwarePlan = null; malwareResult = null
         malwareStage = signatures ? "signatures-review" : "install-review"
         malwareMessage = signatures ? "Download official ClamAV signature updates into Ironclad’s private local data folder. The updater contacts ClamAV’s database service; no selected files or documents are sent." : "Install ClamAV, Bubblewrap isolation and their required dependencies using the system package manager. An OS authentication prompt may appear here. After installation, download signatures before scanning. No background scanning is enabled."
@@ -504,11 +510,11 @@ Ui.Panel {
                     root.malwareStage = "setup-done"; root.malwareMessage = response.message
                 } else throw new Error("response")
                 scannerSetupRequest.received = true
-            } catch (_) { root.malwareStage = "error"; root.malwareMessage = "Scanner setup returned an unreadable result. Check readiness before scanning." }
+            } catch (_) { root.malwareStage = "error"; root.malwareMessage = root.ruleSetup ? "Falco rule updates returned an unreadable result. Check update status before retrying." : "Scanner setup returned an unreadable result. Check readiness before scanning." }
         } }
         onExited: function(exitCode, exitStatus) {
             if (!received || (exitCode !== 0 || exitStatus !== 0) && root.malwareStage !== "error") {
-                root.malwareStage = "error"; root.malwareMessage = "Scanner setup cancelled or incomplete. Check readiness and try again."
+                root.malwareStage = "error"; root.malwareMessage = root.ruleSetup ? "Falco rule update change cancelled or incomplete. Check update status and try again." : "Scanner setup cancelled or incomplete. Check readiness and try again."
             }
             Qt.callLater(function() {
                 if (scannerSetupRequest.reopenPanel) { scannerSetupRequest.reopenPanel = false; root.open() }
@@ -1757,7 +1763,7 @@ Ui.Panel {
                     anchors.fill: parent; anchors.margins: 24; spacing: 16
                     RowLayout {
                         Layout.fillWidth: true
-                        Copy { text: root.malwareStage === "setup" ? "Setting up scanner…" : root.malwareStage === "setup-done" ? "Scanner setup" : root.malwareStage === "install-review" || root.malwareStage === "signatures-review" ? "Review scanner setup" : root.malwareStage === "review" ? "Review file scan" : root.malwareStage === "scanning" ? "Scanning locally…" : root.malwareResult && root.malwareResult.outcome === "detected" ? "File flagged" : root.malwareResult && root.malwareResult.outcome === "no_detection" ? "No detection in this file" : "File scan"; font.pixelSize: 23; font.weight: Font.DemiBold; Layout.fillWidth: true }
+                        Copy { objectName: "malwareHeading"; text: root.ruleSetup ? (root.malwareStage === "setup" ? "Changing Falco rule updates…" : "Falco rule updates") : root.malwareStage === "setup" ? "Setting up scanner…" : root.malwareStage === "setup-done" ? "Scanner setup" : root.malwareStage === "install-review" || root.malwareStage === "signatures-review" ? "Review scanner setup" : root.malwareStage === "review" ? "Review file scan" : root.malwareStage === "scanning" ? "Scanning locally…" : root.malwareResult && root.malwareResult.outcome === "detected" ? "File flagged" : root.malwareResult && root.malwareResult.outcome === "no_detection" ? "No detection in this file" : "File scan"; font.pixelSize: 23; font.weight: Font.DemiBold; Layout.fillWidth: true }
                         Action { objectName: "closeMalwareButton"; visible: !malwareRequest.running; text: "Close"; onClicked: root.dismissMalware() }
                     }
                     Copy { objectName: "malwareMessage"; text: root.malwareMessage; Layout.fillWidth: true; lineHeight: 1.4 }
@@ -1775,7 +1781,7 @@ Ui.Panel {
                             Copy { visible: root.malwareStage === "signatures-review"; text: "Source: database.clamav.net (ClamAV’s official signature service).\n\nThis can download a large database. It updates Ironclad’s private signatures, leaves system scanner configuration unchanged, and does not run a file scan."; Layout.fillWidth: true; lineHeight: 1.4; color: root.muted }
                             Copy { visible: !!root.malwareResult && root.malwareResult.detections.length > 0; text: root.malwareResult ? root.malwareResult.detections.join("\n") : ""; color: root.amber; Layout.fillWidth: true }
                             Copy { visible: !!root.malwareResult && root.malwareResult.outcome === "detected"; text: "What to do: don’t open or run this file. Verify where it came from and seek review; a scanner flag can be a false positive. Ironclad has not deleted or quarantined it."; Layout.fillWidth: true; lineHeight: 1.4 }
-                            Copy { text: "File contents stay on this machine. Results are not sent to AI. A scan can miss threats; it does not certify the rest of the machine."; Layout.fillWidth: true; color: root.muted; lineHeight: 1.4 }
+                            Copy { text: root.ruleSetup ? "Only signed host detection rules are downloaded. No files or alerts are uploaded. Turning automatic updates off retains installed rules." : "File contents stay on this machine. Results are not sent to AI. A scan can miss threats; it does not certify the rest of the machine."; Layout.fillWidth: true; color: root.muted; lineHeight: 1.4 }
                         }
                     }
                     RowLayout {
