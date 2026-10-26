@@ -45,7 +45,7 @@ Environment: pinned project Python 3.14.8 / uv 0.13.4; existing Python 3.13.16 w
 | Published archive | Downloaded checksum verified against sidecar and release manifest; original assets untouched. |
 | Agent diff review | Separate focused AI/permission/lifecycle and supply-chain reviews; documentation discrepancies corrected. This is agent source review, not external human approval or independent certification. |
 
-At e775ba9, the runtime-bearing changed files were bound by SHA-256: `ui0236/Workspace.qml` = `be8c1960669fc87bcc7e2899e78f4a50762576b17aaacddc9edd1400bcece773`; `packaging/manage.py` = `4cc9af8162d9159982f1364751193547abca0a6e9b037c10d17dd1c73a5f6653`; `tools/generate_sbom.py` = `018956d5fcdf1ed38514ac1c9ff2f7b24b32c2f99e1ea069c4add3d8607816f7`. Candidate archive hashes change with documentation; the final exact archive hash belongs in the PR/build evidence rather than recursively inside this packaged status file.
+At e775ba9, the runtime-bearing changed files were bound by SHA-256: `ui0237/Workspace.qml` = `be8c1960669fc87bcc7e2899e78f4a50762576b17aaacddc9edd1400bcece773`; `packaging/manage.py` = `4cc9af8162d9159982f1364751193547abca0a6e9b037c10d17dd1c73a5f6653`; `tools/generate_sbom.py` = `018956d5fcdf1ed38514ac1c9ff2f7b24b32c2f99e1ea069c4add3d8607816f7`. Candidate archive hashes change with documentation; the final exact archive hash belongs in the PR/build evidence rather than recursively inside this packaged status file.
 
 ### Failures found and resolved
 
@@ -313,3 +313,14 @@ regressions. The exact cause of the first historical uninstrumented safety stop
 cannot be recovered. The changes can proceed to PR review; independent security
 review, clean desktop lifecycle and sustained workload calibration remain release
 considerations rather than claims established by this short acceptance run.
+
+### Owner-authorized 0.2.37 publication
+
+The owner explicitly requested merge and publication after the tests passed.
+Version 0.2.37 collects the reviewed PRs, changes the QML import directory to
+`ui0237` to avoid old component caches, and provisions locked test dependencies
+before the release workflow's offline suite. The privileged binaries and services
+are unchanged from the accepted candidate. This is a normal release with the
+limitations above, not a claim of independent certification or renewed marketplace
+verification. Customer installation, sensor upgrades and recurring Falco rule
+updates remain explicit choices. The original v0.2.36 assets remain immutable.

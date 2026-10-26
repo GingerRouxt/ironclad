@@ -1,6 +1,6 @@
 # Architecture
 
-The root manifest loads `ui0236/Dashboard.qml` inside the existing Omarchy shell. The Python standard-library engine runs as a bounded, unprivileged child. The companion handles explicit networking, AI and reviewed action workflows separately from offline collectors.
+The root manifest loads `ui0237/Dashboard.qml` inside the existing Omarchy shell. The Python standard-library engine runs as a bounded, unprivileged child. The companion handles explicit networking, AI and reviewed action workflows separately from offline collectors.
 
 The diagnostic catalog defines 90/180/420 nested profiles with stable IDs. Outcomes distinguish observed, unavailable and not applicable from security passes. Storage uses private directories, directory-fd validation, locks and atomic writes. Reports escape untrusted text.
 

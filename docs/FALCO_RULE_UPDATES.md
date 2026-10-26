@@ -1,8 +1,7 @@
 # Optional automatic Falco host rules
 
-**Unreleased feature-branch candidate:** the security fixes now use a reproducible,
-rules-only downloader build. The code permits explicit opt-in for acceptance;
-this is not a marketplace update or an automatic customer rollout.
+**Available in 0.2.37:** the security fixes now use a reproducible,
+rules-only downloader build. Customers explicitly opt in; installing this release does not enable automatic rule updates.
 
 This feature is **off by default**, including after installation or a plugin or
 sensor update. Existing consent for ClamAV signatures does not enable it.

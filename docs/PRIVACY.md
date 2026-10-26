@@ -6,7 +6,7 @@ There is no telemetry, analytics, registration, crash uploader or automatic repo
 
 ## AI and network use
 
-On this post-launch branch, completed GUI scans do not invoke AI. Choose **Explain all checks**, a per-check explanation, or **Ask agent** to send the selected bounded, redacted context through an available signed-in Codex or Claude Code client. Consent is an action, not a persistent opt-in: a new scan requires another explicit AI action. Published 0.2.36 behaves differently: GUI scan completion automatically requests explanations if a signed-in client is available. Until the fix is released, use CLI diagnostics for a scan without AI transport.
+In version 0.2.37, completed GUI scans do not invoke AI. Choose **Explain all checks**, a per-check explanation, or **Ask agent** to send the selected bounded, redacted context through an available signed-in Codex or Claude Code client. Consent is an action, not a persistent opt-in: a new scan requires another explicit AI action. The older 0.2.36 behaves differently: GUI scan completion automatically requests explanations if a signed-in client is available. Users retaining 0.2.36 can use CLI diagnostics for a scan without AI transport.
 
 Provider account limits, charges, retention and processing policies apply. Stop AI cancels the local request; remote processing may take time to stop. CLI diagnostics do not invoke AI. The AI has no authority to approve or execute actions. One-off file contents, selected paths, detection feeds and private action history are excluded from AI context. Redaction is best effort, not a guarantee that every private string can be recognized.
 

@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
 const model = vm.createContext({});
-vm.runInContext(fs.readFileSync('ui0236/State.js','utf8'), model);
+vm.runInContext(fs.readFileSync('ui0237/State.js','utf8'), model);
 function fixture() {
  return {schema_version:'1.0', collected_at:'2026-10-20T00:00:00Z', checks:[{check_id:'security.home.permissions', status:'attention', severity:'medium', summary:'Review home mode', confidence:'high', recommendation:'Review before changing', reversibility:'Undo with receipt', evidence:[{source:'metadata',value:'mode=0702'}],remediation_action_ids:['home.remove_world_write']}]};
 }

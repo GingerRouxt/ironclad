@@ -31,6 +31,8 @@ jobs:
           if test -e /proc/sys/kernel/apparmor_restrict_unprivileged_userns; then
             sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
           fi
+      - name: Install locked test dependencies
+        run: mise exec -- uv sync --frozen
       - name: Offline Python contracts
         run: mise exec -- uv run --offline python -m unittest discover -s tests -v
       - name: UI model contracts

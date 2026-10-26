@@ -23,7 +23,7 @@ class ReleasePreparationTests(unittest.TestCase):
         self.assertEqual(first,second);self.assertTrue(first['source_dirty']);self.assertFalse(first['publication_performed'])
         archive=first['archive'];self.assertEqual(hashlib.sha256((self.output/archive['name']).read_bytes()).hexdigest(),archive['sha256'])
         saved=json.loads((self.output/'release-manifest.json').read_text());self.assertEqual(saved,first)
-        self.assertIn('ui0236/Overview.qml',saved['payload_sha256'])
+        self.assertIn('ui0237/Overview.qml',saved['payload_sha256'])
         self.assertEqual(saved['sensor']['rule_count'],8)
         self.assertFalse(any('.local-evidence' in name or 'MASTER_SPEC' in name for name in saved['payload_sha256']))
 

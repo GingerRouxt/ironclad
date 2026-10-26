@@ -2,7 +2,7 @@
 
 ## Release status
 
-Ironclad 0.2.36 is an initial beta. Compatibility and detection coverage are limited; see TEST_RESULTS.md and docs/THREAT_MODEL.md.
+Ironclad 0.2.37 is the current release. Compatibility and detection coverage are limited; see TEST_RESULTS.md and docs/THREAT_MODEL.md.
 
 ## Reporting a vulnerability
 

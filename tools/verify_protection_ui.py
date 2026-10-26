@@ -36,7 +36,7 @@ QtObject {
  function write(data) { fixtureRuntime.write(process,data) }
  onRunningChanged: { if (running) fixtureRuntime.start(process,command); else fixtureRuntime.stop(process) }
 }''')
-        plugin=base/'plugin';plugin.mkdir();shutil.copytree(ROOT/'ui0236',plugin/'ui0236');shutil.copy(ROOT/'Panel.qml',plugin/'Panel.qml')
+        plugin=base/'plugin';plugin.mkdir();shutil.copytree(ROOT/'ui0237',plugin/'ui0237');shutil.copy(ROOT/'Panel.qml',plugin/'Panel.qml')
         mode=base/'mode';mode.write_text('missing')
         target=base/'download.bin';target.write_bytes(b'harmless fixture')
         sys.path.insert(0,str(ROOT))
