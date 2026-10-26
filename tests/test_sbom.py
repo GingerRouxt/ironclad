@@ -33,7 +33,7 @@ class SbomTests(unittest.TestCase):
         self.assertTrue(all('purl' not in item for item in local))
         self.assertIn('cargo-local:aya-obj@0.2.1', components)
         self.assertIn('cargo-local:krsi@0.1.0', components)
-        self.assertEqual(components['ironclad:bundled-krsi']['version'], '0.2.0-ironclad.1')
+        self.assertEqual(components['ironclad:bundled-krsi']['version'], '0.2.0-ironclad.2')
         registry = [item for ref, item in components.items() if ref.startswith('cargo-registry:')]
         self.assertTrue(all(item['hashes'][0]['alg'] == 'SHA-256' for item in registry))
         self.assertEqual(components['test:shiboken6']['scope'], 'excluded')

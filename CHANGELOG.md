@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — native dependency follow-up
+
+- Rebuild KRSI fork .2 with anyhow 1.0.103 and Tokio 1.53.3; preserve upstream BPF instructions and the existing reviewed source patches.
+- Pin the Rust compiler identity, allowlist the build environment, and update native provenance, hashes, lock and partial SBOM together.
+- Repeat dependency query: two unsoundness matches resolved; three unmaintained-package findings remain with scoped triage. No certification or complete dependency clearance is claimed.
+
+
 ## Unreleased — post-launch hardening
 
 - Record marketplace publication and maintainer review of `73e2275` on October 25, 2026; clearly label the historical preview film.
@@ -7,7 +14,7 @@
 - Refuse copied-install removal while diagnostic scheduling units remain, including dangling links.
 - Keep update approval/cancel controls visible by bounding long single and batch review text; UI fixtures reject clipped clicks.
 - Add reproducible partial SBOM generation, a fresh-VM acceptance matrix, release/contributor checklists and optional future Core interface design.
-- Keep community Ironclad free. No cloud agent, unsolicited telemetry, website deployment, new native binary or release publication is included.
+- Keep community Ironclad free. No cloud agent, unsolicited telemetry, website deployment or release publication is included.
 
 These proposed changes are not covered by the marketplace's earlier snapshot verification. See [post-launch status](POST_LAUNCH_STATUS.md) for executed checks and remaining gates.
 

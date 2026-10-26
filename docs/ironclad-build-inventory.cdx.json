@@ -377,11 +377,11 @@
       "version": "0.1.5"
     },
     {
-      "bom-ref": "cargo-registry:anyhow@1.0.102",
+      "bom-ref": "cargo-registry:anyhow@1.0.103",
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "7f202df86484c868dbad7eaa557ef785d5c66295e41b460ef922eca0723b842c"
+          "content": "2a4385e2e34eb35d6b3efe798b9eb88096925d87726c0798709bf56d9ed84af3"
         }
       ],
       "name": "anyhow",
@@ -399,9 +399,9 @@
           "value": "registry crate archive, not linked library"
         }
       ],
-      "purl": "pkg:cargo/anyhow@1.0.102",
+      "purl": "pkg:cargo/anyhow@1.0.103",
       "type": "library",
-      "version": "1.0.102"
+      "version": "1.0.103"
     },
     {
       "bom-ref": "cargo-registry:assert_matches@1.5.0",
@@ -3401,11 +3401,11 @@
       "version": "2.7.0"
     },
     {
-      "bom-ref": "cargo-registry:tokio@1.52.2",
+      "bom-ref": "cargo-registry:tokio@1.53.3",
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "110a78583f19d5cdb2c5ccf321d1290344e71313c6c37d43520d386027d18386"
+          "content": "ce3335fa71841cda333a58d7615b03901380ecf09d59b3296d21f8bbac0dde4e"
         }
       ],
       "name": "tokio",
@@ -3423,9 +3423,9 @@
           "value": "registry crate archive, not linked library"
         }
       ],
-      "purl": "pkg:cargo/tokio@1.52.2",
+      "purl": "pkg:cargo/tokio@1.53.3",
       "type": "library",
-      "version": "1.52.2"
+      "version": "1.53.3"
     },
     {
       "bom-ref": "cargo-registry:typed-path@0.11.0",
@@ -4392,22 +4392,22 @@
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "ae9f39fb65553c0427d748e6bd52fe413c8b60b634c7972216ad3a6a93a4ddbd"
+          "content": "9935296a6dd5b0395833055a84dcfa527d630c241532a0e90afc6ca055cb5bd1"
         }
       ],
       "name": "KRSI Ironclad fork",
       "properties": [
         {
           "name": "ironclad:archive-sha256",
-          "value": "a7b62c32ed04f1b82398a6b9996cf1a7a3ab8a8e2a5e5dbe6515d761dc1d8c64"
+          "value": "d64d617b24a56d93bbfcf680582e49fbecee869741bb3699350cedfb812ddf5d"
         },
         {
           "name": "ironclad:build-info-sha256",
-          "value": "183aa1fdc346b8b847fee4e1df6b80f1da873f73f1838fc61a3c94d19bf2e7b6"
+          "value": "8c72da82f18cea53a703398a0dc721ebeaddd865d23039d55bc4ddb771c831a6"
         },
         {
           "name": "ironclad:cargo-lock-sha256",
-          "value": "261304594f08b7df0242e80263d9286c0fb4ad765e2dab7b196e67b39ce38c25"
+          "value": "7475b33f8395f80fb30ea6407b80ac3ed8d6d5904ca053c7369c1ecd973f7e37"
         },
         {
           "name": "ironclad:cargo-package-version",
@@ -4419,7 +4419,7 @@
         },
         {
           "name": "ironclad:notice-files",
-          "value": "158"
+          "value": "254"
         },
         {
           "name": "ironclad:provenance",
@@ -4431,7 +4431,7 @@
         }
       ],
       "type": "library",
-      "version": "0.2.0-ironclad.1"
+      "version": "0.2.0-ironclad.2"
     },
     {
       "bom-ref": "ironclad:optional-falco",
@@ -4519,7 +4519,7 @@
     {
       "dependsOn": [
         "cargo-local:falco_event_derive@0.5.0",
-        "cargo-registry:anyhow@1.0.102",
+        "cargo-registry:anyhow@1.0.103",
         "cargo-registry:chrono@0.4.40",
         "cargo-registry:nix@0.30.1",
         "cargo-registry:thiserror@2.0.18",
@@ -4553,7 +4553,7 @@
         "cargo-local:falco_event@0.5.0",
         "cargo-local:falco_plugin_api@0.5.0",
         "cargo-local:falco_plugin_derive@0.5.0",
-        "cargo-registry:anyhow@1.0.102",
+        "cargo-registry:anyhow@1.0.103",
         "cargo-registry:bumpalo@3.17.0",
         "cargo-registry:lock_api@0.4.12",
         "cargo-registry:log@0.4.29",
@@ -4626,7 +4626,7 @@
         "cargo-local:falco_event_schema@0.5.0",
         "cargo-local:falco_plugin@0.5.0",
         "cargo-local:krsi-common@0.1.0",
-        "cargo-registry:anyhow@1.0.102",
+        "cargo-registry:anyhow@1.0.103",
         "cargo-registry:aya-log@0.2.1",
         "cargo-registry:aya@0.13.1",
         "cargo-registry:bincode@2.0.1",
@@ -4639,7 +4639,7 @@
         "cargo-registry:paste@1.0.15",
         "cargo-registry:serde@1.0.228",
         "cargo-registry:thiserror@2.0.18",
-        "cargo-registry:tokio@1.52.2",
+        "cargo-registry:tokio@1.53.3",
         "cargo-registry:zerocopy@0.8.48"
       ],
       "ref": "cargo-local:krsi@0.1.0"
@@ -4675,7 +4675,7 @@
     },
     {
       "dependsOn": [],
-      "ref": "cargo-registry:anyhow@1.0.102"
+      "ref": "cargo-registry:anyhow@1.0.103"
     },
     {
       "dependsOn": [],
@@ -4774,7 +4774,7 @@
         "cargo-registry:bytes@1.11.1",
         "cargo-registry:log@0.4.29",
         "cargo-registry:thiserror@1.0.69",
-        "cargo-registry:tokio@1.52.2"
+        "cargo-registry:tokio@1.53.3"
       ],
       "ref": "cargo-registry:aya-log@0.2.1"
     },
@@ -4789,7 +4789,7 @@
         "cargo-registry:object@0.36.7",
         "cargo-registry:once_cell@1.21.0",
         "cargo-registry:thiserror@1.0.69",
-        "cargo-registry:tokio@1.52.2"
+        "cargo-registry:tokio@1.53.3"
       ],
       "ref": "cargo-registry:aya@0.13.1"
     },
@@ -5427,7 +5427,7 @@
         "cargo-registry:tokio-macros@2.7.0",
         "cargo-registry:windows-sys@0.61.2"
       ],
-      "ref": "cargo-registry:tokio@1.52.2"
+      "ref": "cargo-registry:tokio@1.53.3"
     },
     {
       "dependsOn": [],
@@ -5621,7 +5621,7 @@
       },
       {
         "name": "ironclad:inputs-sha256",
-        "value": "{\"ironclad/sensor_policy.py\": \"a3bec853017705907b7bac48b1d9faa8bce06a0db44c7ba4e316c1315e8ac34f\", \"manifest.json\": \"4c0078d39a6eea45079f180dc2aec395c5259524df1fb58f01463952c2322444\", \"pyproject.toml\": \"4ec754de5ae0f006a675747bd75e7b350a371da589110711bc5afd1392d2edf0\", \"tools/build_krsi_component.py\": \"77f5123af4f989cacbfe7f1a8044ce133d4f3f8ea77041ca86fc0837b8ab7a68\", \"tools/krsi-Cargo.lock\": \"261304594f08b7df0242e80263d9286c0fb4ad765e2dab7b196e67b39ce38c25\", \"tools/ui-requirements.txt\": \"c94cfdebcb9379cabfe40d77ebc3a24894d4a0bf995b9396d6f29d33065428f9\"}"
+        "value": "{\"ironclad/sensor_policy.py\": \"81aee762693239cd8081c8ee86b9478c1e393a9a9ea7c4e3eb2330ddad9d8475\", \"manifest.json\": \"4c0078d39a6eea45079f180dc2aec395c5259524df1fb58f01463952c2322444\", \"pyproject.toml\": \"4ec754de5ae0f006a675747bd75e7b350a371da589110711bc5afd1392d2edf0\", \"tools/build_krsi_component.py\": \"1d0ea718e2c01e6dabade04c239807973a732f38a2bee1e2effc16f28b13ad75\", \"tools/krsi-Cargo.lock\": \"7475b33f8395f80fb30ea6407b80ac3ed8d6d5904ca053c7369c1ecd973f7e37\", \"tools/ui-requirements.txt\": \"c94cfdebcb9379cabfe40d77ebc3a24894d4a0bf995b9396d6f29d33065428f9\"}"
       },
       {
         "name": "ironclad:inventory",

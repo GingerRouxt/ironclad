@@ -5,11 +5,11 @@ import gzip
 import hashlib
 import io
 import json
-import os
 from pathlib import Path
 import struct
 import subprocess
 import tarfile
+import tomllib
 import urllib.request
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -20,6 +20,25 @@ INPUTS={
  'ayaobj':('https://static.crates.io/crates/aya-obj/aya-obj-0.2.1.crate','c51b96c5a8ed8705b40d655273bc4212cbbf38d4e3be2788f36306f154523ec7'),
 }
 BPF_SHA='898eda944bd24cd15096946bf667771da30686fc784f5f239c6d265fa349193f'
+RUSTC_VERSION='rustc 1.99.1 (58cf8f9c3 2026-10-13)'
+FORK_VERSION='0.2.0-ironclad.2'
+
+
+def build_environment(work, cargo_home, toolchain, bpf):
+    """Allowlisted environment; the caller must also isolate build execution."""
+    toolchain=toolchain.resolve()
+    rustc=toolchain/'bin/rustc'
+    env={'PATH':str(toolchain/'bin')+':/usr/bin', 'HOME':str(work/'home'),
+         'LANG':'C.UTF-8', 'CARGO_HOME':str(cargo_home.absolute()),
+         'RUSTC':str(rustc), 'CARGO_BUILD_JOBS':'2',
+         'IRONCLAD_UPSTREAM_BPF':str(bpf), 'SOURCE_DATE_EPOCH':'1792699200',
+         'RUSTFLAGS':' '.join(('--remap-path-prefix='+str(work)+'=/ironclad-build',
+                              '--remap-path-prefix='+str(cargo_home.absolute())+'=/cargo-cache',
+                              '--remap-path-prefix='+str(toolchain)+'=/rust-toolchain'))}
+    version=subprocess.check_output([str(rustc),'--version'],env=env,text=True,timeout=10).strip()
+    if version!=RUSTC_VERSION:raise ValueError('unexpected Rust compiler; use the recorded pinned toolchain')
+    (work/'home').mkdir(mode=0o700,exist_ok=True)
+    return env
 
 
 def sha(body):return hashlib.sha256(body).hexdigest()
@@ -111,6 +130,7 @@ def main():
     parser.add_argument('--inputs',type=Path,required=True,help='directory with pinned sdk, krsi, binary and ayaobj .tar.gz inputs')
     parser.add_argument('--cargo-home',type=Path,required=True,help='isolated public build cache; never a credential-bearing Cargo home')
     parser.add_argument('--output',type=Path,required=True)
+    parser.add_argument('--toolchain-dir',type=Path,help='pinned Rust installation root; otherwise resolve through mise/rustup')
     parser.add_argument('--allow-network',action='store_true',help='download exact pinned inputs and public crates')
     args=parser.parse_args();work=args.work_dir.absolute()
     if work.exists():raise ValueError('preserve existing build directory; choose a new path')
@@ -137,21 +157,20 @@ def main():
     source=work/'plugins/plugins/krsi'
     subprocess.run(['/usr/bin/patch','--batch','--fuzz=0','-p1','--input',str(ROOT/'tools/krsi-ironclad.patch')],cwd=source,check=True,timeout=10)
     lock=(ROOT/'tools/krsi-Cargo.lock').read_bytes();(source/'Cargo.lock').write_bytes(lock)
-    cargo=subprocess.check_output(['mise','exec','--','rustup','which','cargo'],text=True,timeout=20).strip()
-    rustc=subprocess.check_output(['mise','exec','--','rustup','which','rustc'],text=True,timeout=20).strip()
-    env={**os.environ,'CARGO_HOME':str(args.cargo_home.absolute()),'RUSTC':rustc,'IRONCLAD_UPSTREAM_BPF':str(bpf),'CARGO_BUILD_JOBS':'2',
-         'RUSTFLAGS':' '.join(('--remap-path-prefix='+str(Path.home())+'=/build-user',
-                               '--remap-path-prefix='+str(args.cargo_home.absolute())+'=/cargo-cache',
-                               '--remap-path-prefix='+str(work)+'=/ironclad-build')),
-         'SOURCE_DATE_EPOCH':'1792699200'}
+    toolchain=args.toolchain_dir
+    if toolchain is None:
+        rustc=subprocess.check_output(['mise','exec','--','rustup','which','rustc'],text=True,timeout=20).strip()
+        toolchain=Path(rustc).parent.parent
+    env=build_environment(work,args.cargo_home,toolchain,bpf)
+    cargo=str(toolchain.resolve()/'bin/cargo')
     command=[cargo,'build','--release','--locked','-p','krsi','--manifest-path',str(source/'Cargo.toml')]
     if not args.allow_network:command.append('--offline')
     subprocess.run(command,env=env,check=True,timeout=600)
     library=(source/'target/release/libkrsi.so').read_bytes()
     if any(path.encode() in library for path in (str(Path.home()),str(work),str(args.cargo_home.absolute()))):
         raise ValueError('native library contains a private build path')
-    toolchain=subprocess.check_output(['mise','exec','--','rustc','--version'],text=True,timeout=10).strip()
-    metadata={'version':'0.2.0-ironclad.1','schema':'4.5.0','sdk_commit':'1a7e29e62d025dcd91796537421343111e55cd61','inputs':{k:{'url':u,'sha256':h} for k,(u,h) in INPUTS.items()},'bpf_sha256':BPF_SHA,'library_sha256':sha(library),'patch_sha256':sha((ROOT/'tools/krsi-ironclad.patch').read_bytes()),'lock_sha256':sha(lock),'toolchain':toolchain,'upstream_release':False}
+    toolchain=RUSTC_VERSION
+    metadata={'version':FORK_VERSION,'schema':'4.5.0','sdk_commit':'1a7e29e62d025dcd91796537421343111e55cd61','inputs':{k:{'url':u,'sha256':h} for k,(u,h) in INPUTS.items()},'bpf_sha256':BPF_SHA,'library_sha256':sha(library),'patch_sha256':sha((ROOT/'tools/krsi-ironclad.patch').read_bytes()),'lock_sha256':sha(lock),'toolchain':toolchain,'upstream_release':False}
     metadata['aliased_bpf_sha256']=sha(bpf.read_bytes())
     metadata['bpf_changes']='ELF symbol aliases for io_openat; upstream instructions, maps, relocations and BTF unchanged'
     metadata['loader_patch_sha256']=sha((ROOT/'tools/aya-obj-aliases.patch').read_bytes())
@@ -162,9 +181,11 @@ def main():
         if path.is_file():files['licenses/aya-obj-'+path.name]=path.read_bytes()
     # Include public registry license/notice files for statically linked Rust crates.
     registry=args.cargo_home/'registry/src'
+    locked={p['name']+'-'+p['version'] for p in tomllib.loads(lock.decode())['package']
+            if p.get('source')=='registry+https://github.com/rust-lang/crates.io-index'}
     if registry.is_dir():
         for crate in registry.glob('*/*'):
-            if not crate.is_dir():continue
+            if not crate.is_dir() or crate.is_symlink() or crate.name not in locked:continue
             for path in sorted(crate.iterdir()):
                 if path.is_file() and not path.is_symlink() and path.name.upper().startswith(('LICENSE','COPYING','NOTICE')) and path.stat().st_size<=1048576:
                     files['licenses/'+crate.name+'/'+path.name]=path.read_bytes()

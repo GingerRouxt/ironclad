@@ -24,7 +24,7 @@ Review date: **October 25, 2026 America/Chicago**; automated checks/advisory loo
 | Launch/business | [Announcement draft](docs/LAUNCH_ANNOUNCEMENT.md), updated [installation guide](docs/INSTALL.md) and [szdsecurity.com brief](docs/LANDING_PAGE_BRIEF.md); nothing posted or deployed. |
 | Future Core | [Import-only interface proposal](docs/CORE_INTERFACE_PROPOSAL.md), with explicit future authorization, data minimization and no inherited agent authority. No connector, cloud agent, network telemetry or account requirement implemented. |
 
-## Executed validation
+## Initial validation at e775ba9
 
 Tests ran as an unprivileged synthetic user in a disposable rootless Ubuntu 24.04 container with no network or host home/desktop/service sockets, read-only tools/source input, scratch-only writable storage, 2 CPUs, 4 GiB memory, 256 processes, 1 GiB scratch, 256 MiB per-file limit and 480-second outer timeout. Existing local tools were mounted; no dependency installer or native build fetched code during target execution. Nested Bubblewrap tests needed an unmasked **container** `/proc` and namespace syscalls; host kernel settings were not changed. This shares the host kernel and is not a VM.
 
@@ -45,7 +45,7 @@ Environment: pinned project Python 3.14.8 / uv 0.13.4; existing Python 3.13.16 w
 | Published archive | Downloaded checksum verified against sidecar and release manifest; original assets untouched. |
 | Agent diff review | Separate focused AI/permission/lifecycle and supply-chain reviews; documentation discrepancies corrected. This is agent source review, not external human approval or independent certification. |
 
-The runtime-bearing changed files are bound by SHA-256: `ui0236/Workspace.qml` = `be8c1960669fc87bcc7e2899e78f4a50762576b17aaacddc9edd1400bcece773`; `packaging/manage.py` = `4cc9af8162d9159982f1364751193547abca0a6e9b037c10d17dd1c73a5f6653`; `tools/generate_sbom.py` = `018956d5fcdf1ed38514ac1c9ff2f7b24b32c2f99e1ea069c4add3d8607816f7`. Candidate archive hashes change with documentation; the final exact archive hash belongs in the PR/build evidence rather than recursively inside this packaged status file.
+At e775ba9, the runtime-bearing changed files were bound by SHA-256: `ui0236/Workspace.qml` = `be8c1960669fc87bcc7e2899e78f4a50762576b17aaacddc9edd1400bcece773`; `packaging/manage.py` = `4cc9af8162d9159982f1364751193547abca0a6e9b037c10d17dd1c73a5f6653`; `tools/generate_sbom.py` = `018956d5fcdf1ed38514ac1c9ff2f7b24b32c2f99e1ea069c4add3d8607816f7`. Candidate archive hashes change with documentation; the final exact archive hash belongs in the PR/build evidence rather than recursively inside this packaged status file.
 
 ### Failures found and resolved
 
@@ -53,18 +53,28 @@ The first Bubblewrap harness could not preserve root-owned system-file identity 
 
 The baseline workflow UI then reproduced a product layout failure: Cancel was at y=705 outside a 700-pixel window. A first fix exposed batch-review clipping at y=700. Both layouts were corrected and the complete candidate UI suites passed with strict real-click bounds. Baseline JavaScript/privacy/policy checks were already passing; completed work was reused.
 
+## Native dependency follow-up
+
+The candidate now bundles fork `0.2.0-ironclad.2`, rebuilt with anyhow 1.0.103 and Tokio 1.53.3. Only those two registry package versions changed. Pinned public inputs and the existing source/loader/BPF patches were retained. The recipe verifies Rust 1.99.1 and uses an allowlisted environment; compilation occurred without network or access to user credentials. Native unit tests: **7 passed, 1 ignored** (`load_and_attach_programs`); the ignored kernel-loading test was not executed. Two additional Python contracts verify environment filtering and compiler mismatch refusal.
+
+The current partial inventory SHA-256 is `46acac9493291136375b86eae90cd6ec607842e8adc9ea81504e8e675ca8ef5b`; lock SHA-256 is `7475b33f8395f80fb30ea6407b80ac3ed8d6d5904ca053c7369c1ecd973f7e37`. The October 26 03:30 UTC query of the same 150 public identities returned **three unmaintained-package matches**, with no remaining match for the updated anyhow/Tokio versions. The earlier five-match result above is historical. See [native build procedure](docs/NATIVE_BUILD.md).
+
+Final native follow-up validation: **314 Python tests, 34 JavaScript tests, 36 workflow UI cases and 31 protection UI cases passed**. The complete verifier passed again with the final .2 native artifact, including eight-rule Falco dry-run, 91-file packaging and isolated install/remove. Two clean builds at the same canonical `/build/native` path produced identical archive SHA-256 `d64d617b24a56d93bbfcf680582e49fbecee869741bb3699350cedfb812ddf5d`; library SHA-256 `9935296a6dd5b0395833055a84dcfa527d630c241532a0e90afc6ca055cb5bd1`. Different work paths did not reproduce identical bytes; fixed build paths and system/compiler inputs are required. This is local repeatability, not an independent rebuild.
+
+The initial follow-up suite failed one SBOM assertion that still expected fork .1; it was updated to .2 and all 314 tests passed. The final artifact also corrects the library's internal version label. Source logic and BPF instructions were otherwise retained. The final advisory re-query at **2026-10-26 03:35 UTC** again returned only the three maintenance advisories. Public evidence excludes workstation details, logs and reports.
+
 ## Remaining blockers and triage
 
 | Priority / owner | Gate | Next evidence required |
 |---|---|---|
-| P1 native maintainer | anyhow 1.0.102 matches RUSTSEC-2026-0190; tokio 1.52.2 matches RUSTSEC-2026-0386. | Establish actual target/call reachability and documented remediation/disposition; rebuild changed binary with pinned toolchain, update embedded provenance and hashes together, then run exact-binary VM acceptance. No application exploit demonstrated here. |
+| P1 release tester | Candidate updates resolve the two anyhow/Tokio advisory matches; exact-binary fresh-machine acceptance remains. | Repeat the separate-machine matrix before a new native release. No application exploit or complete dependency clearance is claimed. |
 | P1 release tester | Fresh Quattro install/reboot/update/removal and authenticated native lifecycle **NOT RUN**. | Execute VM-01 through VM-10 on a separate disposable machine, preserving original release and unrelated services. |
-| P1 native maintainer | Independent reproducible native rebuild, complete linked/transitive SBOM and licensing remain incomplete. | Pin recorded Rust/toolchain and isolated public inputs, compare rebuilt bytes, inspect third-party notices and Falco/system dependency closure. Do not equate deterministic tar packaging with native provenance. |
+| P1 native maintainer | Independent reproducible native rebuild, complete linked/transitive SBOM and licensing remain incomplete. | The local recipe now pins the compiler identity and isolates inputs; obtain an independent rebuild, inspect third-party notices and Falco/system dependency closure. Do not equate deterministic tar packaging with native provenance. |
 | P2 dependency maintainer | bincode, paste and proc-macro-error are flagged unmaintained. | Review upstream migration options and build/feature compatibility; do not blindly replace lock entries. |
 | P2 UI tester | Smaller displays, alternate font scaling, multi-monitor and accessibility/resource extremes not established. | Separate-machine UI matrix; current real-click acceptance is 1020×700 plus existing fixture cases. |
 | Maintainer/reviewer | PR review, new version/release decision and later marketplace snapshot review. | Review this feature branch and its own CI. Do not merge/tag/deploy or claim the new snapshot is verified automatically. |
 
-`tools/verify_native_protection.py --run` and `tools/verify_onaccess_native.py --run` were **not executed**: they require live enabled sensors and create native detections. `tools/verify_installed.py` was covered through synthetic installed-audit tests, not aimed at the owner's live plugin. Reboot, prevention, real provider requests and production service acceptance were not performed. Their VM procedures are prepared, not counted as passes.
+During the initial isolated review, `tools/verify_native_protection.py --run` and `tools/verify_onaccess_native.py --run` were **not executed**: they require live enabled sensors and create native detections. `tools/verify_installed.py` was covered through synthetic installed-audit tests, not aimed at the owner's live plugin. Reboot, prevention, real provider requests and production service acceptance were not performed. Their VM procedures are prepared, not counted as passes. Owner workstation evidence is private and is not included in this public report.
 
 Known limitations remain: same-user/root/kernel compromise, shared-kernel sandbox defects, parser/engine vulnerabilities, bounded detection and event loss, incomplete software/advisory coverage, best-effort redaction, and externally controlled AI clients. See [security review](SECURITY_REVIEW.md) and [supply-chain detail](docs/SUPPLY_CHAIN_REVIEW.md).
 
