@@ -35,3 +35,8 @@ jobs:
         run: node --test tests/model.test.cjs
       - name: Publication privacy checks
         run: mise exec -- uv run --offline python tools/verify_publication.py
+      - name: Reproduce reviewed dependency inventory
+        run: |
+          mkdir -p dist/sbom-check
+          mise exec -- uv run --offline python tools/generate_sbom.py --output dist/sbom-check/inventory.cdx.json
+          cmp docs/ironclad-build-inventory.cdx.json dist/sbom-check/inventory.cdx.json

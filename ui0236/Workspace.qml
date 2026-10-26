@@ -872,7 +872,7 @@ Ui.Panel {
     property string expandedSoftware: ""
     property var explanationScan: null
     property var findingExplanations: ({})
-    property string explanationMessage: "Scan this machine for fresh AI explanations."
+    property string explanationMessage: "Scan locally, then choose whether to request AI explanations."
     property string explanationProvider: ""
     function explainScan() {
         if (!explanationScan || findingAdvisor.running || advisor.running || engine.running) return
@@ -1047,7 +1047,10 @@ Ui.Panel {
             }
             else if (root.operation === "scan") {
                 if (!root.scanReceived) root.scanStatus = "Scan returned no valid result. Previous scan is archived."
-                else Qt.callLater(function() { root.explainScan(); root.loadSoftware() })
+                else {
+                    root.explanationMessage = "Local scan complete. AI explanations have not been requested."
+                    Qt.callLater(function() { root.loadSoftware() })
+                }
             }
         }
         onRunningChanged: if (running) deadline.start()
@@ -1271,8 +1274,8 @@ Ui.Panel {
                         }
                         RowLayout {
                             Layout.fillWidth: true
-                            Copy { text: root.explanationMessage + " All checks are shared with your signed-in agent for explanations after each scan. Normal account limits apply."; color: root.muted; font.pixelSize: 13; Layout.fillWidth: true }
-                            Action { text: "Explain all checks"; quiet: true; enabled: !!root.explanationScan && !root.aiBusy && !root.explanationBusy && !root.busy; onClicked: root.explainScan() }
+                            Copy { text: root.explanationMessage + " Explain all checks sends bounded, redacted findings to your agent's provider. Account limits apply."; color: root.muted; font.pixelSize: 13; Layout.fillWidth: true }
+                            Action { objectName: "explainAllChecksButton"; text: "Explain all checks"; quiet: true; enabled: !!root.explanationScan && !root.aiBusy && !root.explanationBusy && !root.busy; onClicked: root.explainScan() }
                         }
                         RowLayout {
                             visible: root.selected === "Diagnostics"
@@ -1431,16 +1434,18 @@ Ui.Panel {
                         }
                     }
                     ColumnLayout {
+                        id: softwarePage
+                        readonly property bool reviewingUpdate: root.updateStage === "review" || root.updateStage === "planning" || root.updateStage === "applying"
                         visible: root.selected === "Software"
                         Layout.fillWidth: true; Layout.fillHeight: true; spacing: 14
                         RowLayout {
-                            visible: root.softwareMode !== "Security"
+                            visible: root.softwareMode !== "Security" && !softwarePage.reviewingUpdate
                             Layout.fillWidth: true
                             Copy { text: "Apps, languages, runtimes & developer tools.\nApp updates below. Build updates use the official Omarchy updater."; color: root.muted; Layout.fillWidth: true; lineHeight: 1.5; font.pixelSize: 13 }
                             Action { text: refreshRequest.running ? "Checking…" : "Check for updates"; enabled: !root.busy && !root.aiBusy; onClicked: root.refreshSoftware() }
                         }
                         RowLayout {
-                            visible: root.softwareMode !== "Security"
+                            visible: root.softwareMode !== "Security" && !softwarePage.reviewingUpdate
                             Layout.fillWidth: true; spacing: 12
                             ColumnLayout {
                                 Layout.fillWidth: true; spacing: 3
@@ -1483,13 +1488,25 @@ Ui.Panel {
                                     Copy { id: updateStatusText; width: updateStatusScroll.availableWidth; text: root.updateMessage; color: root.updateStage === "error" ? root.amber : root.muted; font.pixelSize: 13 }
                                 }
                                 Copy { visible: !!root.updatePlan && root.updateStage === "review"; text: root.updatePlan ? root.updatePlan.installed + " → " + (root.updatePlan.available || "manager-selected compatible version") + " · " + root.updatePlan.source : ""; color: root.accent; Layout.fillWidth: true; font.pixelSize: 13 }
-                                Copy { visible: !!root.updatePlan && root.updateStage === "review"; text: root.updatePlan ? root.updatePlan.scope + "\n\n" + root.updatePlan.impact + "\n\nCommand: " + root.updatePlan.command.join(" ") : ""; Layout.fillWidth: true; font.pixelSize: 13; lineHeight: 1.3 }
+                                ScrollView {
+                                    id: updatePlanScroll
+                                    objectName: "updatePlanScroll"
+                                    visible: !!root.updatePlan && root.updateStage === "review"
+                                    contentWidth: availableWidth
+                                    implicitHeight: Math.min(updatePlanText.implicitHeight, 120)
+                                    Layout.fillWidth: true
+                                    Layout.preferredHeight: implicitHeight
+                                    Layout.minimumHeight: implicitHeight
+                                    Layout.maximumHeight: 120
+                                    clip: true
+                                    Copy { id: updatePlanText; width: updatePlanScroll.availableWidth; text: root.updatePlan ? root.updatePlan.scope + "\n\n" + root.updatePlan.impact + "\n\nCommand: " + root.updatePlan.command.join(" ") : ""; font.pixelSize: 13; lineHeight: 1.3 }
+                                }
                                 ScrollView {
                                     id: selectedReviewScroll
                                     contentWidth: availableWidth
-                                    implicitHeight: 160
+                                    implicitHeight: 120
                                     visible: !!root.updateBatch && root.updateStage === "review"
-                                    Layout.fillWidth: true; Layout.preferredHeight: 160; Layout.minimumHeight: 160; Layout.maximumHeight: 160; clip: true
+                                    Layout.fillWidth: true; Layout.preferredHeight: 120; Layout.minimumHeight: 120; Layout.maximumHeight: 120; clip: true
                                     ColumnLayout {
                                         width: selectedReviewScroll.availableWidth; spacing: 14
                                         Repeater {

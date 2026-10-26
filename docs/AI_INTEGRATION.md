@@ -2,7 +2,7 @@
 
 Ironclad uses an existing signed-in Codex or Claude Code CLI. No new provider key, browser login extraction, model download or Ironclad account is required. The client handles its own authentication. Detection exposes availability, not account identity.
 
-The GUI requests explanations for every selected Quick 90, Full 180 or Super Scan 420 check, with risk-priority ordering, incremental progress and per-check follow-up. Responses must match the current scan and known check IDs. Missing or failed responses stay explicitly incomplete. New scans archive the old snapshot and completed answers locally and clear the display before starting.
+On the post-launch branch, **Explain all checks** explicitly requests explanations for the selected Quick 90, Full 180 or Super Scan 420 checks, with risk-priority ordering, incremental progress and per-check follow-up. Scan completion alone sends nothing. A new scan does not reuse consent. Published 0.2.36 automatically requested these explanations; the change is not yet a new release. Responses must match the current scan and known check IDs. Missing or failed responses stay explicitly incomplete. New scans archive the old snapshot and completed answers locally and clear the display before starting.
 
 Bounded redacted context and questions travel through stdin, not command arguments. CLI brief preparation is offline. GUI explanation and Ask agent actions send that context through the signed-in client's provider. Account limits and provider retention policies apply. Unknown private text cannot be universally redacted.
 

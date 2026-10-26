@@ -1,0 +1,5646 @@
+{
+  "bomFormat": "CycloneDX",
+  "components": [
+    {
+      "bom-ref": "cargo-local:aya-obj@0.2.1",
+      "name": "aya-obj",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "local/patched workspace source"
+        },
+        {
+          "name": "ironclad:identity",
+          "value": "local source; no unmodified registry purl asserted"
+        }
+      ],
+      "type": "library",
+      "version": "0.2.1"
+    },
+    {
+      "bom-ref": "cargo-local:falco_event@0.5.0",
+      "name": "falco_event",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "local/patched workspace source"
+        },
+        {
+          "name": "ironclad:identity",
+          "value": "local source; no unmodified registry purl asserted"
+        }
+      ],
+      "type": "library",
+      "version": "0.5.0"
+    },
+    {
+      "bom-ref": "cargo-local:falco_event_derive@0.5.0",
+      "name": "falco_event_derive",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "local/patched workspace source"
+        },
+        {
+          "name": "ironclad:identity",
+          "value": "local source; no unmodified registry purl asserted"
+        }
+      ],
+      "type": "library",
+      "version": "0.5.0"
+    },
+    {
+      "bom-ref": "cargo-local:falco_event_schema@0.5.0",
+      "name": "falco_event_schema",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "local/patched workspace source"
+        },
+        {
+          "name": "ironclad:identity",
+          "value": "local source; no unmodified registry purl asserted"
+        }
+      ],
+      "type": "library",
+      "version": "0.5.0"
+    },
+    {
+      "bom-ref": "cargo-local:falco_plugin@0.5.0",
+      "name": "falco_plugin",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "local/patched workspace source"
+        },
+        {
+          "name": "ironclad:identity",
+          "value": "local source; no unmodified registry purl asserted"
+        }
+      ],
+      "type": "library",
+      "version": "0.5.0"
+    },
+    {
+      "bom-ref": "cargo-local:falco_plugin_api@0.5.0",
+      "name": "falco_plugin_api",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "local/patched workspace source"
+        },
+        {
+          "name": "ironclad:identity",
+          "value": "local source; no unmodified registry purl asserted"
+        }
+      ],
+      "type": "library",
+      "version": "0.5.0"
+    },
+    {
+      "bom-ref": "cargo-local:falco_plugin_derive@0.5.0",
+      "name": "falco_plugin_derive",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "local/patched workspace source"
+        },
+        {
+          "name": "ironclad:identity",
+          "value": "local source; no unmodified registry purl asserted"
+        }
+      ],
+      "type": "library",
+      "version": "0.5.0"
+    },
+    {
+      "bom-ref": "cargo-local:falco_schema_derive@0.5.0",
+      "name": "falco_schema_derive",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "local/patched workspace source"
+        },
+        {
+          "name": "ironclad:identity",
+          "value": "local source; no unmodified registry purl asserted"
+        }
+      ],
+      "type": "library",
+      "version": "0.5.0"
+    },
+    {
+      "bom-ref": "cargo-local:krsi-common@0.1.0",
+      "name": "krsi-common",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "local/patched workspace source"
+        },
+        {
+          "name": "ironclad:identity",
+          "value": "local source; no unmodified registry purl asserted"
+        }
+      ],
+      "type": "library",
+      "version": "0.1.0"
+    },
+    {
+      "bom-ref": "cargo-local:krsi-ebpf-core@0.1.0",
+      "name": "krsi-ebpf-core",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "local/patched workspace source"
+        },
+        {
+          "name": "ironclad:identity",
+          "value": "local source; no unmodified registry purl asserted"
+        }
+      ],
+      "type": "library",
+      "version": "0.1.0"
+    },
+    {
+      "bom-ref": "cargo-local:krsi-ebpf@0.1.0",
+      "name": "krsi-ebpf",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "local/patched workspace source"
+        },
+        {
+          "name": "ironclad:identity",
+          "value": "local source; no unmodified registry purl asserted"
+        }
+      ],
+      "type": "library",
+      "version": "0.1.0"
+    },
+    {
+      "bom-ref": "cargo-local:krsi@0.1.0",
+      "name": "krsi",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "local/patched workspace source"
+        },
+        {
+          "name": "ironclad:identity",
+          "value": "local source; no unmodified registry purl asserted"
+        }
+      ],
+      "type": "library",
+      "version": "0.1.0"
+    },
+    {
+      "bom-ref": "cargo-registry:ahash@0.8.11",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "e89da841a80418a9b391ebaea17f5c112ffaaa96f621d2c285b5174da76b9011"
+        }
+      ],
+      "name": "ahash",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/ahash@0.8.11",
+      "type": "library",
+      "version": "0.8.11"
+    },
+    {
+      "bom-ref": "cargo-registry:aho-corasick@1.1.3",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "8e60d3430d3a69478ad0993f19238d2df97c507009a52b3c10addcd7f6bcb916"
+        }
+      ],
+      "name": "aho-corasick",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/aho-corasick@1.1.3",
+      "type": "library",
+      "version": "1.1.3"
+    },
+    {
+      "bom-ref": "cargo-registry:allocator-api2@0.2.21",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "683d7910e743518b0e34f1186f92494becacb047c7b6bf616c96772180fef923"
+        }
+      ],
+      "name": "allocator-api2",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/allocator-api2@0.2.21",
+      "type": "library",
+      "version": "0.2.21"
+    },
+    {
+      "bom-ref": "cargo-registry:android-tzdata@0.1.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "e999941b234f3131b00bc13c22d06e8c5ff726d1b6318ac7eb276997bbb4fef0"
+        }
+      ],
+      "name": "android-tzdata",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/android-tzdata@0.1.1",
+      "type": "library",
+      "version": "0.1.1"
+    },
+    {
+      "bom-ref": "cargo-registry:android_system_properties@0.1.5",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "819e7219dbd41043ac279b19830f2efc897156490d7fd6ea916720117ee66311"
+        }
+      ],
+      "name": "android_system_properties",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/android_system_properties@0.1.5",
+      "type": "library",
+      "version": "0.1.5"
+    },
+    {
+      "bom-ref": "cargo-registry:anyhow@1.0.102",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "7f202df86484c868dbad7eaa557ef785d5c66295e41b460ef922eca0723b842c"
+        }
+      ],
+      "name": "anyhow",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/anyhow@1.0.102",
+      "type": "library",
+      "version": "1.0.102"
+    },
+    {
+      "bom-ref": "cargo-registry:assert_matches@1.5.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "9b34d609dfbaf33d6889b2b7106d3ca345eacad44200913df5ba02bfd31d2ba9"
+        }
+      ],
+      "name": "assert_matches",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/assert_matches@1.5.0",
+      "type": "library",
+      "version": "1.5.0"
+    },
+    {
+      "bom-ref": "cargo-registry:attribute-derive-macro@0.10.5",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "0a7cdbbd4bd005c5d3e2e9c885e6fa575db4f4a3572335b974d8db853b6beb61"
+        }
+      ],
+      "name": "attribute-derive-macro",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/attribute-derive-macro@0.10.5",
+      "type": "library",
+      "version": "0.10.5"
+    },
+    {
+      "bom-ref": "cargo-registry:attribute-derive@0.10.5",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "05832cdddc8f2650cc2cc187cc2e952b8c133a48eb055f35211f61ee81502d77"
+        }
+      ],
+      "name": "attribute-derive",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/attribute-derive@0.10.5",
+      "type": "library",
+      "version": "0.10.5"
+    },
+    {
+      "bom-ref": "cargo-registry:autocfg@1.4.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "ace50bade8e6234aa140d9a2f552bbee1db4d353f69b8217bc503490fc1a9f26"
+        }
+      ],
+      "name": "autocfg",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/autocfg@1.4.0",
+      "type": "library",
+      "version": "1.4.0"
+    },
+    {
+      "bom-ref": "cargo-registry:aya-ebpf-bindings@0.1.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "783dc1a82a3d71d83286165381dcc1b1d41643f4b110733d135547527c000a9a"
+        }
+      ],
+      "name": "aya-ebpf-bindings",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/aya-ebpf-bindings@0.1.1",
+      "type": "library",
+      "version": "0.1.1"
+    },
+    {
+      "bom-ref": "cargo-registry:aya-ebpf-cty@0.2.2",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "2cce099aaf3abb89f9a1f8594ffe07fa53738ebc2882fac624d10d9ba31a1b10"
+        }
+      ],
+      "name": "aya-ebpf-cty",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/aya-ebpf-cty@0.2.2",
+      "type": "library",
+      "version": "0.2.2"
+    },
+    {
+      "bom-ref": "cargo-registry:aya-ebpf-macros@0.1.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "72f47f7b4a75eb5f1d7ba0fb5628d247b1cf20388658899177875dabdda66865"
+        }
+      ],
+      "name": "aya-ebpf-macros",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/aya-ebpf-macros@0.1.1",
+      "type": "library",
+      "version": "0.1.1"
+    },
+    {
+      "bom-ref": "cargo-registry:aya-ebpf@0.1.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "d8dbaf5409a1a0982e5c9bdc0f499a55fe5ead39fe9c846012053faf0d404f73"
+        }
+      ],
+      "name": "aya-ebpf",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/aya-ebpf@0.1.1",
+      "type": "library",
+      "version": "0.1.1"
+    },
+    {
+      "bom-ref": "cargo-registry:aya-log-common@0.1.15",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "befef9fe882e63164a2ba0161874e954648a72b0e1c4b361f532d590638c4eec"
+        }
+      ],
+      "name": "aya-log-common",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/aya-log-common@0.1.15",
+      "type": "library",
+      "version": "0.1.15"
+    },
+    {
+      "bom-ref": "cargo-registry:aya-log-ebpf-macros@0.1.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "f6d8251a75f56077db51892041aa6b77c70ef2723845d7a210979700b2f01bc4"
+        }
+      ],
+      "name": "aya-log-ebpf-macros",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/aya-log-ebpf-macros@0.1.0",
+      "type": "library",
+      "version": "0.1.0"
+    },
+    {
+      "bom-ref": "cargo-registry:aya-log-ebpf@0.1.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "ae348f459df78a79e5cd5e164b6562b927033b97ca3b033605b341a474f44510"
+        }
+      ],
+      "name": "aya-log-ebpf",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/aya-log-ebpf@0.1.1",
+      "type": "library",
+      "version": "0.1.1"
+    },
+    {
+      "bom-ref": "cargo-registry:aya-log-parser@0.1.13",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "14b102eb5c88c9aa0b49102d3fbcee08ecb0dfa81014f39b373311de7a7032cb"
+        }
+      ],
+      "name": "aya-log-parser",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/aya-log-parser@0.1.13",
+      "type": "library",
+      "version": "0.1.13"
+    },
+    {
+      "bom-ref": "cargo-registry:aya-log@0.2.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "b600d806c1d07d3b81ab5f4a2a95fd80f479a0d3f1d68f29064d660865f85f02"
+        }
+      ],
+      "name": "aya-log",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/aya-log@0.2.1",
+      "type": "library",
+      "version": "0.2.1"
+    },
+    {
+      "bom-ref": "cargo-registry:aya@0.13.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "d18bc4e506fbb85ab7392ed993a7db4d1a452c71b75a246af4a80ab8c9d2dd50"
+        }
+      ],
+      "name": "aya",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/aya@0.13.1",
+      "type": "library",
+      "version": "0.13.1"
+    },
+    {
+      "bom-ref": "cargo-registry:bincode@2.0.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "36eaf5d7b090263e8150820482d5d93cd964a81e4019913c972f4edcc6edb740"
+        }
+      ],
+      "name": "bincode",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/bincode@2.0.1",
+      "type": "library",
+      "version": "2.0.1"
+    },
+    {
+      "bom-ref": "cargo-registry:bincode_derive@2.0.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "bf95709a440f45e986983918d0e8a1f30a9b1df04918fc828670606804ac3c09"
+        }
+      ],
+      "name": "bincode_derive",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/bincode_derive@2.0.1",
+      "type": "library",
+      "version": "2.0.1"
+    },
+    {
+      "bom-ref": "cargo-registry:bindgen@0.72.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "993776b509cfb49c750f11b8f07a46fa23e0a1386ffc01fb1e7d343efc387895"
+        }
+      ],
+      "name": "bindgen",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/bindgen@0.72.1",
+      "type": "library",
+      "version": "0.72.1"
+    },
+    {
+      "bom-ref": "cargo-registry:bitflags@2.11.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "c4512299f36f043ab09a583e57bceb5a5aab7a73db1805848e8fef3c9e8c78b3"
+        }
+      ],
+      "name": "bitflags",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/bitflags@2.11.1",
+      "type": "library",
+      "version": "2.11.1"
+    },
+    {
+      "bom-ref": "cargo-registry:bumpalo@3.17.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "1628fb46dfa0b37568d12e5edd512553eccf6a22a78e8bde00bb4aed84d5bdbf"
+        }
+      ],
+      "name": "bumpalo",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/bumpalo@3.17.0",
+      "type": "library",
+      "version": "3.17.0"
+    },
+    {
+      "bom-ref": "cargo-registry:byteorder@1.5.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "1fd0f2584146f6f2ef48085050886acf353beff7305ebd1ae69500e27c67f64b"
+        }
+      ],
+      "name": "byteorder",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/byteorder@1.5.0",
+      "type": "library",
+      "version": "1.5.0"
+    },
+    {
+      "bom-ref": "cargo-registry:bytes@1.11.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "1e748733b7cbc798e1434b6ac524f0c1ff2ab456fe201501e6497c8417a4fc33"
+        }
+      ],
+      "name": "bytes",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/bytes@1.11.1",
+      "type": "library",
+      "version": "1.11.1"
+    },
+    {
+      "bom-ref": "cargo-registry:cc@1.2.61",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "d16d90359e986641506914ba71350897565610e87ce0ad9e6f28569db3dd5c6d"
+        }
+      ],
+      "name": "cc",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/cc@1.2.61",
+      "type": "library",
+      "version": "1.2.61"
+    },
+    {
+      "bom-ref": "cargo-registry:cexpr@0.6.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "6fac387a98bb7c37292057cffc56d62ecb629900026402633ae9160df93a8766"
+        }
+      ],
+      "name": "cexpr",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/cexpr@0.6.0",
+      "type": "library",
+      "version": "0.6.0"
+    },
+    {
+      "bom-ref": "cargo-registry:cfg-if@1.0.4",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "9330f8b2ff13f34540b44e946ef35111825727b38d33286ef986142615121801"
+        }
+      ],
+      "name": "cfg-if",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/cfg-if@1.0.4",
+      "type": "library",
+      "version": "1.0.4"
+    },
+    {
+      "bom-ref": "cargo-registry:cfg_aliases@0.2.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "613afe47fcd5fac7ccf1db93babcb082c5994d996f20b8b159f2ad1658eb5724"
+        }
+      ],
+      "name": "cfg_aliases",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/cfg_aliases@0.2.1",
+      "type": "library",
+      "version": "0.2.1"
+    },
+    {
+      "bom-ref": "cargo-registry:chrono@0.4.40",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "1a7964611d71df112cb1730f2ee67324fcf4d0fc6606acbbe9bfe06df124637c"
+        }
+      ],
+      "name": "chrono",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/chrono@0.4.40",
+      "type": "library",
+      "version": "0.4.40"
+    },
+    {
+      "bom-ref": "cargo-registry:clang-sys@1.8.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "0b023947811758c97c59bf9d1c188fd619ad4718dcaa767947df1cadb14f39f4"
+        }
+      ],
+      "name": "clang-sys",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/clang-sys@1.8.1",
+      "type": "library",
+      "version": "1.8.1"
+    },
+    {
+      "bom-ref": "cargo-registry:collection_literals@1.0.3",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "2550f75b8cfac212855f6b1885455df8eaee8fe8e246b647d69146142e016084"
+        }
+      ],
+      "name": "collection_literals",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/collection_literals@1.0.3",
+      "type": "library",
+      "version": "1.0.3"
+    },
+    {
+      "bom-ref": "cargo-registry:core-error@0.0.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "efcdb2972eb64230b4c50646d8498ff73f5128d196a90c7236eec4cbe8619b8f"
+        }
+      ],
+      "name": "core-error",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/core-error@0.0.0",
+      "type": "library",
+      "version": "0.0.0"
+    },
+    {
+      "bom-ref": "cargo-registry:core-foundation-sys@0.8.7",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "773648b94d0e5d620f64f280777445740e61fe701025087ec8b57f45c791888b"
+        }
+      ],
+      "name": "core-foundation-sys",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/core-foundation-sys@0.8.7",
+      "type": "library",
+      "version": "0.8.7"
+    },
+    {
+      "bom-ref": "cargo-registry:crc32fast@1.4.2",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "a97769d94ddab943e4510d138150169a2758b5ef3eb191a9ee688de3e23ef7b3"
+        }
+      ],
+      "name": "crc32fast",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/crc32fast@1.4.2",
+      "type": "library",
+      "version": "1.4.2"
+    },
+    {
+      "bom-ref": "cargo-registry:derive-where@1.6.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "ef941ded77d15ca19b40374869ac6000af1c9f2a4c0f3d4c70926287e6364a8f"
+        }
+      ],
+      "name": "derive-where",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/derive-where@1.6.0",
+      "type": "library",
+      "version": "1.6.0"
+    },
+    {
+      "bom-ref": "cargo-registry:dyn-clone@1.0.19",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "1c7a8fb8a9fbf66c1f703fe16184d10ca0ee9d23be5b4436400408ba54a95005"
+        }
+      ],
+      "name": "dyn-clone",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/dyn-clone@1.0.19",
+      "type": "library",
+      "version": "1.0.19"
+    },
+    {
+      "bom-ref": "cargo-registry:either@1.15.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "48c757948c5ede0e46177b7add2e67155f70e33c07fea8284df6576da70b3719"
+        }
+      ],
+      "name": "either",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/either@1.15.0",
+      "type": "library",
+      "version": "1.15.0"
+    },
+    {
+      "bom-ref": "cargo-registry:env_filter@1.0.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "7a1c3cc8e57274ec99de65301228b537f1e4eedc1b8e0f9411c6caac8ae7308f"
+        }
+      ],
+      "name": "env_filter",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/env_filter@1.0.0",
+      "type": "library",
+      "version": "1.0.0"
+    },
+    {
+      "bom-ref": "cargo-registry:env_logger@0.11.10",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "0621c04f2196ac3f488dd583365b9c09be011a4ab8b9f37248ffcc8f6198b56a"
+        }
+      ],
+      "name": "env_logger",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/env_logger@0.11.10",
+      "type": "library",
+      "version": "0.11.10"
+    },
+    {
+      "bom-ref": "cargo-registry:equivalent@1.0.2",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "877a4ace8713b0bcf2a4e7eec82529c029f1d0619886d18145fea96c3ffe5c0f"
+        }
+      ],
+      "name": "equivalent",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/equivalent@1.0.2",
+      "type": "library",
+      "version": "1.0.2"
+    },
+    {
+      "bom-ref": "cargo-registry:fastrand@2.3.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "37909eebbb50d72f9059c3b6d82c0463f2ff062c9e95845c43a6c9c0355411be"
+        }
+      ],
+      "name": "fastrand",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/fastrand@2.3.0",
+      "type": "library",
+      "version": "2.3.0"
+    },
+    {
+      "bom-ref": "cargo-registry:find-msvc-tools@0.1.9",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "5baebc0774151f905a1a2cc41989300b1e6fbb29aff0ceffa1064fdd3088d582"
+        }
+      ],
+      "name": "find-msvc-tools",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/find-msvc-tools@0.1.9",
+      "type": "library",
+      "version": "0.1.9"
+    },
+    {
+      "bom-ref": "cargo-registry:foldhash@0.1.4",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "a0d2fde1f7b3d48b8395d5f2de76c18a528bd6a9cdde438df747bfcba3e05d6f"
+        }
+      ],
+      "name": "foldhash",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/foldhash@0.1.4",
+      "type": "library",
+      "version": "0.1.4"
+    },
+    {
+      "bom-ref": "cargo-registry:glob@0.3.2",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "a8d1add55171497b4705a648c6b583acafb01d58050a51727785f0b2c8e0a2b2"
+        }
+      ],
+      "name": "glob",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/glob@0.3.2",
+      "type": "library",
+      "version": "0.3.2"
+    },
+    {
+      "bom-ref": "cargo-registry:hashbrown@0.13.2",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "43a3c133739dddd0d2990f9a4bdf8eb4b21ef50e4851ca85ab661199821d510e"
+        }
+      ],
+      "name": "hashbrown",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/hashbrown@0.13.2",
+      "type": "library",
+      "version": "0.13.2"
+    },
+    {
+      "bom-ref": "cargo-registry:hashbrown@0.15.2",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "bf151400ff0baff5465007dd2f3e717f3fe502074ca563069ce3a6629d07b289"
+        }
+      ],
+      "name": "hashbrown",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/hashbrown@0.15.2",
+      "type": "library",
+      "version": "0.15.2"
+    },
+    {
+      "bom-ref": "cargo-registry:hashlru@0.11.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "d2c782df656366ccb42fbbac7c7c180535a43d906a138ffb491ec3ed56a239ab"
+        }
+      ],
+      "name": "hashlru",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/hashlru@0.11.1",
+      "type": "library",
+      "version": "0.11.1"
+    },
+    {
+      "bom-ref": "cargo-registry:hermit-abi@0.5.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "f154ce46856750ed433c8649605bf7ed2de3bc35fd9d2a9f30cddd873c80cb08"
+        }
+      ],
+      "name": "hermit-abi",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/hermit-abi@0.5.1",
+      "type": "library",
+      "version": "0.5.1"
+    },
+    {
+      "bom-ref": "cargo-registry:iana-time-zone-haiku@0.1.2",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "f31827a206f56af32e590ba56d5d2d085f558508192593743f16b2306495269f"
+        }
+      ],
+      "name": "iana-time-zone-haiku",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/iana-time-zone-haiku@0.1.2",
+      "type": "library",
+      "version": "0.1.2"
+    },
+    {
+      "bom-ref": "cargo-registry:iana-time-zone@0.1.61",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "235e081f3925a06703c2d0117ea8b91f042756fd6e7a6e5d901e8ca1a996b220"
+        }
+      ],
+      "name": "iana-time-zone",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/iana-time-zone@0.1.61",
+      "type": "library",
+      "version": "0.1.61"
+    },
+    {
+      "bom-ref": "cargo-registry:indexmap@2.8.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "3954d50fe15b02142bf25d3b8bdadb634ec3948f103d04ffe3031bc8fe9d7058"
+        }
+      ],
+      "name": "indexmap",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/indexmap@2.8.0",
+      "type": "library",
+      "version": "2.8.0"
+    },
+    {
+      "bom-ref": "cargo-registry:interpolator@0.5.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "71dd52191aae121e8611f1e8dc3e324dd0dd1dee1e6dd91d10ee07a3cfb4d9d8"
+        }
+      ],
+      "name": "interpolator",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/interpolator@0.5.0",
+      "type": "library",
+      "version": "0.5.0"
+    },
+    {
+      "bom-ref": "cargo-registry:itertools@0.13.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "413ee7dfc52ee1a4949ceeb7dbc8a33f2d6c088194d9f922fb8318faf1f01186"
+        }
+      ],
+      "name": "itertools",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/itertools@0.13.0",
+      "type": "library",
+      "version": "0.13.0"
+    },
+    {
+      "bom-ref": "cargo-registry:itoa@1.0.15",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "4a5f13b858c8d314ee3e8f639011f7ccefe71f97f96e50151fb991f267928e2c"
+        }
+      ],
+      "name": "itoa",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/itoa@1.0.15",
+      "type": "library",
+      "version": "1.0.15"
+    },
+    {
+      "bom-ref": "cargo-registry:js-sys@0.3.77",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "1cfaf33c695fc6e08064efbc1f72ec937429614f25eef83af942d0e227c3a28f"
+        }
+      ],
+      "name": "js-sys",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/js-sys@0.3.77",
+      "type": "library",
+      "version": "0.3.77"
+    },
+    {
+      "bom-ref": "cargo-registry:libc@0.2.186",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "68ab91017fe16c622486840e4c83c9a37afeff978bd239b5293d61ece587de66"
+        }
+      ],
+      "name": "libc",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/libc@0.2.186",
+      "type": "library",
+      "version": "0.2.186"
+    },
+    {
+      "bom-ref": "cargo-registry:libloading@0.8.6",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "fc2f4eb4bc735547cfed7c0a4922cbd04a4655978c09b54f1f7b228750664c34"
+        }
+      ],
+      "name": "libloading",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/libloading@0.8.6",
+      "type": "library",
+      "version": "0.8.6"
+    },
+    {
+      "bom-ref": "cargo-registry:lock_api@0.4.12",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "07af8b9cdd281b7915f413fa73f29ebd5d55d0d3f0155584dade1ff18cea1b17"
+        }
+      ],
+      "name": "lock_api",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/lock_api@0.4.12",
+      "type": "library",
+      "version": "0.4.12"
+    },
+    {
+      "bom-ref": "cargo-registry:log@0.4.29",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "5e5032e24019045c762d3c0f28f5b6b8bbf38563a65908389bf7978758920897"
+        }
+      ],
+      "name": "log",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/log@0.4.29",
+      "type": "library",
+      "version": "0.4.29"
+    },
+    {
+      "bom-ref": "cargo-registry:manyhow-macros@0.11.4",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "46fce34d199b78b6e6073abf984c9cf5fd3e9330145a93ee0738a7443e371495"
+        }
+      ],
+      "name": "manyhow-macros",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/manyhow-macros@0.11.4",
+      "type": "library",
+      "version": "0.11.4"
+    },
+    {
+      "bom-ref": "cargo-registry:manyhow@0.11.4",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "b33efb3ca6d3b07393750d4030418d594ab1139cee518f0dc88db70fec873587"
+        }
+      ],
+      "name": "manyhow",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/manyhow@0.11.4",
+      "type": "library",
+      "version": "0.11.4"
+    },
+    {
+      "bom-ref": "cargo-registry:memchr@2.7.4",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "78ca9ab1a0babb1e7d5695e3530886289c18cf2f87ec19a575a0abdce112e3a3"
+        }
+      ],
+      "name": "memchr",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/memchr@2.7.4",
+      "type": "library",
+      "version": "2.7.4"
+    },
+    {
+      "bom-ref": "cargo-registry:minimal-lexical@0.2.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "68354c5c6bd36d73ff3feceb05efa59b6acb7626617f4962be322a825e61f79a"
+        }
+      ],
+      "name": "minimal-lexical",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/minimal-lexical@0.2.1",
+      "type": "library",
+      "version": "0.2.1"
+    },
+    {
+      "bom-ref": "cargo-registry:mio@1.2.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "50b7e5b27aa02a74bac8c3f23f448f8d87ff11f92d3aac1a6ed369ee08cc56c1"
+        }
+      ],
+      "name": "mio",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/mio@1.2.0",
+      "type": "library",
+      "version": "1.2.0"
+    },
+    {
+      "bom-ref": "cargo-registry:nix@0.30.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "74523f3a35e05aba87a1d978330aef40f67b0304ac79c1c00b294c9830543db6"
+        }
+      ],
+      "name": "nix",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/nix@0.30.1",
+      "type": "library",
+      "version": "0.30.1"
+    },
+    {
+      "bom-ref": "cargo-registry:nom@7.1.3",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "d273983c5a657a70a3e8f2a01329822f3b8c8172b73826411a55751e404a0a4a"
+        }
+      ],
+      "name": "nom",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/nom@7.1.3",
+      "type": "library",
+      "version": "7.1.3"
+    },
+    {
+      "bom-ref": "cargo-registry:num-derive@0.4.2",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "ed3955f1a9c7c0c15e092f9c887db08b1fc683305fdf6eb6684f22555355e202"
+        }
+      ],
+      "name": "num-derive",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/num-derive@0.4.2",
+      "type": "library",
+      "version": "0.4.2"
+    },
+    {
+      "bom-ref": "cargo-registry:num-traits@0.2.19",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "071dfc062690e90b734c0b2273ce72ad0ffa95f0c74596bc250dcfd960262841"
+        }
+      ],
+      "name": "num-traits",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/num-traits@0.2.19",
+      "type": "library",
+      "version": "0.2.19"
+    },
+    {
+      "bom-ref": "cargo-registry:num_cpus@1.17.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "91df4bbde75afed763b708b7eee1e8e7651e02d97f6d5dd763e89367e957b23b"
+        }
+      ],
+      "name": "num_cpus",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/num_cpus@1.17.0",
+      "type": "library",
+      "version": "1.17.0"
+    },
+    {
+      "bom-ref": "cargo-registry:num_enum@0.7.3",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "4e613fc340b2220f734a8595782c551f1250e969d87d3be1ae0579e8d4065179"
+        }
+      ],
+      "name": "num_enum",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/num_enum@0.7.3",
+      "type": "library",
+      "version": "0.7.3"
+    },
+    {
+      "bom-ref": "cargo-registry:num_enum_derive@0.7.3",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "af1844ef2428cc3e1cb900be36181049ef3d3193c63e43026cfe202983b27a56"
+        }
+      ],
+      "name": "num_enum_derive",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/num_enum_derive@0.7.3",
+      "type": "library",
+      "version": "0.7.3"
+    },
+    {
+      "bom-ref": "cargo-registry:object@0.36.7",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "62948e14d923ea95ea2c7c86c71013138b66525b86bdc08d2dcc262bdb497b87"
+        }
+      ],
+      "name": "object",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/object@0.36.7",
+      "type": "library",
+      "version": "0.36.7"
+    },
+    {
+      "bom-ref": "cargo-registry:once_cell@1.21.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "cde51589ab56b20a6f686b2c68f7a0bd6add753d697abf720d63f8db3ab7b1ad"
+        }
+      ],
+      "name": "once_cell",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/once_cell@1.21.0",
+      "type": "library",
+      "version": "1.21.0"
+    },
+    {
+      "bom-ref": "cargo-registry:paste@1.0.15",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "57c0d7b74b563b49d38dae00a0c37d4d6de9b432382b2892f0574ddcae73fd0a"
+        }
+      ],
+      "name": "paste",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/paste@1.0.15",
+      "type": "library",
+      "version": "1.0.15"
+    },
+    {
+      "bom-ref": "cargo-registry:phf@0.12.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "913273894cec178f401a31ec4b656318d95473527be05c0752cc41cdc32be8b7"
+        }
+      ],
+      "name": "phf",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/phf@0.12.1",
+      "type": "library",
+      "version": "0.12.1"
+    },
+    {
+      "bom-ref": "cargo-registry:phf_generator@0.12.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "2cbb1126afed61dd6368748dae63b1ee7dc480191c6262a3b4ff1e29d86a6c5b"
+        }
+      ],
+      "name": "phf_generator",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/phf_generator@0.12.1",
+      "type": "library",
+      "version": "0.12.1"
+    },
+    {
+      "bom-ref": "cargo-registry:phf_macros@0.12.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "d713258393a82f091ead52047ca779d37e5766226d009de21696c4e667044368"
+        }
+      ],
+      "name": "phf_macros",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/phf_macros@0.12.1",
+      "type": "library",
+      "version": "0.12.1"
+    },
+    {
+      "bom-ref": "cargo-registry:phf_shared@0.12.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "06005508882fb681fd97892ecff4b7fd0fee13ef1aa569f8695dae7ab9099981"
+        }
+      ],
+      "name": "phf_shared",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/phf_shared@0.12.1",
+      "type": "library",
+      "version": "0.12.1"
+    },
+    {
+      "bom-ref": "cargo-registry:pin-project-lite@0.2.16",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "3b3cff922bd51709b605d9ead9aa71031d81447142d828eb4a6eba76fe619f9b"
+        }
+      ],
+      "name": "pin-project-lite",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/pin-project-lite@0.2.16",
+      "type": "library",
+      "version": "0.2.16"
+    },
+    {
+      "bom-ref": "cargo-registry:prettyplease@0.2.32",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "664ec5419c51e34154eec046ebcba56312d5a2fc3b09a06da188e1ad21afadf6"
+        }
+      ],
+      "name": "prettyplease",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/prettyplease@0.2.32",
+      "type": "library",
+      "version": "0.2.32"
+    },
+    {
+      "bom-ref": "cargo-registry:proc-macro-error-attr@1.0.4",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "a1be40180e52ecc98ad80b184934baf3d0d29f979574e439af5a55274b35f869"
+        }
+      ],
+      "name": "proc-macro-error-attr",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/proc-macro-error-attr@1.0.4",
+      "type": "library",
+      "version": "1.0.4"
+    },
+    {
+      "bom-ref": "cargo-registry:proc-macro-error@1.0.4",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "da25490ff9892aab3fcf7c36f08cfb902dd3e71ca0f9f9517bea02a73a5ce38c"
+        }
+      ],
+      "name": "proc-macro-error",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/proc-macro-error@1.0.4",
+      "type": "library",
+      "version": "1.0.4"
+    },
+    {
+      "bom-ref": "cargo-registry:proc-macro-utils@0.10.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "eeaf08a13de400bc215877b5bdc088f241b12eb42f0a548d3390dc1c56bb7071"
+        }
+      ],
+      "name": "proc-macro-utils",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/proc-macro-utils@0.10.0",
+      "type": "library",
+      "version": "0.10.0"
+    },
+    {
+      "bom-ref": "cargo-registry:proc-macro2@1.0.94",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "a31971752e70b8b2686d7e46ec17fb38dad4051d94024c88df49b667caea9c84"
+        }
+      ],
+      "name": "proc-macro2",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/proc-macro2@1.0.94",
+      "type": "library",
+      "version": "1.0.94"
+    },
+    {
+      "bom-ref": "cargo-registry:quote-use-macros@0.8.4",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "82ebfb7faafadc06a7ab141a6f67bcfb24cb8beb158c6fe933f2f035afa99f35"
+        }
+      ],
+      "name": "quote-use-macros",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/quote-use-macros@0.8.4",
+      "type": "library",
+      "version": "0.8.4"
+    },
+    {
+      "bom-ref": "cargo-registry:quote-use@0.8.4",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "9619db1197b497a36178cfc736dc96b271fe918875fbf1344c436a7e93d0321e"
+        }
+      ],
+      "name": "quote-use",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/quote-use@0.8.4",
+      "type": "library",
+      "version": "0.8.4"
+    },
+    {
+      "bom-ref": "cargo-registry:quote@1.0.44",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "21b2ebcf727b7760c461f091f9f0f539b77b8e87f2fd88131e7f1b433b3cece4"
+        }
+      ],
+      "name": "quote",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/quote@1.0.44",
+      "type": "library",
+      "version": "1.0.44"
+    },
+    {
+      "bom-ref": "cargo-registry:ref-cast-impl@1.0.25",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "b7186006dcb21920990093f30e3dea63b7d6e977bf1256be20c3563a5db070da"
+        }
+      ],
+      "name": "ref-cast-impl",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/ref-cast-impl@1.0.25",
+      "type": "library",
+      "version": "1.0.25"
+    },
+    {
+      "bom-ref": "cargo-registry:ref-cast@1.0.25",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "f354300ae66f76f1c85c5f84693f0ce81d747e2c3f21a45fef496d89c960bf7d"
+        }
+      ],
+      "name": "ref-cast",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/ref-cast@1.0.25",
+      "type": "library",
+      "version": "1.0.25"
+    },
+    {
+      "bom-ref": "cargo-registry:refcell-lock-api@0.1.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "aef5aec54439264f95d29cba927a8546d1950a38948ee4c80aba74fbfaea1116"
+        }
+      ],
+      "name": "refcell-lock-api",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/refcell-lock-api@0.1.0",
+      "type": "library",
+      "version": "0.1.0"
+    },
+    {
+      "bom-ref": "cargo-registry:regex-automata@0.4.9",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "809e8dc61f6de73b46c85f4c96486310fe304c434cfa43669d7b40f711150908"
+        }
+      ],
+      "name": "regex-automata",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/regex-automata@0.4.9",
+      "type": "library",
+      "version": "0.4.9"
+    },
+    {
+      "bom-ref": "cargo-registry:regex-syntax@0.8.5",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "2b15c43186be67a4fd63bee50d0303afffcef381492ebe2c5d87f324e1b8815c"
+        }
+      ],
+      "name": "regex-syntax",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/regex-syntax@0.8.5",
+      "type": "library",
+      "version": "0.8.5"
+    },
+    {
+      "bom-ref": "cargo-registry:regex@1.11.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "b544ef1b4eac5dc2db33ea63606ae9ffcfac26c1416a2806ae0bf5f56b201191"
+        }
+      ],
+      "name": "regex",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/regex@1.11.1",
+      "type": "library",
+      "version": "1.11.1"
+    },
+    {
+      "bom-ref": "cargo-registry:rustc-hash@2.1.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "357703d41365b4b27c590e3ed91eabb1b663f07c4c084095e60cbed4362dff0d"
+        }
+      ],
+      "name": "rustc-hash",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/rustc-hash@2.1.1",
+      "type": "library",
+      "version": "2.1.1"
+    },
+    {
+      "bom-ref": "cargo-registry:rustversion@1.0.20",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "eded382c5f5f786b989652c49544c4877d9f015cc22e145a5ea8ea66c2921cd2"
+        }
+      ],
+      "name": "rustversion",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/rustversion@1.0.20",
+      "type": "library",
+      "version": "1.0.20"
+    },
+    {
+      "bom-ref": "cargo-registry:schemars@1.1.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "9558e172d4e8533736ba97870c4b2cd63f84b382a3d6eb063da41b91cce17289"
+        }
+      ],
+      "name": "schemars",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/schemars@1.1.0",
+      "type": "library",
+      "version": "1.1.0"
+    },
+    {
+      "bom-ref": "cargo-registry:schemars_derive@1.1.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "301858a4023d78debd2353c7426dc486001bddc91ae31a76fb1f55132f7e2633"
+        }
+      ],
+      "name": "schemars_derive",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/schemars_derive@1.1.0",
+      "type": "library",
+      "version": "1.1.0"
+    },
+    {
+      "bom-ref": "cargo-registry:scopeguard@1.2.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "94143f37725109f92c262ed2cf5e59bce7498c01bcc1502d7b9afe439a4e9f49"
+        }
+      ],
+      "name": "scopeguard",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/scopeguard@1.2.0",
+      "type": "library",
+      "version": "1.2.0"
+    },
+    {
+      "bom-ref": "cargo-registry:serde@1.0.228",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "9a8e94ea7f378bd32cbbd37198a4a91436180c5bb472411e48b5ec2e2124ae9e"
+        }
+      ],
+      "name": "serde",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/serde@1.0.228",
+      "type": "library",
+      "version": "1.0.228"
+    },
+    {
+      "bom-ref": "cargo-registry:serde_core@1.0.228",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "41d385c7d4ca58e59fc732af25c3983b67ac852c1a25000afe1175de458b67ad"
+        }
+      ],
+      "name": "serde_core",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/serde_core@1.0.228",
+      "type": "library",
+      "version": "1.0.228"
+    },
+    {
+      "bom-ref": "cargo-registry:serde_derive@1.0.228",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "d540f220d3187173da220f885ab66608367b6574e925011a9353e4badda91d79"
+        }
+      ],
+      "name": "serde_derive",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/serde_derive@1.0.228",
+      "type": "library",
+      "version": "1.0.228"
+    },
+    {
+      "bom-ref": "cargo-registry:serde_derive_internals@0.29.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "18d26a20a969b9e3fdf2fc2d9f21eda6c40e2de84c9408bb5d3b05d499aae711"
+        }
+      ],
+      "name": "serde_derive_internals",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/serde_derive_internals@0.29.1",
+      "type": "library",
+      "version": "0.29.1"
+    },
+    {
+      "bom-ref": "cargo-registry:serde_json@1.0.149",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "83fc039473c5595ace860d8c4fafa220ff474b3fc6bfdb4293327f1a37e94d86"
+        }
+      ],
+      "name": "serde_json",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/serde_json@1.0.149",
+      "type": "library",
+      "version": "1.0.149"
+    },
+    {
+      "bom-ref": "cargo-registry:shlex@1.3.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "0fda2ff0d084019ba4d7c6f371c95d8fd75ce3524c3cb8fb653a3023f6323e64"
+        }
+      ],
+      "name": "shlex",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/shlex@1.3.0",
+      "type": "library",
+      "version": "1.3.0"
+    },
+    {
+      "bom-ref": "cargo-registry:signal-hook-registry@1.4.2",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "a9e9e0b4211b72e7b8b6e85c807d36c212bdb33ea8587f7569562a84df5465b1"
+        }
+      ],
+      "name": "signal-hook-registry",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/signal-hook-registry@1.4.2",
+      "type": "library",
+      "version": "1.4.2"
+    },
+    {
+      "bom-ref": "cargo-registry:siphasher@1.0.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "56199f7ddabf13fe5074ce809e7d3f42b42ae711800501b5b16ea82ad029c39d"
+        }
+      ],
+      "name": "siphasher",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/siphasher@1.0.1",
+      "type": "library",
+      "version": "1.0.1"
+    },
+    {
+      "bom-ref": "cargo-registry:smallvec@1.15.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "67b1b7a3b5fe4f1376887184045fcf45c69e92af734b7aaddc05fb777b6fbd03"
+        }
+      ],
+      "name": "smallvec",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/smallvec@1.15.1",
+      "type": "library",
+      "version": "1.15.1"
+    },
+    {
+      "bom-ref": "cargo-registry:socket2@0.6.3",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "3a766e1110788c36f4fa1c2b71b387a7815aa65f88ce0229841826633d93723e"
+        }
+      ],
+      "name": "socket2",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/socket2@0.6.3",
+      "type": "library",
+      "version": "0.6.3"
+    },
+    {
+      "bom-ref": "cargo-registry:syn@2.0.100",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "b09a44accad81e1ba1cd74a32461ba89dee89095ba17b32f5d03683b1b1fc2a0"
+        }
+      ],
+      "name": "syn",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/syn@2.0.100",
+      "type": "library",
+      "version": "2.0.100"
+    },
+    {
+      "bom-ref": "cargo-registry:thiserror-impl@1.0.69",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "4fee6c4efc90059e10f81e6d42c60a18f76588c3d74cb83a0b242a2b6c7504c1"
+        }
+      ],
+      "name": "thiserror-impl",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/thiserror-impl@1.0.69",
+      "type": "library",
+      "version": "1.0.69"
+    },
+    {
+      "bom-ref": "cargo-registry:thiserror-impl@2.0.18",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "ebc4ee7f67670e9b64d05fa4253e753e016c6c95ff35b89b7941d6b856dec1d5"
+        }
+      ],
+      "name": "thiserror-impl",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/thiserror-impl@2.0.18",
+      "type": "library",
+      "version": "2.0.18"
+    },
+    {
+      "bom-ref": "cargo-registry:thiserror@1.0.69",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "b6aaf5339b578ea85b50e080feb250a3e8ae8cfcdff9a461c9ec2904bc923f52"
+        }
+      ],
+      "name": "thiserror",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/thiserror@1.0.69",
+      "type": "library",
+      "version": "1.0.69"
+    },
+    {
+      "bom-ref": "cargo-registry:thiserror@2.0.18",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "4288b5bcbc7920c07a1149a35cf9590a2aa808e0bc1eafaade0b80947865fbc4"
+        }
+      ],
+      "name": "thiserror",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/thiserror@2.0.18",
+      "type": "library",
+      "version": "2.0.18"
+    },
+    {
+      "bom-ref": "cargo-registry:tokio-macros@2.7.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "385a6cb71ab9ab790c5fe8d67f1645e6c450a7ce006a33de03daa956cf70a496"
+        }
+      ],
+      "name": "tokio-macros",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/tokio-macros@2.7.0",
+      "type": "library",
+      "version": "2.7.0"
+    },
+    {
+      "bom-ref": "cargo-registry:tokio@1.52.2",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "110a78583f19d5cdb2c5ccf321d1290344e71313c6c37d43520d386027d18386"
+        }
+      ],
+      "name": "tokio",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/tokio@1.52.2",
+      "type": "library",
+      "version": "1.52.2"
+    },
+    {
+      "bom-ref": "cargo-registry:typed-path@0.11.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "c462d18470a2857aa657d338af5fa67170bb48bcc80a296710ce3b0802a32566"
+        }
+      ],
+      "name": "typed-path",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/typed-path@0.11.0",
+      "type": "library",
+      "version": "0.11.0"
+    },
+    {
+      "bom-ref": "cargo-registry:unicode-ident@1.0.18",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "5a5f39404a5da50712a4c1eecf25e90dd62b613502b7e925fd4e4d19b5c96512"
+        }
+      ],
+      "name": "unicode-ident",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/unicode-ident@1.0.18",
+      "type": "library",
+      "version": "1.0.18"
+    },
+    {
+      "bom-ref": "cargo-registry:unty@0.0.4",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "6d49784317cd0d1ee7ec5c716dd598ec5b4483ea832a2dced265471cc0f690ae"
+        }
+      ],
+      "name": "unty",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/unty@0.0.4",
+      "type": "library",
+      "version": "0.0.4"
+    },
+    {
+      "bom-ref": "cargo-registry:version_check@0.9.5",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "0b928f33d975fc6ad9f86c8f283853ad26bdd5b10b7f1542aa2fa15e2289105a"
+        }
+      ],
+      "name": "version_check",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/version_check@0.9.5",
+      "type": "library",
+      "version": "0.9.5"
+    },
+    {
+      "bom-ref": "cargo-registry:virtue@0.0.18",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "051eb1abcf10076295e815102942cc58f9d5e3b4560e46e53c21e8ff6f3af7b1"
+        }
+      ],
+      "name": "virtue",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/virtue@0.0.18",
+      "type": "library",
+      "version": "0.0.18"
+    },
+    {
+      "bom-ref": "cargo-registry:wasi@0.11.0+wasi-snapshot-preview1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "9c8d87e72b64a3b4db28d11ce29237c246188f4f51057d65a7eab63b7987e423"
+        }
+      ],
+      "name": "wasi",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/wasi@0.11.0%2Bwasi-snapshot-preview1",
+      "type": "library",
+      "version": "0.11.0+wasi-snapshot-preview1"
+    },
+    {
+      "bom-ref": "cargo-registry:wasm-bindgen-backend@0.2.100",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "2f0a0651a5c2bc21487bde11ee802ccaf4c51935d0d3d42a6101f98161700bc6"
+        }
+      ],
+      "name": "wasm-bindgen-backend",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/wasm-bindgen-backend@0.2.100",
+      "type": "library",
+      "version": "0.2.100"
+    },
+    {
+      "bom-ref": "cargo-registry:wasm-bindgen-macro-support@0.2.100",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "8ae87ea40c9f689fc23f209965b6fb8a99ad69aeeb0231408be24920604395de"
+        }
+      ],
+      "name": "wasm-bindgen-macro-support",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/wasm-bindgen-macro-support@0.2.100",
+      "type": "library",
+      "version": "0.2.100"
+    },
+    {
+      "bom-ref": "cargo-registry:wasm-bindgen-macro@0.2.100",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "7fe63fc6d09ed3792bd0897b314f53de8e16568c2b3f7982f468c0bf9bd0b407"
+        }
+      ],
+      "name": "wasm-bindgen-macro",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/wasm-bindgen-macro@0.2.100",
+      "type": "library",
+      "version": "0.2.100"
+    },
+    {
+      "bom-ref": "cargo-registry:wasm-bindgen-shared@0.2.100",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "1a05d73b933a847d6cccdda8f838a22ff101ad9bf93e33684f39c1f5f0eece3d"
+        }
+      ],
+      "name": "wasm-bindgen-shared",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/wasm-bindgen-shared@0.2.100",
+      "type": "library",
+      "version": "0.2.100"
+    },
+    {
+      "bom-ref": "cargo-registry:wasm-bindgen@0.2.100",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "1edc8929d7499fc4e8f0be2262a241556cfc54a0bea223790e71446f2aab1ef5"
+        }
+      ],
+      "name": "wasm-bindgen",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/wasm-bindgen@0.2.100",
+      "type": "library",
+      "version": "0.2.100"
+    },
+    {
+      "bom-ref": "cargo-registry:which@8.0.2",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "81995fafaaaf6ae47a7d0cc83c67caf92aeb7e5331650ae6ff856f7c0c60c459"
+        }
+      ],
+      "name": "which",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/which@8.0.2",
+      "type": "library",
+      "version": "8.0.2"
+    },
+    {
+      "bom-ref": "cargo-registry:windows-core@0.52.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "33ab640c8d7e35bf8ba19b884ba838ceb4fba93a4e8c65a9059d08afcfc683d9"
+        }
+      ],
+      "name": "windows-core",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/windows-core@0.52.0",
+      "type": "library",
+      "version": "0.52.0"
+    },
+    {
+      "bom-ref": "cargo-registry:windows-link@0.1.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "6dccfd733ce2b1753b03b6d3c65edf020262ea35e20ccdf3e288043e6dd620e3"
+        }
+      ],
+      "name": "windows-link",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/windows-link@0.1.0",
+      "type": "library",
+      "version": "0.1.0"
+    },
+    {
+      "bom-ref": "cargo-registry:windows-link@0.2.1",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "f0805222e57f7521d6a62e36fa9163bc891acd422f971defe97d64e70d0a4fe5"
+        }
+      ],
+      "name": "windows-link",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/windows-link@0.2.1",
+      "type": "library",
+      "version": "0.2.1"
+    },
+    {
+      "bom-ref": "cargo-registry:windows-sys@0.61.2",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "ae137229bcbd6cdf0f7b80a31df61766145077ddf49416a728b02cb3921ff3fc"
+        }
+      ],
+      "name": "windows-sys",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/windows-sys@0.61.2",
+      "type": "library",
+      "version": "0.61.2"
+    },
+    {
+      "bom-ref": "cargo-registry:windows-targets@0.52.6",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "9b724f72796e036ab90c1021d4780d4d3d648aca59e491e6b98e725b84e99973"
+        }
+      ],
+      "name": "windows-targets",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/windows-targets@0.52.6",
+      "type": "library",
+      "version": "0.52.6"
+    },
+    {
+      "bom-ref": "cargo-registry:windows_aarch64_gnullvm@0.52.6",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "32a4622180e7a0ec044bb555404c800bc9fd9ec262ec147edd5989ccd0c02cd3"
+        }
+      ],
+      "name": "windows_aarch64_gnullvm",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/windows_aarch64_gnullvm@0.52.6",
+      "type": "library",
+      "version": "0.52.6"
+    },
+    {
+      "bom-ref": "cargo-registry:windows_aarch64_msvc@0.52.6",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "09ec2a7bb152e2252b53fa7803150007879548bc709c039df7627cabbd05d469"
+        }
+      ],
+      "name": "windows_aarch64_msvc",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/windows_aarch64_msvc@0.52.6",
+      "type": "library",
+      "version": "0.52.6"
+    },
+    {
+      "bom-ref": "cargo-registry:windows_i686_gnu@0.52.6",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "8e9b5ad5ab802e97eb8e295ac6720e509ee4c243f69d781394014ebfe8bbfa0b"
+        }
+      ],
+      "name": "windows_i686_gnu",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/windows_i686_gnu@0.52.6",
+      "type": "library",
+      "version": "0.52.6"
+    },
+    {
+      "bom-ref": "cargo-registry:windows_i686_gnullvm@0.52.6",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "0eee52d38c090b3caa76c563b86c3a4bd71ef1a819287c19d586d7334ae8ed66"
+        }
+      ],
+      "name": "windows_i686_gnullvm",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/windows_i686_gnullvm@0.52.6",
+      "type": "library",
+      "version": "0.52.6"
+    },
+    {
+      "bom-ref": "cargo-registry:windows_i686_msvc@0.52.6",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "240948bc05c5e7c6dabba28bf89d89ffce3e303022809e73deaefe4f6ec56c66"
+        }
+      ],
+      "name": "windows_i686_msvc",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/windows_i686_msvc@0.52.6",
+      "type": "library",
+      "version": "0.52.6"
+    },
+    {
+      "bom-ref": "cargo-registry:windows_x86_64_gnu@0.52.6",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "147a5c80aabfbf0c7d901cb5895d1de30ef2907eb21fbbab29ca94c5b08b1a78"
+        }
+      ],
+      "name": "windows_x86_64_gnu",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/windows_x86_64_gnu@0.52.6",
+      "type": "library",
+      "version": "0.52.6"
+    },
+    {
+      "bom-ref": "cargo-registry:windows_x86_64_gnullvm@0.52.6",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "24d5b23dc417412679681396f2b49f3de8c1473deb516bd34410872eff51ed0d"
+        }
+      ],
+      "name": "windows_x86_64_gnullvm",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/windows_x86_64_gnullvm@0.52.6",
+      "type": "library",
+      "version": "0.52.6"
+    },
+    {
+      "bom-ref": "cargo-registry:windows_x86_64_msvc@0.52.6",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "589f6da84c646204747d1270a2a5661ea66ed1cced2631d546fdfb155959f9ec"
+        }
+      ],
+      "name": "windows_x86_64_msvc",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/windows_x86_64_msvc@0.52.6",
+      "type": "library",
+      "version": "0.52.6"
+    },
+    {
+      "bom-ref": "cargo-registry:zerocopy-derive@0.7.35",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "fa4f8080344d4671fb4e831a13ad1e68092748387dfc4f55e356242fae12ce3e"
+        }
+      ],
+      "name": "zerocopy-derive",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/zerocopy-derive@0.7.35",
+      "type": "library",
+      "version": "0.7.35"
+    },
+    {
+      "bom-ref": "cargo-registry:zerocopy-derive@0.8.48",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "70e3cd084b1788766f53af483dd21f93881ff30d7320490ec3ef7526d203bad4"
+        }
+      ],
+      "name": "zerocopy-derive",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/zerocopy-derive@0.8.48",
+      "type": "library",
+      "version": "0.8.48"
+    },
+    {
+      "bom-ref": "cargo-registry:zerocopy@0.7.35",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "1b9b4fd18abc82b8136838da5d50bae7bdea537c574d8dc1a34ed098d6c166f0"
+        }
+      ],
+      "name": "zerocopy",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/zerocopy@0.7.35",
+      "type": "library",
+      "version": "0.7.35"
+    },
+    {
+      "bom-ref": "cargo-registry:zerocopy@0.8.48",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "eed437bf9d6692032087e337407a86f04cd8d6a16a37199ed57949d415bd68e9"
+        }
+      ],
+      "name": "zerocopy",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/zerocopy@0.8.48",
+      "type": "library",
+      "version": "0.8.48"
+    },
+    {
+      "bom-ref": "cargo-registry:zmij@1.0.17",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "02aae0f83f69aafc94776e879363e9771d7ecbffe2c7fbb6c14c5e00dfe88439"
+        }
+      ],
+      "name": "zmij",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked-build-input; linked runtime membership unknown"
+        },
+        {
+          "name": "ironclad:source",
+          "value": "registry+https://github.com/rust-lang/crates.io-index"
+        },
+        {
+          "name": "ironclad:hash-subject",
+          "value": "registry crate archive, not linked library"
+        }
+      ],
+      "purl": "pkg:cargo/zmij@1.0.17",
+      "type": "library",
+      "version": "1.0.17"
+    },
+    {
+      "bom-ref": "external:Bubblewrap",
+      "name": "Bubblewrap",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "external requirement; not bundled"
+        },
+        {
+          "name": "ironclad:version",
+          "value": "not observed; host inventory excluded"
+        },
+        {
+          "name": "ironclad:usage",
+          "value": "required only for corresponding optional protection/setup feature"
+        }
+      ],
+      "scope": "optional",
+      "type": "application"
+    },
+    {
+      "bom-ref": "external:ClamAV",
+      "name": "ClamAV",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "external requirement; not bundled"
+        },
+        {
+          "name": "ironclad:version",
+          "value": "not observed; host inventory excluded"
+        },
+        {
+          "name": "ironclad:usage",
+          "value": "required only for corresponding optional protection/setup feature"
+        }
+      ],
+      "scope": "optional",
+      "type": "application"
+    },
+    {
+      "bom-ref": "external:Omarchy",
+      "name": "Omarchy",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "external requirement; not bundled"
+        },
+        {
+          "name": "ironclad:version",
+          "value": "not observed; host inventory excluded"
+        }
+      ],
+      "type": "application"
+    },
+    {
+      "bom-ref": "external:Python",
+      "name": "Python",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "external requirement; not bundled"
+        },
+        {
+          "name": "ironclad:version",
+          "value": "not observed; host inventory excluded"
+        }
+      ],
+      "type": "application"
+    },
+    {
+      "bom-ref": "external:Qt Quick/Controls",
+      "name": "Qt Quick/Controls",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "external requirement; not bundled"
+        },
+        {
+          "name": "ironclad:version",
+          "value": "not observed; host inventory excluded"
+        }
+      ],
+      "type": "framework"
+    },
+    {
+      "bom-ref": "external:Quickshell",
+      "name": "Quickshell",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "external requirement; not bundled"
+        },
+        {
+          "name": "ironclad:version",
+          "value": "not observed; host inventory excluded"
+        }
+      ],
+      "type": "framework"
+    },
+    {
+      "bom-ref": "external:libseccomp",
+      "name": "libseccomp",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "external requirement; not bundled"
+        },
+        {
+          "name": "ironclad:version",
+          "value": "not observed; host inventory excluded"
+        }
+      ],
+      "type": "application"
+    },
+    {
+      "bom-ref": "external:polkit",
+      "name": "polkit",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "external requirement; not bundled"
+        },
+        {
+          "name": "ironclad:version",
+          "value": "not observed; host inventory excluded"
+        },
+        {
+          "name": "ironclad:usage",
+          "value": "required only for corresponding optional protection/setup feature"
+        }
+      ],
+      "scope": "optional",
+      "type": "application"
+    },
+    {
+      "bom-ref": "external:systemd",
+      "name": "systemd",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "external requirement; not bundled"
+        },
+        {
+          "name": "ironclad:version",
+          "value": "not observed; host inventory excluded"
+        }
+      ],
+      "type": "application"
+    },
+    {
+      "bom-ref": "ironclad:bundled-krsi",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "ae9f39fb65553c0427d748e6bd52fe413c8b60b634c7972216ad3a6a93a4ddbd"
+        }
+      ],
+      "name": "KRSI Ironclad fork",
+      "properties": [
+        {
+          "name": "ironclad:archive-sha256",
+          "value": "a7b62c32ed04f1b82398a6b9996cf1a7a3ab8a8e2a5e5dbe6515d761dc1d8c64"
+        },
+        {
+          "name": "ironclad:build-info-sha256",
+          "value": "183aa1fdc346b8b847fee4e1df6b80f1da873f73f1838fc61a3c94d19bf2e7b6"
+        },
+        {
+          "name": "ironclad:cargo-lock-sha256",
+          "value": "261304594f08b7df0242e80263d9286c0fb4ad765e2dab7b196e67b39ce38c25"
+        },
+        {
+          "name": "ironclad:cargo-package-version",
+          "value": "0.1.0; separate from native fork version"
+        },
+        {
+          "name": "ironclad:inventory",
+          "value": "bundled libkrsi.so"
+        },
+        {
+          "name": "ironclad:notice-files",
+          "value": "158"
+        },
+        {
+          "name": "ironclad:provenance",
+          "value": "self-recorded, not signed or independently reproduced"
+        },
+        {
+          "name": "ironclad:toolchain-recorded",
+          "value": "rustc 1.99.1 (58cf8f9c3 2026-10-13)"
+        }
+      ],
+      "type": "library",
+      "version": "0.2.0-ironclad.1"
+    },
+    {
+      "bom-ref": "ironclad:optional-falco",
+      "externalReferences": [
+        {
+          "type": "distribution",
+          "url": "https://download.falco.org/packages/bin/x86_64/falco-0.45.1-x86_64.tar.gz"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "cd3ab1310ea27ba8ab33546fc50c3af707aeaee21908957a973b3d5376e804de"
+        }
+      ],
+      "name": "Falco",
+      "properties": [
+        {
+          "name": "ironclad:archive-sha256",
+          "value": "a4a384055327207202c36e3f89a3e954d131db71d55088737c5174ff7dab7c7b"
+        },
+        {
+          "name": "ironclad:inventory",
+          "value": "optional downloaded engine; not bundled"
+        },
+        {
+          "name": "ironclad:limitations",
+          "value": "transitive/native dependency inventory incomplete"
+        }
+      ],
+      "scope": "optional",
+      "type": "application",
+      "version": "0.45.1"
+    },
+    {
+      "bom-ref": "test:pyside6-essentials",
+      "name": "pyside6-essentials",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "GUI acceptance test only; not runtime"
+        }
+      ],
+      "purl": "pkg:pypi/pyside6-essentials@6.12.0",
+      "scope": "excluded",
+      "type": "library",
+      "version": "6.12.0"
+    },
+    {
+      "bom-ref": "test:shiboken6",
+      "name": "shiboken6",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "GUI acceptance test only; not runtime"
+        }
+      ],
+      "purl": "pkg:pypi/shiboken6@6.12.0",
+      "scope": "excluded",
+      "type": "library",
+      "version": "6.12.0"
+    }
+  ],
+  "compositions": [
+    {
+      "aggregate": "incomplete",
+      "assemblies": [
+        "ironclad:project",
+        "ironclad:bundled-krsi"
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "dependsOn": [
+        "cargo-registry:bytes@1.11.1",
+        "cargo-registry:core-error@0.0.0",
+        "cargo-registry:hashbrown@0.15.2",
+        "cargo-registry:log@0.4.29",
+        "cargo-registry:object@0.36.7",
+        "cargo-registry:thiserror@1.0.69"
+      ],
+      "ref": "cargo-local:aya-obj@0.2.1"
+    },
+    {
+      "dependsOn": [
+        "cargo-local:falco_event_derive@0.5.0",
+        "cargo-registry:anyhow@1.0.102",
+        "cargo-registry:chrono@0.4.40",
+        "cargo-registry:nix@0.30.1",
+        "cargo-registry:thiserror@2.0.18",
+        "cargo-registry:typed-path@0.11.0"
+      ],
+      "ref": "cargo-local:falco_event@0.5.0"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:attribute-derive@0.10.5",
+        "cargo-registry:proc-macro2@1.0.94",
+        "cargo-registry:quote@1.0.44",
+        "cargo-registry:syn@2.0.100"
+      ],
+      "ref": "cargo-local:falco_event_derive@0.5.0"
+    },
+    {
+      "dependsOn": [
+        "cargo-local:falco_event@0.5.0",
+        "cargo-local:falco_event_derive@0.5.0",
+        "cargo-local:falco_schema_derive@0.5.0",
+        "cargo-registry:bitflags@2.11.1",
+        "cargo-registry:chrono@0.4.40",
+        "cargo-registry:nix@0.30.1",
+        "cargo-registry:typed-path@0.11.0"
+      ],
+      "ref": "cargo-local:falco_event_schema@0.5.0"
+    },
+    {
+      "dependsOn": [
+        "cargo-local:falco_event@0.5.0",
+        "cargo-local:falco_plugin_api@0.5.0",
+        "cargo-local:falco_plugin_derive@0.5.0",
+        "cargo-registry:anyhow@1.0.102",
+        "cargo-registry:bumpalo@3.17.0",
+        "cargo-registry:lock_api@0.4.12",
+        "cargo-registry:log@0.4.29",
+        "cargo-registry:memchr@2.7.4",
+        "cargo-registry:num-derive@0.4.2",
+        "cargo-registry:num-traits@0.2.19",
+        "cargo-registry:phf@0.12.1",
+        "cargo-registry:refcell-lock-api@0.1.0",
+        "cargo-registry:schemars@1.1.0",
+        "cargo-registry:serde@1.0.228",
+        "cargo-registry:serde_json@1.0.149",
+        "cargo-registry:thiserror@2.0.18"
+      ],
+      "ref": "cargo-local:falco_plugin@0.5.0"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-local:falco_plugin_api@0.5.0"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:proc-macro2@1.0.94",
+        "cargo-registry:quote@1.0.44",
+        "cargo-registry:syn@2.0.100"
+      ],
+      "ref": "cargo-local:falco_plugin_derive@0.5.0"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:proc-macro2@1.0.94",
+        "cargo-registry:quote@1.0.44",
+        "cargo-registry:syn@2.0.100"
+      ],
+      "ref": "cargo-local:falco_schema_derive@0.5.0"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:aya@0.13.1",
+        "cargo-registry:bitflags@2.11.1",
+        "cargo-registry:zerocopy-derive@0.8.48",
+        "cargo-registry:zerocopy@0.8.48"
+      ],
+      "ref": "cargo-local:krsi-common@0.1.0"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:aya-ebpf@0.1.1",
+        "cargo-registry:bindgen@0.72.1",
+        "cargo-registry:cc@1.2.61",
+        "cargo-registry:paste@1.0.15"
+      ],
+      "ref": "cargo-local:krsi-ebpf-core@0.1.0"
+    },
+    {
+      "dependsOn": [
+        "cargo-local:krsi-common@0.1.0",
+        "cargo-local:krsi-ebpf-core@0.1.0",
+        "cargo-registry:aya-ebpf@0.1.1",
+        "cargo-registry:aya-log-ebpf@0.1.1",
+        "cargo-registry:cfg-if@1.0.4",
+        "cargo-registry:paste@1.0.15",
+        "cargo-registry:which@8.0.2",
+        "cargo-registry:zerocopy@0.8.48"
+      ],
+      "ref": "cargo-local:krsi-ebpf@0.1.0"
+    },
+    {
+      "dependsOn": [
+        "cargo-local:aya-obj@0.2.1",
+        "cargo-local:falco_event_schema@0.5.0",
+        "cargo-local:falco_plugin@0.5.0",
+        "cargo-local:krsi-common@0.1.0",
+        "cargo-registry:anyhow@1.0.102",
+        "cargo-registry:aya-log@0.2.1",
+        "cargo-registry:aya@0.13.1",
+        "cargo-registry:bincode@2.0.1",
+        "cargo-registry:byteorder@1.5.0",
+        "cargo-registry:env_logger@0.11.10",
+        "cargo-registry:hashlru@0.11.1",
+        "cargo-registry:libc@0.2.186",
+        "cargo-registry:log@0.4.29",
+        "cargo-registry:num_cpus@1.17.0",
+        "cargo-registry:paste@1.0.15",
+        "cargo-registry:serde@1.0.228",
+        "cargo-registry:thiserror@2.0.18",
+        "cargo-registry:tokio@1.52.2",
+        "cargo-registry:zerocopy@0.8.48"
+      ],
+      "ref": "cargo-local:krsi@0.1.0"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:cfg-if@1.0.4",
+        "cargo-registry:once_cell@1.21.0",
+        "cargo-registry:version_check@0.9.5",
+        "cargo-registry:zerocopy@0.7.35"
+      ],
+      "ref": "cargo-registry:ahash@0.8.11"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:memchr@2.7.4"
+      ],
+      "ref": "cargo-registry:aho-corasick@1.1.3"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:allocator-api2@0.2.21"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:android-tzdata@0.1.1"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:libc@0.2.186"
+      ],
+      "ref": "cargo-registry:android_system_properties@0.1.5"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:anyhow@1.0.102"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:assert_matches@1.5.0"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:collection_literals@1.0.3",
+        "cargo-registry:interpolator@0.5.0",
+        "cargo-registry:manyhow@0.11.4",
+        "cargo-registry:proc-macro-utils@0.10.0",
+        "cargo-registry:proc-macro2@1.0.94",
+        "cargo-registry:quote-use@0.8.4",
+        "cargo-registry:quote@1.0.44",
+        "cargo-registry:syn@2.0.100"
+      ],
+      "ref": "cargo-registry:attribute-derive-macro@0.10.5"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:attribute-derive-macro@0.10.5",
+        "cargo-registry:derive-where@1.6.0",
+        "cargo-registry:manyhow@0.11.4",
+        "cargo-registry:proc-macro2@1.0.94",
+        "cargo-registry:quote@1.0.44",
+        "cargo-registry:syn@2.0.100"
+      ],
+      "ref": "cargo-registry:attribute-derive@0.10.5"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:autocfg@1.4.0"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:aya-ebpf-cty@0.2.2"
+      ],
+      "ref": "cargo-registry:aya-ebpf-bindings@0.1.1"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:aya-ebpf-cty@0.2.2"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:proc-macro-error@1.0.4",
+        "cargo-registry:proc-macro2@1.0.94",
+        "cargo-registry:quote@1.0.44",
+        "cargo-registry:syn@2.0.100"
+      ],
+      "ref": "cargo-registry:aya-ebpf-macros@0.1.1"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:aya-ebpf-bindings@0.1.1",
+        "cargo-registry:aya-ebpf-cty@0.2.2",
+        "cargo-registry:aya-ebpf-macros@0.1.1",
+        "cargo-registry:rustversion@1.0.20"
+      ],
+      "ref": "cargo-registry:aya-ebpf@0.1.1"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:num_enum@0.7.3"
+      ],
+      "ref": "cargo-registry:aya-log-common@0.1.15"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:aya-log-common@0.1.15",
+        "cargo-registry:aya-log-parser@0.1.13",
+        "cargo-registry:proc-macro2@1.0.94",
+        "cargo-registry:quote@1.0.44",
+        "cargo-registry:syn@2.0.100"
+      ],
+      "ref": "cargo-registry:aya-log-ebpf-macros@0.1.0"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:aya-ebpf@0.1.1",
+        "cargo-registry:aya-log-common@0.1.15",
+        "cargo-registry:aya-log-ebpf-macros@0.1.0"
+      ],
+      "ref": "cargo-registry:aya-log-ebpf@0.1.1"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:aya-log-common@0.1.15"
+      ],
+      "ref": "cargo-registry:aya-log-parser@0.1.13"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:aya-log-common@0.1.15",
+        "cargo-registry:aya@0.13.1",
+        "cargo-registry:bytes@1.11.1",
+        "cargo-registry:log@0.4.29",
+        "cargo-registry:thiserror@1.0.69",
+        "cargo-registry:tokio@1.52.2"
+      ],
+      "ref": "cargo-registry:aya-log@0.2.1"
+    },
+    {
+      "dependsOn": [
+        "cargo-local:aya-obj@0.2.1",
+        "cargo-registry:assert_matches@1.5.0",
+        "cargo-registry:bitflags@2.11.1",
+        "cargo-registry:bytes@1.11.1",
+        "cargo-registry:libc@0.2.186",
+        "cargo-registry:log@0.4.29",
+        "cargo-registry:object@0.36.7",
+        "cargo-registry:once_cell@1.21.0",
+        "cargo-registry:thiserror@1.0.69",
+        "cargo-registry:tokio@1.52.2"
+      ],
+      "ref": "cargo-registry:aya@0.13.1"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:bincode_derive@2.0.1",
+        "cargo-registry:serde@1.0.228",
+        "cargo-registry:unty@0.0.4"
+      ],
+      "ref": "cargo-registry:bincode@2.0.1"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:virtue@0.0.18"
+      ],
+      "ref": "cargo-registry:bincode_derive@2.0.1"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:bitflags@2.11.1",
+        "cargo-registry:cexpr@0.6.0",
+        "cargo-registry:clang-sys@1.8.1",
+        "cargo-registry:itertools@0.13.0",
+        "cargo-registry:log@0.4.29",
+        "cargo-registry:prettyplease@0.2.32",
+        "cargo-registry:proc-macro2@1.0.94",
+        "cargo-registry:quote@1.0.44",
+        "cargo-registry:regex@1.11.1",
+        "cargo-registry:rustc-hash@2.1.1",
+        "cargo-registry:shlex@1.3.0",
+        "cargo-registry:syn@2.0.100"
+      ],
+      "ref": "cargo-registry:bindgen@0.72.1"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:bitflags@2.11.1"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:bumpalo@3.17.0"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:byteorder@1.5.0"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:bytes@1.11.1"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:find-msvc-tools@0.1.9",
+        "cargo-registry:shlex@1.3.0"
+      ],
+      "ref": "cargo-registry:cc@1.2.61"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:nom@7.1.3"
+      ],
+      "ref": "cargo-registry:cexpr@0.6.0"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:cfg-if@1.0.4"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:cfg_aliases@0.2.1"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:android-tzdata@0.1.1",
+        "cargo-registry:iana-time-zone@0.1.61",
+        "cargo-registry:js-sys@0.3.77",
+        "cargo-registry:num-traits@0.2.19",
+        "cargo-registry:wasm-bindgen@0.2.100",
+        "cargo-registry:windows-link@0.1.0"
+      ],
+      "ref": "cargo-registry:chrono@0.4.40"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:glob@0.3.2",
+        "cargo-registry:libc@0.2.186",
+        "cargo-registry:libloading@0.8.6"
+      ],
+      "ref": "cargo-registry:clang-sys@1.8.1"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:collection_literals@1.0.3"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:version_check@0.9.5"
+      ],
+      "ref": "cargo-registry:core-error@0.0.0"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:core-foundation-sys@0.8.7"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:cfg-if@1.0.4"
+      ],
+      "ref": "cargo-registry:crc32fast@1.4.2"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:proc-macro2@1.0.94",
+        "cargo-registry:quote@1.0.44",
+        "cargo-registry:syn@2.0.100"
+      ],
+      "ref": "cargo-registry:derive-where@1.6.0"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:dyn-clone@1.0.19"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:either@1.15.0"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:log@0.4.29"
+      ],
+      "ref": "cargo-registry:env_filter@1.0.0"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:env_filter@1.0.0",
+        "cargo-registry:log@0.4.29"
+      ],
+      "ref": "cargo-registry:env_logger@0.11.10"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:equivalent@1.0.2"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:fastrand@2.3.0"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:find-msvc-tools@0.1.9"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:foldhash@0.1.4"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:glob@0.3.2"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:ahash@0.8.11"
+      ],
+      "ref": "cargo-registry:hashbrown@0.13.2"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:allocator-api2@0.2.21",
+        "cargo-registry:equivalent@1.0.2",
+        "cargo-registry:foldhash@0.1.4"
+      ],
+      "ref": "cargo-registry:hashbrown@0.15.2"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:hashbrown@0.13.2"
+      ],
+      "ref": "cargo-registry:hashlru@0.11.1"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:hermit-abi@0.5.1"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:cc@1.2.61"
+      ],
+      "ref": "cargo-registry:iana-time-zone-haiku@0.1.2"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:android_system_properties@0.1.5",
+        "cargo-registry:core-foundation-sys@0.8.7",
+        "cargo-registry:iana-time-zone-haiku@0.1.2",
+        "cargo-registry:js-sys@0.3.77",
+        "cargo-registry:wasm-bindgen@0.2.100",
+        "cargo-registry:windows-core@0.52.0"
+      ],
+      "ref": "cargo-registry:iana-time-zone@0.1.61"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:equivalent@1.0.2",
+        "cargo-registry:hashbrown@0.15.2"
+      ],
+      "ref": "cargo-registry:indexmap@2.8.0"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:interpolator@0.5.0"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:either@1.15.0"
+      ],
+      "ref": "cargo-registry:itertools@0.13.0"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:itoa@1.0.15"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:once_cell@1.21.0",
+        "cargo-registry:wasm-bindgen@0.2.100"
+      ],
+      "ref": "cargo-registry:js-sys@0.3.77"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:libc@0.2.186"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:cfg-if@1.0.4",
+        "cargo-registry:windows-targets@0.52.6"
+      ],
+      "ref": "cargo-registry:libloading@0.8.6"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:autocfg@1.4.0",
+        "cargo-registry:scopeguard@1.2.0"
+      ],
+      "ref": "cargo-registry:lock_api@0.4.12"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:log@0.4.29"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:proc-macro-utils@0.10.0",
+        "cargo-registry:proc-macro2@1.0.94",
+        "cargo-registry:quote@1.0.44"
+      ],
+      "ref": "cargo-registry:manyhow-macros@0.11.4"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:manyhow-macros@0.11.4",
+        "cargo-registry:proc-macro2@1.0.94",
+        "cargo-registry:quote@1.0.44",
+        "cargo-registry:syn@2.0.100"
+      ],
+      "ref": "cargo-registry:manyhow@0.11.4"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:memchr@2.7.4"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:minimal-lexical@0.2.1"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:libc@0.2.186",
+        "cargo-registry:wasi@0.11.0+wasi-snapshot-preview1",
+        "cargo-registry:windows-sys@0.61.2"
+      ],
+      "ref": "cargo-registry:mio@1.2.0"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:bitflags@2.11.1",
+        "cargo-registry:cfg-if@1.0.4",
+        "cargo-registry:cfg_aliases@0.2.1",
+        "cargo-registry:libc@0.2.186"
+      ],
+      "ref": "cargo-registry:nix@0.30.1"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:memchr@2.7.4",
+        "cargo-registry:minimal-lexical@0.2.1"
+      ],
+      "ref": "cargo-registry:nom@7.1.3"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:proc-macro2@1.0.94",
+        "cargo-registry:quote@1.0.44",
+        "cargo-registry:syn@2.0.100"
+      ],
+      "ref": "cargo-registry:num-derive@0.4.2"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:autocfg@1.4.0"
+      ],
+      "ref": "cargo-registry:num-traits@0.2.19"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:hermit-abi@0.5.1",
+        "cargo-registry:libc@0.2.186"
+      ],
+      "ref": "cargo-registry:num_cpus@1.17.0"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:num_enum_derive@0.7.3"
+      ],
+      "ref": "cargo-registry:num_enum@0.7.3"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:proc-macro2@1.0.94",
+        "cargo-registry:quote@1.0.44",
+        "cargo-registry:syn@2.0.100"
+      ],
+      "ref": "cargo-registry:num_enum_derive@0.7.3"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:crc32fast@1.4.2",
+        "cargo-registry:hashbrown@0.15.2",
+        "cargo-registry:indexmap@2.8.0",
+        "cargo-registry:memchr@2.7.4"
+      ],
+      "ref": "cargo-registry:object@0.36.7"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:once_cell@1.21.0"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:paste@1.0.15"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:phf_macros@0.12.1",
+        "cargo-registry:phf_shared@0.12.1",
+        "cargo-registry:serde@1.0.228"
+      ],
+      "ref": "cargo-registry:phf@0.12.1"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:fastrand@2.3.0",
+        "cargo-registry:phf_shared@0.12.1"
+      ],
+      "ref": "cargo-registry:phf_generator@0.12.1"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:phf_generator@0.12.1",
+        "cargo-registry:phf_shared@0.12.1",
+        "cargo-registry:proc-macro2@1.0.94",
+        "cargo-registry:quote@1.0.44",
+        "cargo-registry:syn@2.0.100"
+      ],
+      "ref": "cargo-registry:phf_macros@0.12.1"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:siphasher@1.0.1"
+      ],
+      "ref": "cargo-registry:phf_shared@0.12.1"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:pin-project-lite@0.2.16"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:proc-macro2@1.0.94",
+        "cargo-registry:syn@2.0.100"
+      ],
+      "ref": "cargo-registry:prettyplease@0.2.32"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:proc-macro2@1.0.94",
+        "cargo-registry:quote@1.0.44",
+        "cargo-registry:version_check@0.9.5"
+      ],
+      "ref": "cargo-registry:proc-macro-error-attr@1.0.4"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:proc-macro-error-attr@1.0.4",
+        "cargo-registry:proc-macro2@1.0.94",
+        "cargo-registry:quote@1.0.44",
+        "cargo-registry:version_check@0.9.5"
+      ],
+      "ref": "cargo-registry:proc-macro-error@1.0.4"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:proc-macro2@1.0.94",
+        "cargo-registry:quote@1.0.44",
+        "cargo-registry:smallvec@1.15.1"
+      ],
+      "ref": "cargo-registry:proc-macro-utils@0.10.0"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:unicode-ident@1.0.18"
+      ],
+      "ref": "cargo-registry:proc-macro2@1.0.94"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:proc-macro-utils@0.10.0",
+        "cargo-registry:proc-macro2@1.0.94",
+        "cargo-registry:quote@1.0.44",
+        "cargo-registry:syn@2.0.100"
+      ],
+      "ref": "cargo-registry:quote-use-macros@0.8.4"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:quote-use-macros@0.8.4",
+        "cargo-registry:quote@1.0.44"
+      ],
+      "ref": "cargo-registry:quote-use@0.8.4"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:proc-macro2@1.0.94"
+      ],
+      "ref": "cargo-registry:quote@1.0.44"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:proc-macro2@1.0.94",
+        "cargo-registry:quote@1.0.44",
+        "cargo-registry:syn@2.0.100"
+      ],
+      "ref": "cargo-registry:ref-cast-impl@1.0.25"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:ref-cast-impl@1.0.25"
+      ],
+      "ref": "cargo-registry:ref-cast@1.0.25"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:cfg_aliases@0.2.1",
+        "cargo-registry:lock_api@0.4.12"
+      ],
+      "ref": "cargo-registry:refcell-lock-api@0.1.0"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:aho-corasick@1.1.3",
+        "cargo-registry:memchr@2.7.4",
+        "cargo-registry:regex-syntax@0.8.5"
+      ],
+      "ref": "cargo-registry:regex-automata@0.4.9"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:regex-syntax@0.8.5"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:aho-corasick@1.1.3",
+        "cargo-registry:memchr@2.7.4",
+        "cargo-registry:regex-automata@0.4.9",
+        "cargo-registry:regex-syntax@0.8.5"
+      ],
+      "ref": "cargo-registry:regex@1.11.1"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:rustc-hash@2.1.1"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:rustversion@1.0.20"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:dyn-clone@1.0.19",
+        "cargo-registry:ref-cast@1.0.25",
+        "cargo-registry:schemars_derive@1.1.0",
+        "cargo-registry:serde@1.0.228",
+        "cargo-registry:serde_json@1.0.149"
+      ],
+      "ref": "cargo-registry:schemars@1.1.0"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:proc-macro2@1.0.94",
+        "cargo-registry:quote@1.0.44",
+        "cargo-registry:serde_derive_internals@0.29.1",
+        "cargo-registry:syn@2.0.100"
+      ],
+      "ref": "cargo-registry:schemars_derive@1.1.0"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:scopeguard@1.2.0"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:serde_core@1.0.228",
+        "cargo-registry:serde_derive@1.0.228"
+      ],
+      "ref": "cargo-registry:serde@1.0.228"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:serde_derive@1.0.228"
+      ],
+      "ref": "cargo-registry:serde_core@1.0.228"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:proc-macro2@1.0.94",
+        "cargo-registry:quote@1.0.44",
+        "cargo-registry:syn@2.0.100"
+      ],
+      "ref": "cargo-registry:serde_derive@1.0.228"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:proc-macro2@1.0.94",
+        "cargo-registry:quote@1.0.44",
+        "cargo-registry:syn@2.0.100"
+      ],
+      "ref": "cargo-registry:serde_derive_internals@0.29.1"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:itoa@1.0.15",
+        "cargo-registry:memchr@2.7.4",
+        "cargo-registry:serde@1.0.228",
+        "cargo-registry:serde_core@1.0.228",
+        "cargo-registry:zmij@1.0.17"
+      ],
+      "ref": "cargo-registry:serde_json@1.0.149"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:shlex@1.3.0"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:libc@0.2.186"
+      ],
+      "ref": "cargo-registry:signal-hook-registry@1.4.2"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:siphasher@1.0.1"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:smallvec@1.15.1"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:libc@0.2.186",
+        "cargo-registry:windows-sys@0.61.2"
+      ],
+      "ref": "cargo-registry:socket2@0.6.3"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:proc-macro2@1.0.94",
+        "cargo-registry:quote@1.0.44",
+        "cargo-registry:unicode-ident@1.0.18"
+      ],
+      "ref": "cargo-registry:syn@2.0.100"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:proc-macro2@1.0.94",
+        "cargo-registry:quote@1.0.44",
+        "cargo-registry:syn@2.0.100"
+      ],
+      "ref": "cargo-registry:thiserror-impl@1.0.69"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:proc-macro2@1.0.94",
+        "cargo-registry:quote@1.0.44",
+        "cargo-registry:syn@2.0.100"
+      ],
+      "ref": "cargo-registry:thiserror-impl@2.0.18"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:thiserror-impl@1.0.69"
+      ],
+      "ref": "cargo-registry:thiserror@1.0.69"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:thiserror-impl@2.0.18"
+      ],
+      "ref": "cargo-registry:thiserror@2.0.18"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:proc-macro2@1.0.94",
+        "cargo-registry:quote@1.0.44",
+        "cargo-registry:syn@2.0.100"
+      ],
+      "ref": "cargo-registry:tokio-macros@2.7.0"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:libc@0.2.186",
+        "cargo-registry:mio@1.2.0",
+        "cargo-registry:pin-project-lite@0.2.16",
+        "cargo-registry:signal-hook-registry@1.4.2",
+        "cargo-registry:socket2@0.6.3",
+        "cargo-registry:tokio-macros@2.7.0",
+        "cargo-registry:windows-sys@0.61.2"
+      ],
+      "ref": "cargo-registry:tokio@1.52.2"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:typed-path@0.11.0"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:unicode-ident@1.0.18"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:unty@0.0.4"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:version_check@0.9.5"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:virtue@0.0.18"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:wasi@0.11.0+wasi-snapshot-preview1"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:bumpalo@3.17.0",
+        "cargo-registry:log@0.4.29",
+        "cargo-registry:proc-macro2@1.0.94",
+        "cargo-registry:quote@1.0.44",
+        "cargo-registry:syn@2.0.100",
+        "cargo-registry:wasm-bindgen-shared@0.2.100"
+      ],
+      "ref": "cargo-registry:wasm-bindgen-backend@0.2.100"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:proc-macro2@1.0.94",
+        "cargo-registry:quote@1.0.44",
+        "cargo-registry:syn@2.0.100",
+        "cargo-registry:wasm-bindgen-backend@0.2.100",
+        "cargo-registry:wasm-bindgen-shared@0.2.100"
+      ],
+      "ref": "cargo-registry:wasm-bindgen-macro-support@0.2.100"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:quote@1.0.44",
+        "cargo-registry:wasm-bindgen-macro-support@0.2.100"
+      ],
+      "ref": "cargo-registry:wasm-bindgen-macro@0.2.100"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:unicode-ident@1.0.18"
+      ],
+      "ref": "cargo-registry:wasm-bindgen-shared@0.2.100"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:cfg-if@1.0.4",
+        "cargo-registry:once_cell@1.21.0",
+        "cargo-registry:rustversion@1.0.20",
+        "cargo-registry:wasm-bindgen-macro@0.2.100"
+      ],
+      "ref": "cargo-registry:wasm-bindgen@0.2.100"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:libc@0.2.186"
+      ],
+      "ref": "cargo-registry:which@8.0.2"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:windows-targets@0.52.6"
+      ],
+      "ref": "cargo-registry:windows-core@0.52.0"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:windows-link@0.1.0"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:windows-link@0.2.1"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:windows-link@0.2.1"
+      ],
+      "ref": "cargo-registry:windows-sys@0.61.2"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:windows_aarch64_gnullvm@0.52.6",
+        "cargo-registry:windows_aarch64_msvc@0.52.6",
+        "cargo-registry:windows_i686_gnu@0.52.6",
+        "cargo-registry:windows_i686_gnullvm@0.52.6",
+        "cargo-registry:windows_i686_msvc@0.52.6",
+        "cargo-registry:windows_x86_64_gnu@0.52.6",
+        "cargo-registry:windows_x86_64_gnullvm@0.52.6",
+        "cargo-registry:windows_x86_64_msvc@0.52.6"
+      ],
+      "ref": "cargo-registry:windows-targets@0.52.6"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:windows_aarch64_gnullvm@0.52.6"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:windows_aarch64_msvc@0.52.6"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:windows_i686_gnu@0.52.6"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:windows_i686_gnullvm@0.52.6"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:windows_i686_msvc@0.52.6"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:windows_x86_64_gnu@0.52.6"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:windows_x86_64_gnullvm@0.52.6"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:windows_x86_64_msvc@0.52.6"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:proc-macro2@1.0.94",
+        "cargo-registry:quote@1.0.44",
+        "cargo-registry:syn@2.0.100"
+      ],
+      "ref": "cargo-registry:zerocopy-derive@0.7.35"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:proc-macro2@1.0.94",
+        "cargo-registry:quote@1.0.44",
+        "cargo-registry:syn@2.0.100"
+      ],
+      "ref": "cargo-registry:zerocopy-derive@0.8.48"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:zerocopy-derive@0.7.35"
+      ],
+      "ref": "cargo-registry:zerocopy@0.7.35"
+    },
+    {
+      "dependsOn": [
+        "cargo-registry:zerocopy-derive@0.8.48"
+      ],
+      "ref": "cargo-registry:zerocopy@0.8.48"
+    },
+    {
+      "dependsOn": [],
+      "ref": "cargo-registry:zmij@1.0.17"
+    }
+  ],
+  "metadata": {
+    "component": {
+      "bom-ref": "ironclad:project",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "name": "zds-ironclad",
+      "type": "application",
+      "version": "0.2.36"
+    },
+    "properties": [
+      {
+        "name": "ironclad:dependency-graph",
+        "value": "Cargo.lock resolution only; not target/features or linked-runtime graph"
+      },
+      {
+        "name": "ironclad:inputs-sha256",
+        "value": "{\"ironclad/sensor_policy.py\": \"a3bec853017705907b7bac48b1d9faa8bce06a0db44c7ba4e316c1315e8ac34f\", \"manifest.json\": \"4c0078d39a6eea45079f180dc2aec395c5259524df1fb58f01463952c2322444\", \"pyproject.toml\": \"4ec754de5ae0f006a675747bd75e7b350a371da589110711bc5afd1392d2edf0\", \"tools/build_krsi_component.py\": \"77f5123af4f989cacbfe7f1a8044ce133d4f3f8ea77041ca86fc0837b8ab7a68\", \"tools/krsi-Cargo.lock\": \"261304594f08b7df0242e80263d9286c0fb4ad765e2dab7b196e67b39ce38c25\", \"tools/ui-requirements.txt\": \"c94cfdebcb9379cabfe40d77ebc3a24894d4a0bf995b9396d6f29d33065428f9\"}"
+      },
+      {
+        "name": "ironclad:inventory",
+        "value": "partial source/build inventory; offline and deterministic"
+      },
+      {
+        "name": "ironclad:omissions",
+        "value": "Falco transitive dependencies, system versions, exact native link graph, full license review, vulnerability/advisory scan, signature verification"
+      },
+      {
+        "name": "ironclad:python-runtime-dependencies",
+        "value": "none declared"
+      },
+      {
+        "name": "ironclad:security",
+        "value": "No vulnerability clearance or security certification is asserted"
+      }
+    ]
+  },
+  "specVersion": "1.6",
+  "version": 1
+}

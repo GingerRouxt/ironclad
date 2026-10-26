@@ -5,7 +5,7 @@ Before removing the controls:
 1. Turn off automatic protection updates in Protection.
 2. Stop automatic malware scanning, review the action, and authenticate. Remove the separately installed `ironclad-antimalware` package through your package manager after reviewing the transaction.
 3. Use Protection to remove the native sensor and authenticate the scoped removal.
-4. Disable any optional diagnostic schedule you enabled.
+4. Disable any optional diagnostic schedule you enabled and remove its unchanged owned units through Ironclad's schedule-disable workflow. The post-launch copied-file uninstaller refuses to proceed while either diagnostic unit remains, including a broken symlink. Do not delete changed unit files blindly.
 
 For git-managed installations:
 

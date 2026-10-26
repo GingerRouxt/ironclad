@@ -154,10 +154,17 @@ def click(view, root, name):
     assert item.property('visible') and item.property('enabled'), 'Control unavailable: '+name
     # Resolve visual coordinates in QML: dynamic QML types may arrive in Python
     # as QObject wrappers, so do not depend on a QQuickItem Python subclass.
-    QMetaObject.invokeMethod(root,'fixtureItemCenter',Q_RETURN_ARG('QVariant'),Q_ARG('QVariant',name),Q_ARG('QVariant',True))
-    QTest.qWait(50)
-    center=QMetaObject.invokeMethod(root,'fixtureItemCenter',Q_RETURN_ARG('QVariant'),Q_ARG('QVariant',name),Q_ARG('QVariant',False))
-    center=center.toVariant() if hasattr(center,'toVariant') else center
+    for _ in range(3):
+        QMetaObject.invokeMethod(root,'fixtureItemCenter',Q_RETURN_ARG('QVariant'),Q_ARG('QVariant',name),Q_ARG('QVariant',True))
+        QTest.qWait(50)
+        center=QMetaObject.invokeMethod(root,'fixtureItemCenter',Q_RETURN_ARG('QVariant'),Q_ARG('QVariant',name),Q_ARG('QVariant',False))
+        center=center.toVariant() if hasattr(center,'toVariant') else center
+        if 0 <= center['x'] < view.width() and 0 <= center['y'] < view.height():
+            break
+    assert 0 <= center['x'] < view.width() and 0 <= center['y'] < view.height(), f'{name} is outside the viewport after scrolling: {center}'
+    if name in ('approveUpdateButton', 'cancelUpdateButton'):
+        half_height=float(item.property('height'))/2
+        assert 0 <= center['y']-half_height and center['y']+half_height <= view.height(), f'{name} is partly clipped by the viewport'
     point=QPointF(center['x'],center['y'])
     QTest.mouseClick(view, Qt.LeftButton, Qt.NoModifier, QPoint(round(point.x()), round(point.y())))
 
@@ -640,24 +647,40 @@ print(json.dumps(dict(scans=[],actions=[],activity=history({str(base/'state')!r}
         results.append('activity-real-receipts-without-saved-scans-and-refresh')
         wait(app,lambda:not root.property('busy') and not root.property('aiBusy'),'settle before slow AI regression')
         mode.write_text('slow-ai')
-        root.setProperty('operation','scan')
-        QMetaObject.invokeMethod(root,'receive',Qt.DirectConnection,Q_ARG('QVariant',json.dumps(data.scan())))
-        QMetaObject.invokeMethod(root,'explainScan')
         ai_marker=base/'explanation-started'
+        def ai_requests():
+            return sum('explain-findings' in args or 'ask' in args for args in runtime.started_commands)
+        ai_before=ai_requests()
+        click(view,root,'scanMachineButton')
+        wait(app,lambda:root.property('scanReceived') and not root.property('busy'),'local scan without AI consent')
+        QTest.qWait(150)
+        assert ai_requests()==ai_before and not ai_marker.exists(),'Local scan must not send AI requests'
+        assert not root.property('explanationBusy') and root.property('findingExplanations').toVariant()=={}
+        assert 'have not been requested' in root.property('explanationMessage')
+        root.setProperty('selected','Diagnostics')
+        click(view,root,'explainAllChecksButton')
         wait(app,lambda:ai_marker.exists() and root.property('explanationBusy'),'slow background AI actually started')
+        assert ai_requests()==ai_before+1,'Explicit Explain all checks must start exactly one request'
+        results.append('local-scan-sends-no-ai-until-explicit-explain-all-click')
         assert not root.property('aiBusy'),'Background AI must not gate local actions'
         assert find_item(view,'scanMachineButton').property('enabled')
         root.setProperty('selected','Protection')
         for attempt in range(2):
             wait(app,lambda:not root.property('busy') and root.property('explanationBusy'),'scan available while AI waits')
             scans_before=sum('check' in args for args in runtime.started_commands)
+            ai_before=ai_requests()
             ai_marker.unlink(missing_ok=True)
             click(view,root,'scanMachineButton')
             wait(app,lambda:sum('check' in args for args in runtime.started_commands)==scans_before+1 and root.property('scanReceived') and not root.property('busy'),'scan click completes despite pending AI')
             assert root.property('selected')=='Overview'
             assert root.property('scanStatus').startswith('Scan complete · 1 catalog checks')
             assert find_item(view,'scanProgressLabel').property('visible')
-            wait(app,lambda:ai_marker.exists() and root.property('explanationBusy'),'new background explanation started')
+            QTest.qWait(150)
+            assert ai_requests()==ai_before and not ai_marker.exists(),'Rescan must not renew AI consent'
+            assert not root.property('explanationBusy')
+            root.setProperty('selected','Diagnostics')
+            click(view,root,'explainAllChecksButton')
+            wait(app,lambda:ai_marker.exists() and root.property('explanationBusy'),'new explicitly requested explanation started')
         click(view,root,'stopExplanationButton')
         wait(app,lambda:not root.property('explanationBusy'),'stop only plugin-owned AI request')
         assert find_item(view,'scanMachineButton').property('enabled')
@@ -703,8 +726,13 @@ print(json.dumps(dict(scans=[],actions=[],activity=history({str(base/'state')!r}
             for _ in range(index):QTest.keyClick(view,Qt.Key_Down)
             QTest.keyClick(view,Qt.Key_Return)
             wait(app,lambda:root.property('profile')==profile,'profile selector '+profile)
+            ai_before=ai_requests()
             click(view,root,'scanMachineButton')
             wait(app,lambda:len(root.property('results').toVariant())==count and not root.property('busy'),'large scan '+profile)
+            QTest.qWait(150)
+            assert ai_requests()==ai_before and not root.property('explanationBusy'),'Profile scan must remain local: '+profile
+            root.setProperty('selected','Diagnostics')
+            click(view,root,'explainAllChecksButton')
             wait(app,lambda:not root.property('explanationBusy'),'bounded explanation '+profile)
             assert 'All checks have AI explanations' in root.property('explanationMessage'),root.property('explanationMessage')
             root.setProperty('selected','Diagnostics')
@@ -721,7 +749,7 @@ print(json.dumps(dict(scans=[],actions=[],activity=history({str(base/'state')!r}
         assert root.property('findingExplanations').toVariant()=={}
         assert root.property('aiAnswer')=='' and root.property('aiBrief')==''
         wait(app,lambda:root.property('scanReceived') and not root.property('busy'),'fresh super scan after archive')
-        wait(app,lambda:not root.property('explanationBusy'),'all super explanations after archive')
+        assert not root.property('explanationBusy') and root.property('findingExplanations').toVariant()=={}
         import gzip
         archives=[json.loads(gzip.decompress(p.read_bytes())) for p in (base/'state/scan-archives').glob('*.json.gz')]
         assert any(len(a['scan']['checks'])==420 and len(a['explanations'])==420 for a in archives)
@@ -733,7 +761,7 @@ print(json.dumps(dict(scans=[],actions=[],activity=history({str(base/'state')!r}
         assert 'could not be archived' in root.property('scanStatus')
         mode.write_text('archive-delay');click(view,root,'scanMachineButton')
         wait(app,lambda:root.property('scanReceived') and not root.property('busy'),'retry preserves and archives old scan')
-        wait(app,lambda:not root.property('explanationBusy'),'all AI explanations after archive retry')
+        assert not root.property('explanationBusy') and root.property('findingExplanations').toVariant()=={}
         results.append('new-scan-clears-results-and-ai-gzip-preserves-420-checks-and-explanations-archive-failure-blocks-and-retries')
         target='service.ironclad_antimalware_engine.service.restrictfilesystems'
         root.setProperty('selected','Diagnostics');root.setProperty('diagnosticGroup','Diagnostics');root.setProperty('query',target)

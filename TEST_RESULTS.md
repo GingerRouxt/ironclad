@@ -1,4 +1,12 @@
-# Beta validation — 0.2.36
+# Validation history and post-launch checks
+
+## Post-launch branch
+
+The post-launch candidate passed 312 Python tests (zero skips), 34 JavaScript model tests, 36 workflow UI cases and 31 protection UI cases. The complete verifier passed manifest/QML/Ruff/systemd syntax checks, pinned eight-rule policy compilation, offline reports/baseline/AI-packet checks and isolated deterministic package/install/remove flows. The partial SBOM reproduced byte-for-byte and validated against CycloneDX 1.6; dependency advisory matches remain open, not cleared by these tests.
+
+See [POST_LAUNCH_STATUS.md](POST_LAUNCH_STATUS.md) for exact evidence, baseline/harness failures, fixes, environment, separate-machine blockers and security limitations. No host install, service mutation, reboot, provider request or live native acceptance was performed in this pass. Human PR review remains separate.
+
+## Historical public export — 0.2.36
 
 The public export passed 299 Python tests and 34 JavaScript model tests, plus 35 real-process workflow UI cases and 31 protection UI cases. Four additional publication-privacy regression tests passed. These are automated contracts and synthetic workflows, not measured attack recall.
 

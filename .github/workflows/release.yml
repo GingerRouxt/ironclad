@@ -43,6 +43,10 @@ jobs:
           release_args=()
           if [[ "$GITHUB_REF_TYPE" == tag ]]; then release_args=(--tag "$GITHUB_REF_NAME"); fi
           mise exec -- uv run --offline python tools/prepare_release.py --require-clean --output dist/candidate "${release_args[@]}"
+      - name: Include reviewed partial dependency inventory
+        run: |
+          mise exec -- uv run --offline python tools/generate_sbom.py --output dist/candidate/inventory.cdx.json
+          cmp docs/ironclad-build-inventory.cdx.json dist/candidate/inventory.cdx.json
       - name: Retain candidate for maintainer review
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:

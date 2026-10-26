@@ -1,4 +1,6 @@
-# Overview, detection coverage and release preparation — 0.2.24
+# Overview, detection coverage and release preparation
+
+Current status: 0.2.36 is published; the marketplace verified snapshot `73e2275` on October 25, 2026. The following implementation notes originated with 0.2.24 and describe the retained design, not a pending publication.
 
 Overview is now a separate compact status/action page; Diagnostics retains full
 findings, filters, explanations, Ignore/Restore and evidence. Overview shows
@@ -15,8 +17,8 @@ coverage limitations are documented in docs/DETECTION_COVERAGE.md.
 README now describes the prepared public install/update/removal path. Candidate
 builder emits a deterministic archive, checksum and manifest with source dirty
 state and component pins, refusing conflicts. Pinned-action CI builds review
-artifacts only; it does not publish. The repository remains private, source
-uncommitted and marketplace checklist unchecked. See docs/RELEASING.md.
+artifacts only; it does not publish. Source and release 0.2.36 are public, and
+marketplace review is complete for its exact snapshot. See docs/RELEASING.md.
 
 # Deterministic rules and false-positive boundaries
 
