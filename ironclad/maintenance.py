@@ -335,7 +335,7 @@ def software_snapshot(state):
 def main(argv=None):
     p = argparse.ArgumentParser(description='Ironclad interactive companion')
     p.add_argument('--state', type=Path, default=Path(os.environ.get('XDG_STATE_HOME', Path.home()/'.local/state'))/'ironclad')
-    p.add_argument('operation', choices=('refresh', 'plan', 'update', 'ask', 'brief', 'agent-status', 'apply-update', 'plan-selected', 'apply-selected', 'explain-findings', 'scan-archive', 'fix-options', 'fix-queue', 'fix-run', 'fix-result', 'protection-status', 'automatic-malware-plan', 'automatic-malware-apply', 'automatic-malware-review', 'malware-plan', 'malware-scan', 'scanner-install', 'scanner-signatures', 'monitor-status', 'monitor-plan', 'monitor-apply', 'monitor-review', 'finding-preferences', 'protection-maintain', 'protection-updates-enable', 'protection-updates-disable'))
+    p.add_argument('operation', choices=('refresh', 'plan', 'update', 'ask', 'brief', 'agent-status', 'apply-update', 'plan-selected', 'apply-selected', 'explain-findings', 'scan-archive', 'fix-options', 'fix-queue', 'fix-run', 'fix-result', 'protection-status', 'automatic-malware-plan', 'automatic-malware-apply', 'automatic-malware-review', 'malware-plan', 'malware-scan', 'scanner-install', 'scanner-signatures', 'monitor-status', 'monitor-plan', 'monitor-apply', 'monitor-review', 'finding-preferences', 'protection-maintain', 'protection-updates-enable', 'protection-updates-disable', 'falco-rules-enable', 'falco-rules-disable'))
     p.add_argument('--ticket', help='private reviewed repair ticket')
     p.add_argument('--approve', help='exact digest of a reviewed application plan; only applies to apply-update')
     p.add_argument('--allow-network', action='store_true', help='explicitly approve update/advisory metadata requests; never authorizes installing updates')
@@ -359,6 +359,11 @@ def main(argv=None):
             return 0
         if os.geteuid() == 0:
             raise ValueError('run Ironclad as your normal user')
+        if args.operation in ('falco-rules-enable','falco-rules-disable'):
+            from . import rule_updates
+            rule_updates.configure(args.operation=='falco-rules-enable',args.allow_network)
+            print(json.dumps({'scanner':__import__('ironclad.malware',fromlist=['status']).status(args.state),'message':rule_updates.status()['message']}))
+            return 0
         if args.operation in ('protection-maintain','protection-updates-enable','protection-updates-disable'):
             from . import protection_updates
             try:

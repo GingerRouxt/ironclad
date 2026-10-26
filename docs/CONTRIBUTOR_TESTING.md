@@ -9,3 +9,10 @@
 - Dependency changes: regenerate and inspect the SBOM, validate checksums and licenses, review new network/privileged surfaces and record vulnerability-query scope. Do not claim every locked crate is linked into the runtime binary.
 - Record every executed command, counts, exit status, skips, environment limitations and source revision. Do not copy historical test totals into a new claim.
 - Submit a focused PR; do not publish live services, change websites, submit private reports or introduce cloud enrollment/telemetry as part of a contributor test.
+
+For the optional Falco rule updater, use the guarded disposable-VM procedure in
+[acceptance tests](ACCEPTANCE_TESTS.md). The downloader's own pinned build recipe
+and advisory limitations are in [build provenance](FALCO_DOWNLOADER_BUILD.md).
+Local `tools/verify.py` validates the allowlisted release payload, excluding ignored
+developer tool caches. The expanded native inventory gives the Python test suite
+a 120-second budget. Never relax security assertions merely to meet that budget.

@@ -12,10 +12,10 @@ sys.path.insert(0, str(SOURCE))
 from ironclad.storage import open_dir, private_dir
 
 ID = 'com.zerodaysecurity.ironclad'
-FILES = ['zds-ironclad', 'companion.py', 'packaging/manage.py', 'packaging/install.sh', 'packaging/uninstall.sh', 'ui0236/State.js', 'ui0236/Design.js', 'ui0236/NavIcon.qml', 'ui0236/BodyText.qml', 'ui0236/ControlButton.qml', 'ui0236/Dashboard.qml', 'ui0236/Workspace.qml', 'ui0236/Protection.qml', 'ui0236/Monitoring.qml', 'ui0236/AutomaticMalware.qml', 'ui0236/Overview.qml', 'ironclad/FALCO-LICENSE', 'ironclad/krsi-component.tar.gz', 'manifest.json', 'BarWidget.qml', 'Panel.qml', 'engine.py', 'README.md', 'LICENSE', 'SECURITY.md', 'THIRD_PARTY_NOTICES.md', 'CHANGELOG.md', 'TEST_RESULTS.md', 'SECURITY_REVIEW.md']
+FILES = ['zds-ironclad', 'companion.py', 'packaging/manage.py', 'packaging/install.sh', 'packaging/uninstall.sh', 'ui0237/State.js', 'ui0237/Design.js', 'ui0237/NavIcon.qml', 'ui0237/BodyText.qml', 'ui0237/ControlButton.qml', 'ui0237/Dashboard.qml', 'ui0237/Workspace.qml', 'ui0237/Protection.qml', 'ui0237/Monitoring.qml', 'ui0237/AutomaticMalware.qml', 'ui0237/Overview.qml', 'ironclad/FALCO-LICENSE', 'ironclad/krsi-component.tar.gz', 'ironclad/falcoctl-component.tar.gz', 'manifest.json', 'BarWidget.qml', 'Panel.qml', 'engine.py', 'README.md', 'LICENSE', 'SECURITY.md', 'THIRD_PARTY_NOTICES.md', 'CHANGELOG.md', 'TEST_RESULTS.md', 'SECURITY_REVIEW.md']
 FILES += ['ironclad/'+p.name for p in sorted((SOURCE/'ironclad').glob('*.py'))]
 FILES += ['POST_LAUNCH_STATUS.md', 'CONTRIBUTING.md']
-FILES += ['docs/'+name for name in ('INSTALL.md', 'CHECK_CATALOG.md', 'AUTOMATIC_MALWARE.md', 'UNINSTALL.md', 'PRIVACY.md', 'PROTECTION_UPDATES.md', 'DETECTION_COVERAGE.md', 'RELEASING.md', 'FEATURES.md', 'ARCHITECTURE.md', 'THREAT_MODEL.md', 'RULES.md', 'AI_INTEGRATION.md', 'BUSINESS.md', 'ACCEPTANCE_TESTS.md', 'RELEASE_CHECKLIST.md', 'CONTRIBUTOR_TESTING.md', 'CORE_INTERFACE_PROPOSAL.md', 'LANDING_PAGE_BRIEF.md', 'SUPPLY_CHAIN_REVIEW.md', 'NATIVE_BUILD.md')]
+FILES += ['docs/'+name for name in ('INSTALL.md', 'CHECK_CATALOG.md', 'AUTOMATIC_MALWARE.md', 'UNINSTALL.md', 'PRIVACY.md', 'PROTECTION_UPDATES.md', 'FALCO_RULE_UPDATES.md', 'FALCO_DOWNLOADER_BUILD.md', 'DETECTION_COVERAGE.md', 'RELEASING.md', 'FEATURES.md', 'ARCHITECTURE.md', 'THREAT_MODEL.md', 'RULES.md', 'AI_INTEGRATION.md', 'BUSINESS.md', 'ACCEPTANCE_TESTS.md', 'RELEASE_CHECKLIST.md', 'CONTRIBUTOR_TESTING.md', 'CORE_INTERFACE_PROPOSAL.md', 'LANDING_PAGE_BRIEF.md', 'SUPPLY_CHAIN_REVIEW.md', 'NATIVE_BUILD.md')]
 FILES += ['docs/'+name for name in ('ROADMAP.md', 'LAUNCH_ANNOUNCEMENT.md', 'ironclad-build-inventory.cdx.json', 'dependency-advisories.json')]
 
 
@@ -47,7 +47,7 @@ def install(root):
         # Exclusive directory creation: never overwrite an existing plugin.
         os.mkdir(ID, 0o700, dir_fd=parentfd)
         destfd = os.open(ID, os.O_RDONLY|os.O_DIRECTORY|os.O_NOFOLLOW, dir_fd=parentfd)
-        for directory in ('ironclad', 'docs', 'ui0236', 'packaging'):
+        for directory in ('ironclad', 'docs', 'ui0237', 'packaging'):
             os.mkdir(directory,0o700,dir_fd=destfd)
         for name, body in data.items():
             parts=name.split('/')
@@ -92,7 +92,7 @@ def remove(root):
         for p in dest.rglob('*'):
             if p.is_symlink(): raise ValueError('symlink in installation')
             if p.is_file(): actual.add(p.relative_to(dest).as_posix())
-            elif p.relative_to(dest).as_posix() not in {'ironclad','docs','ui0236','packaging'}: raise ValueError('unexpected directory')
+            elif p.relative_to(dest).as_posix() not in {'ironclad','docs','ui0237','packaging'}: raise ValueError('unexpected directory')
         if actual!=expected: raise ValueError('installation contains user additions; preserve and review')
         for name in FILES:
             p=dest/name
@@ -102,7 +102,7 @@ def remove(root):
         # All files are in owner-only directories. Same-UID malicious actors are outside this boundary.
         for name in FILES: (dest/name).unlink()
         (dest/'.ironclad-install.json').unlink()
-        for directory in ('ironclad','docs','ui0236','packaging'): (dest/directory).rmdir()
+        for directory in ('ironclad','docs','ui0237','packaging'): (dest/directory).rmdir()
     finally: os.close(destfd)
     dest.rmdir()
 

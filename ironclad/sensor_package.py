@@ -89,6 +89,25 @@ def krsi_payload():
     return files
 
 
+def falcoctl_payload():
+    from . import falco_rules
+    body=Path(__file__).with_name('falcoctl-component.tar.gz').read_bytes()
+    if len(body)>67108864 or sha(body)!=falco_rules.FALCOCTL_ARCHIVE_SHA:raise ValueError('bundled rule downloader integrity failure')
+    files={};seen=set();total=0;binary=None;metadata=None
+    with tarfile.open(fileobj=io.BytesIO(body),mode='r:gz') as source:
+        for entry in source:
+            name=entry.name;total+=entry.size
+            if name in seen or len(seen)>=10000 or not entry.isfile() or entry.size>100663296 or total>134217728 or name.startswith('/') or '..' in Path(name).parts or '\\' in name:raise ValueError('unsafe downloader archive')
+            seen.add(name);content=source.extractfile(entry).read()
+            if name=='falcoctl':binary=content;files['usr/lib/ironclad/falcoctl']=content
+            elif name=='build-info.json':metadata=json.loads(content);files['usr/share/ironclad-sensor/falcoctl-build-info.json']=content
+            elif name.startswith('licenses/') or name in ('go.mod','go.sum','go-build-info.txt','ironclad.patch'):
+                files['usr/share/licenses/ironclad-sensor/falcoctl/'+name]=content
+            else:raise ValueError('unexpected downloader archive member')
+    if binary is None or sha(binary)!=falco_rules.FALCOCTL_SHA or not isinstance(metadata,dict) or metadata.get('binary_sha256')!=falco_rules.FALCOCTL_SHA or metadata.get('version')!=falco_rules.FALCOCTL_VERSION:raise ValueError('downloader identity mismatch')
+    return files
+
+
 def payload(body):
     if sha(body)!=policy.ARCHIVE_SHA:raise ValueError('sensor archive hash mismatch')
     engine=None;license_files={}
@@ -96,7 +115,7 @@ def payload(body):
         members=source.getmembers()
         if len(members)>5000:raise ValueError('sensor archive entry limit')
         for entry in members:
-            # Only one known binary and license notices are copied. Nothing is extracted.
+            # Only pinned binaries and license notices are copied; no archive paths are extracted.
             if entry.name=='falco-0.45.1-x86_64/usr/bin/falco':
                 if not entry.isfile() or entry.size>MAX_ARCHIVE:raise ValueError('unsafe sensor binary')
                 engine=source.extractfile(entry).read(MAX_ARCHIVE+1)
@@ -105,16 +124,22 @@ def payload(body):
                 if '..' in Path(relative).parts or relative.startswith('/'):raise ValueError('unsafe license entry')
                 license_files['usr/share/licenses/ironclad-sensor/upstream/'+relative]=source.extractfile(entry).read(1048577)
     if engine is None or sha(engine)!=policy.ENGINE_SHA:raise ValueError('sensor binary hash mismatch')
+    from . import rule_updates
     data={'version':policy.VERSION,'engine_version':policy.FALCO_VERSION,'engine_sha256':policy.ENGINE_SHA,'krsi_version':policy.KRSI_VERSION,'krsi_sha256':policy.KRSI_SHA,'rules':policy.RULES,
           'config_sha256':sha(policy.CONFIG.encode()),'rules_sha256':sha(policy.RULES_YAML.encode())}
     helper=Path(__file__).with_name('sensor_service.py').read_bytes()
-    files={'usr/lib/ironclad/falco':engine,'usr/lib/ironclad/sensor-helper':helper,
+    files={'usr/lib/ironclad/rule-helper':Path(__file__).with_name('rule_service.py').read_bytes(),
+           'usr/lib/ironclad/rule-worker':Path(__file__).with_name('falco_rules.py').read_bytes(),
+           'usr/lib/systemd/system/ironclad-rule-updates.service':rule_updates.SERVICE.encode(),
+           'usr/lib/systemd/system/ironclad-rule-updates.timer':rule_updates.TIMER.encode(),
+           'usr/share/polkit-1/actions/com.zerodaysecurity.ironclad.rules.policy':rule_updates.POLKIT.encode(),
+           'usr/lib/ironclad/falco':engine,'usr/lib/ironclad/sensor-helper':helper,
            'usr/share/ironclad-sensor/falco.yaml':policy.CONFIG.encode(),'usr/share/ironclad-sensor/rules.yaml':policy.RULES_YAML.encode(),
            'usr/share/ironclad-sensor/policy.json':json.dumps(data,sort_keys=True).encode(),
            'usr/lib/systemd/system/ironclad-sensor.service':policy.SERVICE.encode(),
            'usr/share/polkit-1/actions/com.zerodaysecurity.ironclad.sensor.policy':policy.POLKIT.encode(),
            'usr/share/licenses/ironclad-sensor/Falco-LICENSE':Path(__file__).with_name('FALCO-LICENSE').read_bytes(),
-           'usr/share/licenses/ironclad-sensor/LICENSE':Path(__file__).resolve().parents[1].joinpath('LICENSE').read_bytes(),**license_files,**krsi_payload()}
+           'usr/share/licenses/ironclad-sensor/LICENSE':Path(__file__).resolve().parents[1].joinpath('LICENSE').read_bytes(),**license_files,**krsi_payload(),**falcoctl_payload()}
     if not license_files:
         # The official static tarball currently may not include license files.
         files['usr/share/licenses/ironclad-sensor/Falco-NOTICE']=b'Falco 0.45.1, The Falco Authors. Apache-2.0. https://github.com/falcosecurity/falco/tree/0.45.1\nUpstream source, dependency notices and license: https://github.com/falcosecurity/falco\n'
@@ -133,15 +158,15 @@ def build(state,allow_network=False):
         with temporary.open('xb') as raw:
             temporary.chmod(0o600)
             with tarfile.open(fileobj=raw,mode='w',format=tarfile.USTAR_FORMAT) as package:
-                info=('pkgname = ironclad-sensor\npkgbase = ironclad-sensor\npkgver = '+policy.VERSION+'-1\npkgdesc = Ironclad embedded local sensor (Falco)\nurl = https://szdsecurity.com\nbuilddate = 1792699200\npackager = Zero Day Security local development\nsize = '+str(sum(len(v) for v in files.values()))+'\narch = x86_64\nlicense = MIT\nlicense = Apache-2.0\ndepend = python\ndepend = glibc\ndepend = gcc-libs\ndepend = systemd\ndepend = acl\ndepend = polkit\n').encode()
-                removal=b'pre_remove() { /usr/bin/systemctl disable --now ironclad-sensor.service >/dev/null 2>&1 || return 1; }\npost_remove() { /usr/bin/systemctl daemon-reload; }\n'
+                info=('pkgname = ironclad-sensor\npkgbase = ironclad-sensor\npkgver = '+policy.VERSION+'-1\npkgdesc = Ironclad embedded local sensor (Falco)\nurl = https://szdsecurity.com\nbuilddate = 1792699200\npackager = Zero Day Security local development\nsize = '+str(sum(len(v) for v in files.values()))+'\narch = x86_64\nlicense = MIT\nlicense = Apache-2.0\ndepend = python\ndepend = python-yaml\ndepend = libseccomp\ndepend = bubblewrap>=0.10.0\ndepend = glibc\ndepend = gcc-libs\ndepend = systemd\ndepend = acl\ndepend = polkit\n').encode()
+                removal=b'pre_remove() { /usr/bin/systemctl disable --now ironclad-rule-updates.timer ironclad-rule-updates.service ironclad-sensor.service >/dev/null 2>&1 || return 1; }\npost_remove() { /usr/bin/systemctl daemon-reload; }\n'
                 entries={'.PKGINFO':info,'.INSTALL':removal,**files}
                 # Explicit directory entries keep privileged parent paths root-owned.
                 dirs=sorted({str(parent) for name in files for parent in Path(name).parents if str(parent)!='.'},key=lambda v:(v.count('/'),v))
                 for name in dirs:
                     item=tarfile.TarInfo(name);item.type=tarfile.DIRTYPE;item.mode=0o755;item.uid=item.gid=0;package.addfile(item)
                 for name,content in sorted(entries.items()):
-                    item=tarfile.TarInfo(name);item.size=len(content);item.mode=0o755 if name in ('usr/lib/ironclad/falco','usr/lib/ironclad/sensor-helper') else 0o644;item.uid=item.gid=0;package.addfile(item,io.BytesIO(content))
+                    item=tarfile.TarInfo(name);item.size=len(content);item.mode=0o755 if name in ('usr/lib/ironclad/falco','usr/lib/ironclad/falcoctl','usr/lib/ironclad/sensor-helper','usr/lib/ironclad/rule-helper') else 0o644;item.uid=item.gid=0;package.addfile(item,io.BytesIO(content))
         result=subprocess.run([trusted('/usr/bin/zstd'),'-q','-T1','--no-progress',str(temporary),'-o',str(compressed)],stdin=subprocess.DEVNULL,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,env=environment(),timeout=60,check=False)
         if result.returncode:raise ValueError('sensor packaging did not complete')
         compressed.chmod(0o600)

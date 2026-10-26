@@ -71,7 +71,7 @@ Ui.BarWidget {
             return JSON.stringify({agent: details.agentName, busy: details.aiBusy, briefCharacters: details.aiBrief.length, answerCharacters: details.aiAnswer.length, message: details.aiMessage})
         }
         function status(): string {
-            return JSON.stringify({version: "0.2.36", opened: root.opened, busy: details.busy, checks: details.results.length, section: details.selected, scanTime: details.scanTime, scanStatus: details.scanStatus, scanEnabled: details.scanControlEnabled, scanFocused: details.scanControlFocused, message: details.message})
+            return JSON.stringify({version: "0.2.37", opened: root.opened, busy: details.busy, checks: details.results.length, section: details.selected, scanTime: details.scanTime, scanStatus: details.scanStatus, scanEnabled: details.scanControlEnabled, scanFocused: details.scanControlFocused, message: details.message})
         }
     }
     Workspace {

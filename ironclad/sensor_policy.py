@@ -1,5 +1,5 @@
 """Versioned local Falco policy. No argument/content fields or generated actions."""
-VERSION='0.2.33'
+VERSION='0.2.34'
 FALCO_VERSION='0.45.1'
 ARCHIVE_URL='https://download.falco.org/packages/bin/x86_64/falco-0.45.1-x86_64.tar.gz'
 ARCHIVE_SHA='a4a384055327207202c36e3f89a3e954d131db71d55088737c5174ff7dab7c7b'

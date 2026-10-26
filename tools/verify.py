@@ -34,13 +34,12 @@ def main():
     for name,args in [
         ('python-tests',[sys.executable,'-B','-m','unittest','discover','-s','tests','-v']),
         ('model-tests',['node','--test','tests/model.test.cjs']),
-        ('manifest',['/usr/bin/omarchy','plugin','validate',str(ROOT)]),
         ('qml-lint',[sys.executable,'-B','tools/lint_qml.py']),
         ('detection-policy',[sys.executable,'-B','tools/verify_detection_policy.py']+(['--engine',str(options.sensor_engine.resolve())] if options.sensor_engine else [])),
         ('ruff',['ruff','check','--select','E9,F','ironclad','tests','packaging','tools','engine.py']),
         ('systemd-verify',['/usr/bin/systemd-analyze','--user','verify','packaging/systemd-user/zds-ironclad.service','packaging/systemd-user/zds-ironclad.timer','packaging/systemd-user/ironclad-protection-updates.service','packaging/systemd-user/ironclad-protection-updates.timer']),
     ]:
-        begin=time.monotonic(); text=call(args); (evidence/(name+'.txt')).write_text(text)
+        begin=time.monotonic(); text=call(args,timeout=120 if name=='python-tests' else 30); (evidence/(name+'.txt')).write_text(text)
         result[name]={'passed':True,'elapsed_seconds':round(time.monotonic()-begin,3)}
     if options.ui_python:
         output=call([str(options.ui_python),'-B','tools/verify_update_ui.py'],timeout=120)
@@ -77,7 +76,10 @@ def main():
             # Every entry is generated from a strict allowlist above; extraction is into a disposable fixture.
             archive.extractall(temp/'release',filter='data')
         release=temp/('release/zds-ironclad-'+module.VERSION)
-        call(['/usr/bin/omarchy','plugin','validate',str(release)])
+        # Validate the actual shipped payload; ignored developer caches are not plugin files.
+        manifest=call(['/usr/bin/omarchy','plugin','validate',str(release)])
+        (evidence/'manifest.txt').write_text(manifest)
+        result['manifest']={'passed':True,'scope':'allowlisted release payload'}
         call([sys.executable,'-I','-B',str(release/'packaging/manage.py'),'--root',str(temp/'config'),'--apply'],env=env)
         installed=temp/'config/omarchy/plugins/com.zerodaysecurity.ironclad'
         output=json.loads(call([sys.executable,'-I','-B',str(installed/'engine.py'),'check','--profile','quick'],env=env))

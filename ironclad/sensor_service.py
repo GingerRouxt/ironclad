@@ -5,6 +5,7 @@ No arbitrary paths/commands/configuration are accepted by its CLI. Tests patch
 constants in an imported module, never elevate or start a host service.
 """
 import collections
+import fcntl
 from datetime import datetime, timezone
 import hashlib
 import json
@@ -12,6 +13,7 @@ import os
 from pathlib import Path
 import pwd
 import re
+import runpy
 import secrets
 import selectors
 import signal
@@ -134,6 +136,21 @@ def verify_install():
     return data
 
 
+def add_upstream(data):
+    """Only the administrator-installed helper reads an authenticated generation."""
+    if not Path('/var/lib/ironclad-rules/active.json').exists():return data
+    helper=Path('/usr/lib/ironclad/rule-helper')
+    trusted_file(helper,65536)
+    runtime=runpy.run_path(str(helper))
+    upstream=runtime['active']()
+    if upstream:
+        if set(data['rules'])&set(upstream['catalog']):raise ValueError('upstream rule name collision')
+        data['rules']={**data['rules'],**upstream['catalog']}
+        data['_upstream_sha']=upstream['rules_sha256']
+        data['_upstream_path']='/var/lib/ironclad-rules/'+upstream['rules_sha256']+'/rules.yaml'
+    return data
+
+
 def prepare_owner(uid):
     fd=root_dir(BASE,create=True);os.close(fd)
     try:
@@ -160,7 +177,9 @@ def sanitize_event(data,rules,identifier):
     event=fields.get('evt.type','unknown')
     if not isinstance(event,str) or not re.fullmatch('[a-z0-9_]{1,32}',event):event='unknown'
     entry=rules[data['rule']]
-    return {'id':identifier,'rule_id':entry['id'],'severity':entry['severity'],'time':timestamp,'app':application,'event':event}
+    result={'id':identifier,'rule_id':entry['id'],'severity':entry['severity'],'time':timestamp,'app':application,'event':event}
+    if entry['id'].startswith('upstream.'):result['title']=entry['title']
+    return result
 
 
 def metrics(data):
@@ -180,14 +199,14 @@ def metrics(data):
 
 
 def run():
-    data=verify_install();uid=owner();prepare_owner(uid)
+    data=add_upstream(verify_install());uid=owner();prepare_owner(uid)
     rules=data['rules'];session=secrets.token_hex(8);sequence=0
     events=collections.deque(maxlen=MAX_EVENTS);omitted=0
     try:
         previous=json.loads(trusted_file(BASE/'feed/snapshot.json',262144))
         if previous.get('owner_uid')==uid and isinstance(previous.get('events'),list) and len(previous['events'])<=MAX_EVENTS:
             for row in previous['events']:
-                if isinstance(row,dict) and set(row)=={'id','rule_id','severity','time','app','event'}:events.append(row)
+                if isinstance(row,dict) and set(row) in ({'id','rule_id','severity','time','app','event'},{'id','rule_id','severity','time','app','event','title'}):events.append(row)
             omitted=previous.get('omitted',0) if isinstance(previous.get('omitted'),int) else 0
     except (OSError,ValueError,KeyError,TypeError):pass
     boot_id=Path('/proc/sys/kernel/random/boot_id').read_text().strip()
@@ -196,7 +215,9 @@ def run():
         nonlocal stopping
         stopping=True
     signal.signal(signal.SIGTERM,stop);signal.signal(signal.SIGINT,stop)
-    child=subprocess.Popen([str(ENGINE),'-c',str(CONFIG)],stdin=subprocess.DEVNULL,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,env={'PATH':'/usr/bin','LANG':'C','LC_ALL':'C'},cwd='/',start_new_session=False)
+    args=[str(ENGINE),'-c',str(CONFIG)]
+    if data.get('_upstream_path'):args+=['-r',str(ASSETS/'rules.yaml'),'-r',data['_upstream_path']]
+    child=subprocess.Popen(args,stdin=subprocess.DEVNULL,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,env={'PATH':'/usr/bin','LANG':'C','LC_ALL':'C'},cwd='/',start_new_session=False)
     selector=selectors.DefaultSelector();selector.register(child.stdout,selectors.EVENT_READ)
     pending=b'';last_write=0
     try:
@@ -220,7 +241,7 @@ def run():
                         if len(events)==MAX_EVENTS:omitted+=1
                         events.append(event)
             if time.monotonic()-last_write>=2:
-                snapshot={'policy_version':data['version'],'schema':1,'owner_uid':uid,'session':session,'boot_id':boot_id,'heartbeat_ns':str(time.monotonic_ns()),'metric_ns':str(last_metric),'metrics':counts,'events':list(events),'omitted':max(0,omitted),'parse_errors':parse_errors,'stopped':False}
+                snapshot={'upstream_rules_sha256':data.get('_upstream_sha',''),'policy_version':data['version'],'schema':1,'owner_uid':uid,'session':session,'boot_id':boot_id,'heartbeat_ns':str(time.monotonic_ns()),'metric_ns':str(last_metric),'metrics':counts,'events':list(events),'omitted':max(0,omitted),'parse_errors':parse_errors,'stopped':False}
                 atomic('snapshot.json',snapshot,uid);last_write=time.monotonic()
     finally:
         selector.close()
@@ -228,11 +249,26 @@ def run():
             child.terminate()
             try:child.wait(timeout=4)
             except subprocess.TimeoutExpired:child.kill();child.wait()
-        atomic('snapshot.json',{'policy_version':data['version'],'schema':1,'owner_uid':uid,'session':session,'boot_id':boot_id,'heartbeat_ns':str(time.monotonic_ns()),'metric_ns':str(last_metric),'metrics':counts,'events':list(events),'omitted':max(0,omitted),'parse_errors':parse_errors,'stopped':True},uid)
+        atomic('snapshot.json',{'upstream_rules_sha256':data.get('_upstream_sha',''),'policy_version':data['version'],'schema':1,'owner_uid':uid,'session':session,'boot_id':boot_id,'heartbeat_ns':str(time.monotonic_ns()),'metric_ns':str(last_metric),'metrics':counts,'events':list(events),'omitted':max(0,omitted),'parse_errors':parse_errors,'stopped':True},uid)
     return 0 if stopping else child.returncode or 1
 
 
 def manage(action):
+    # Serialize explicit stop/remove with automatic activation. A user request
+    # cannot be silently undone by an updater that checked liveness earlier.
+    folder=Path('/var/lib/ironclad-rules')
+    if not folder.exists():return manage_unlocked(action)
+    fd=root_dir(folder);os.close(fd)
+    lock=os.open(folder/'lock',os.O_CREAT|os.O_RDWR|os.O_NOFOLLOW,0o600)
+    try:
+        meta=os.fstat(lock)
+        if not stat.S_ISREG(meta.st_mode) or meta.st_uid!=ROOT_UID or meta.st_nlink!=1 or meta.st_mode&0o022:raise ValueError('unsafe rule update lock')
+        fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+        return manage_unlocked(action)
+    finally:os.close(lock)
+
+
+def manage_unlocked(action):
     uid=caller()
     if action=='enable':
         verify_install()

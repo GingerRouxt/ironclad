@@ -13,7 +13,19 @@ installed system dependency (LGPL-3.0), not bundled. Omarchy shell base types:
 installed system dependency (MIT), not bundled. Linux command-line tools:
 optional system dependencies, not redistributed; their absence is reported.
 libseccomp: installed system library (LGPL-2.1), not bundled; used only for a
-process-local IPv4/IPv6 socket restriction. No third-party Python package, icon, font, copied QML implementation or AI model is bundled. The KRSI library and its Rust dependencies are the bundled native exception described above. Upstream reference documents under
+process-local IPv4/IPv6 socket restriction. No third-party Python package, icon, font, copied QML implementation or AI model is bundled. The KRSI library and rules-only falcoctl fork, with their dependencies, are the bundled native components described here. Upstream reference documents under
 docs/upstream retain their original authorship and repository license; they
 are development evidence, excluded from installed/release payload. No claim
 of Omarchy endorsement. Master handoff supplied by the owner.
+
+### Optional Falco rule updates
+
+The optional native sensor package includes the bundled rules-only falcoctl fork
+0.14.2-ironclad.1 (Apache-2.0, https://github.com/falcosecurity/falcoctl).
+`ironclad/falcoctl-component.tar.gz` contains its source patch, locked Go modules,
+build provenance, Go license and license/notice files for all 159 modules recorded
+in its binary. The deterministic recipe is `tools/build_falcoctl_component.py`.
+This collected notice inventory does not assert independent legal review.
+The rule worker uses OS-provided PyYAML (MIT); tests pin PyYAML 6.0.3.
+Official Falco rules are Apache-2.0: https://github.com/falcosecurity/rules.
+Falco and the downloader are separate components; the timer does not upgrade engines.

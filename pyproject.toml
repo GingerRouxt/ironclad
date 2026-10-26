@@ -1,9 +1,11 @@
 [project]
 name = "zds-ironclad"
-version = "0.2.36"
+version = "0.2.37"
 description = "Local-first Linux System Intelligence, Optimization & Defense"
 requires-python = ">=3.12"
 dependencies = []
+[dependency-groups]
+dev = ["PyYAML==6.0.3"]
 [project.scripts]
 zds-ironclad = "ironclad.cli:entrypoint"
 [tool.uv]

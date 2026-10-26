@@ -1,5 +1,10 @@
 name: Local contracts
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 11 * * *'
 permissions:
   contents: read
 jobs:
@@ -29,6 +34,8 @@ jobs:
           if test -e /proc/sys/kernel/apparmor_restrict_unprivileged_userns; then
             sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
           fi
+      - name: Install locked test dependencies
+        run: mise exec -- uv sync --frozen
       - name: Python contracts without downloads
         run: mise exec -- uv run --offline python -m unittest discover -s tests -v
       - name: UI data contracts
@@ -40,3 +47,13 @@ jobs:
           mkdir -p dist/sbom-check
           mise exec -- uv run --offline python tools/generate_sbom.py --output dist/sbom-check/inventory.cdx.json
           cmp docs/ironclad-build-inventory.cdx.json dist/sbom-check/inventory.cdx.json
+      - name: Pinned downloader vulnerability analysis (no binary execution)
+        run: |
+          mise install go@1.27.3
+          mise exec -- uv run --offline python - <<'PYCODE'
+          import os
+          from pathlib import Path
+          from ironclad.sensor_package import falcoctl_payload
+          Path(os.environ['RUNNER_TEMP'], 'ironclad-falcoctl-audit').write_bytes(falcoctl_payload()['usr/lib/ironclad/falcoctl'])
+          PYCODE
+          mise exec go@1.27.3 -- go run golang.org/x/vuln/cmd/govulncheck@v1.9.0 -mode=binary "$RUNNER_TEMP/ironclad-falcoctl-audit"

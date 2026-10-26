@@ -2,14 +2,14 @@
   "schemaVersion": 1,
   "id": "com.zerodaysecurity.ironclad",
   "name": "ZDS Ironclad",
-  "version": "0.2.36",
+  "version": "0.2.37",
   "author": "Zero Day Security LLC",
   "description": "Local-first Linux system intelligence and defense",
   "kinds": [
     "bar-widget"
   ],
   "entryPoints": {
-    "barWidget": "ui0236/Dashboard.qml"
+    "barWidget": "ui0237/Dashboard.qml"
   },
   "barWidget": {
     "displayName": "Ironclad",

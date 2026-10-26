@@ -2,7 +2,7 @@
   <img src="assets/brand/hero.png" alt="Ironclad — Your machine. Your call. Local-first security for Omarchy." width="100%">
 </p>
 
-> **Published beta — 0.2.36.** [Available in the Omarchy marketplace](https://omarchyplugins.com/plugin.html?id=com.zerodaysecurity.ironclad), maintainer-verified October 25, 2026 at snapshot `73e2275`. Verification is a scoped marketplace review, not a security audit or certification. Changes on this branch are proposed post-launch fixes, not part of that verified snapshot.
+> **Ironclad 0.2.37.** [Available in the Omarchy marketplace](https://omarchyplugins.com/plugin.html?id=com.zerodaysecurity.ironclad), maintainer-verified October 25, 2026 at snapshot `73e2275`. Verification is a scoped marketplace review, not a security audit or certification. Version 0.2.37 adds the tested post-launch fixes; it is not covered by that earlier snapshot verification.
 
 <p align="center">
   <strong>Know what needs attention. Understand why. Choose what happens next.</strong><br>
@@ -12,7 +12,7 @@
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-96b8ec?style=flat-square&amp;labelColor=151e2d" alt="MIT license"></a>
   <img src="https://img.shields.io/badge/platform-Omarchy-96b8ec?style=flat-square&amp;labelColor=151e2d" alt="Built for Omarchy">
-  <img src="https://img.shields.io/badge/status-beta-e7bc79?style=flat-square&amp;labelColor=151e2d" alt="Beta">
+  <img src="https://img.shields.io/badge/status-available-96b8ec?style=flat-square&amp;labelColor=151e2d" alt="Available">
 </p>
 
 <p align="center">
@@ -32,6 +32,8 @@
 Ironclad brings system findings, behavior monitoring, automatic Downloads malware scanning, one-off file scans, software checks, and AI explanations into one desktop panel. Findings come with context and a next step you can review.
 
 **You stay in control.** Review an observation, ignore it when appropriate, or choose a supported action. Ironclad does not automatically delete your files, quarantine applications, or execute AI suggestions.
+
+Version 0.2.37 adds separately approved, off-by-default [Falco host-rule updates](docs/FALCO_RULE_UPDATES.md). See [installation](docs/INSTALL.md) and [verified test status](POST_LAUNCH_STATUS.md); the earlier marketplace snapshot predates this feature.
 
 ## Watch the preview
 
@@ -68,7 +70,7 @@ The preview uses a fixture response. No AI request was made to create this scree
 
 - **Built around your machine.** Review findings and supported actions from the Omarchy desktop.
 - **Optional components are visible.** Monitoring, malware scanning, maintenance, and AI have their own setup and status.
-- **AI is optional.** On this post-launch branch, scans stay local until you choose **Explain all checks** or another explicit AI action. It uses your existing Codex or Claude Code account, subject to provider limits. The published 0.2.36 GUI automatically requests explanations after scans when a signed-in client is available; this branch removes that automatic request.
+- **AI is optional.** In 0.2.37, scans stay local until you choose **Explain all checks** or another explicit AI action. It uses your existing Codex or Claude Code account, subject to provider limits. The older 0.2.36 GUI automatically requested explanations after scans; 0.2.37 removes that automatic request.
 - **Evidence before action.** AI answers explain or propose; they do not execute changes on their own.
 
 Local-first does not mean every optional feature is offline. Advisory lookups, protection updates, and AI requests require network access when used.

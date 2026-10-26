@@ -213,6 +213,10 @@ function protectionState(data) {
         for (const e of u.engines) if (["clamav","falco"].indexOf(e.name) < 0 || typeof e.update_available !== "boolean" || [e.installed,e.latest].some(v => v !== null && (typeof v !== "string" || !/^[0-9]+\.[0-9]+\.[0-9]+$/.test(v)))) throw new Error("engine health")
     }
     if (data.automatic_malware) automaticMalwareState(data.automatic_malware)
+    if (data.rule_updates) {
+        const r = data.rule_updates
+        if (typeof r.available !== "boolean" || typeof r.installed !== "boolean" || typeof r.enabled !== "boolean" || !Number.isInteger(r.rules) || r.rules < 0 || r.rules > 128 || typeof r.message !== "string" || r.message.length > 1024 || ["unavailable","not_checked","checking","ok","failed","needs_attention"].indexOf(r.state) < 0) throw new Error("Falco rule update health")
+    }
     if (data.last_scan) malwareResult(data.last_scan)
     return data
 }

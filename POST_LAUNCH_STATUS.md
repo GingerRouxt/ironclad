@@ -1,6 +1,6 @@
 # Ironclad post-launch status
 
-Review date: **October 25, 2026 America/Chicago**; automated checks/advisory lookup continued into October 26 UTC. Scope: `GingerRouxt/ironclad`, baseline **0.2.36 / `73e2275b3bb8b83c3c7c72c570cd6adff1402779`**, branch `feat/post-launch-ironclad`. These are proposed changes, not a new release or deployment. Community Ironclad remains free and MIT licensed.
+Review date: **October 26, 2026 America/Chicago**; automated checks/advisory lookup continued into October 26 UTC. Scope: `GingerRouxt/ironclad`, baseline **0.2.36 / `73e2275b3bb8b83c3c7c72c570cd6adff1402779`**, branch `feat/gated-falco-rules`, stacked on the post-launch branch. These are proposed changes, not a new release or deployment. Community Ironclad remains free and MIT licensed.
 
 ## Verified starting state
 
@@ -45,7 +45,7 @@ Environment: pinned project Python 3.14.8 / uv 0.13.4; existing Python 3.13.16 w
 | Published archive | Downloaded checksum verified against sidecar and release manifest; original assets untouched. |
 | Agent diff review | Separate focused AI/permission/lifecycle and supply-chain reviews; documentation discrepancies corrected. This is agent source review, not external human approval or independent certification. |
 
-At e775ba9, the runtime-bearing changed files were bound by SHA-256: `ui0236/Workspace.qml` = `be8c1960669fc87bcc7e2899e78f4a50762576b17aaacddc9edd1400bcece773`; `packaging/manage.py` = `4cc9af8162d9159982f1364751193547abca0a6e9b037c10d17dd1c73a5f6653`; `tools/generate_sbom.py` = `018956d5fcdf1ed38514ac1c9ff2f7b24b32c2f99e1ea069c4add3d8607816f7`. Candidate archive hashes change with documentation; the final exact archive hash belongs in the PR/build evidence rather than recursively inside this packaged status file.
+At e775ba9, the runtime-bearing changed files were bound by SHA-256: `ui0237/Workspace.qml` = `be8c1960669fc87bcc7e2899e78f4a50762576b17aaacddc9edd1400bcece773`; `packaging/manage.py` = `4cc9af8162d9159982f1364751193547abca0a6e9b037c10d17dd1c73a5f6653`; `tools/generate_sbom.py` = `018956d5fcdf1ed38514ac1c9ff2f7b24b32c2f99e1ea069c4add3d8607816f7`. Candidate archive hashes change with documentation; the final exact archive hash belongs in the PR/build evidence rather than recursively inside this packaged status file.
 
 ### Failures found and resolved
 
@@ -81,3 +81,246 @@ Known limitations remain: same-user/root/kernel compromise, shared-kernel sandbo
 ## Recommended next steps
 
 Review and merge only through the feature PR after its checks pass; decide the next version separately. Resolve native advisory disposition and perform the separate-machine matrix before expanding assurance claims. Obtain independent security/licensing review. Approve current launch copy only after confirming what version actually ships. Keep szdsecurity.com, cloud agents and other services untouched until a separate explicit task authorizes them.
+
+## Optional Falco rule maintenance — October 26 remediation
+
+The candidate now supports separately authenticated, **off-by-default** host-rule
+updates. Installation, a plugin update and existing ClamAV consent do not enable
+its timer. The maintainer code gate is open for this tested candidate; customer
+consent is still required. No host sensor, host timer, customer machine, website,
+release tag or protected branch was changed during this remediation.
+
+### Verified fixes and evidence
+
+- Bundled a rules-only falcoctl `0.14.2-ironclad.1` build using Go 1.27.3,
+  Cosign 3.1.4 and Rekor 1.5.5. Removed driver/registry-management commands and
+  credential discovery from the download path. Missing signature policy and
+  verification bypass are refused. Mandatory digest claims use Cosign's in-toto
+  verifier for v3 bundles and simple verifier for legacy signatures.
+- Fixed the default-index bug discovered by the negative issuer test: the worker
+  explicitly selects its local policy, and the compiled downloader refuses any
+  remote-index fallback. Correctly signed content cannot substitute an arbitrary
+  configured issuer/workflow policy.
+- Two local offline builds reproduced the same binary and archive. Exact input
+  and output hashes, patch/locks, audit commands and limitations are recorded in
+  [downloader provenance](docs/FALCO_DOWNLOADER_BUILD.md). All 159 recorded Go
+  modules have collected notices. This is not independent provenance or legal
+  certification.
+- Final `govulncheck@v1.9.0` source and exact-binary scans: **zero affected symbols,
+  zero vulnerable imported packages**. One module-level OpenPGP advisory remains
+  for unused packages in `x/crypto`; it is documented, not suppressed. Existing
+  Falco/native dependency limitations and KRSI unmaintained-package triage remain.
+- Deterministic CycloneDX inventory: **335 components**, schema 1.6 validation
+  passed; binary hashes and embedded locks/patches are checked. The inventory
+  remains incomplete for the separate Falco engine and exact native link graph.
+- Full local verifier: **330 Python tests, 34 JavaScript tests, 36 workflow UI
+  cases, 32 protection UI cases passed**, plus QML lint, policy compilation,
+  reproducible **97-file** packaging, and fixture install/remove. UI authentication
+  releases the overlay and restores it afterward; cancellation grants no consent.
+  A closed maintainer gate still permits disabling an already-enabled timer.
+- Publication pattern/path checks passed for **168 source files**, including the
+  nested native archives. This is a bounded privacy check, not universal secret
+  detection. Raw machine evidence and credentials remain excluded from Git.
+
+### Executed disposable-guest acceptance
+
+A signed official Arch cloud image was verified with the Arch Boxes signing key
+and run in a disposable KVM guest. QEMU was privately extracted from verified
+packages; no host OS-package installation or host reboot occurred. This guest is
+headless Arch, **not full Omarchy Quattro desktop acceptance**.
+
+`tools/verify_falco_rules_native.py --confirm-disposable-vm` passed **11 checks**:
+
+1. Refuse an unconsented refresh without restarting the sensor.
+2. Real systemd service verifies/downloads rules and observes healthy live metrics.
+3. An unchanged generation does not restart monitoring.
+4. Missing local policy fails closed.
+5. Wrong workflow identity is rejected before activation.
+6. Wrong issuer is rejected before activation.
+7. Verification bypass is rejected before activation.
+8. Invalid rules fail compilation before activation.
+9. An injected health failure causes actual service restarts and successful rollback.
+10. A pending transaction recovers the prior healthy generation.
+11. Disable retains current rules and monitoring while stopping scheduled updates.
+
+The signed snapshot supplies **13 additional host rules**, with 12 disabled or
+unsupported rules excluded; the existing eight Ironclad rules remain. A harmless
+self-`PTRACE_TRACEME` fixture produced the upstream `PTRACE anti-debug attempt`
+alert with only rule identity, severity, time, application and event type retained.
+A guarded capacity test filled the private scratch filesystem, observed `ENOSPC`
+at the 32 MiB limit and confirmed unmount/cleanup. A separate sandbox probe
+verified UID 65534, zero effective capabilities, no home,
+no host state/desktop mounts and no leaked directory descriptors. That UID maps to
+host root in the new user namespace; it is not a distinct host service account.
+The worker additionally installs an inherited socket-family/io_uring seccomp filter
+to deny local Unix/Netlink/packet socket authority. A real child-process regression
+checks denial, IPv4 availability and filter inheritance across exec.
+
+A guest-only reboot changed its boot ID and passed the guarded boot check: explicit
+consent, timer enablement, selected rules and fresh zero-drop monitoring survived.
+The exact final package passed this check after a guest-only reboot; the kernel
+was 7.2.11-arch1-1. Guarded native uninstall also passed: the owned sensor/updater
+services stopped, the native helper was removed, and local evidence was retained.
+
+### Failures found and addressed
+
+The VM exposed staging ownership/mapping errors and systemd restrictions that
+prevented namespace setup. Staging now stays root-private and is mounted through
+a descriptor. Downloads/extraction use a 32 MiB private tmpfs; worker `/tmp` is
+also capped at 32 MiB, with checked persistent output limits. The supervisor grants the mapping capability needed by the kernel;
+worker capabilities remain empty. Incompatible outer `RestrictSUIDSGID` and
+`ProtectKernelTunables` settings were removed; `NoNewPrivileges`, read-only host
+mounts, separate namespaces and resource limits remain. These tradeoffs are
+explicit in [the trust design](docs/FALCO_RULE_UPDATES.md).
+
+Early downloads at a 50% CPU quota caused observed kernel drops in the small guest.
+The updater now uses **10% of one CPU**; the final signed-refresh and live-health
+checks passed without relaxing zero-drop activation checks. Monitoring retains
+its existing 25% CPU / 512 MiB limits. Workload calibration is still required;
+future drops remain visible as degraded coverage, never inferred safety.
+
+Other failed intermediate runs included a v3/simple-claim mismatch, the remote
+index bug, an authentication-panel restore failure, obsolete Go dependency API
+combinations, and a native-fixture crash-loop-limit collision during rapid injected
+restarts. Each was corrected and the relevant final checks rerun. The fixture resets
+crash-loop counters between deliberate failure scenarios; production limits are
+unchanged. The verifier's former 30-second suite limit was raised to 120 seconds
+for the larger native inventory; ignored tool-cache symlinks are excluded by
+validating the actual allowlisted release payload.
+
+### Remaining review and next steps
+
+- Review draft [PR #2](https://github.com/GingerRouxt/ironclad/pull/2), stacked on
+  PR #1. Do not merge, tag or deploy from this development run. Repository issue
+  triage on October 26 found no open issues; remaining work is recorded here.
+- Complete the remaining desktop lifecycle cases, long-running legitimate workloads,
+  false-positive/resource calibration and independent security/build review.
+  The live desktop acceptance below covers component installation and rule opt-in/disable;
+  it does not establish full fresh-machine lifecycle or independent assurance.
+- Review complete Falco native dependency/license closure and the existing KRSI
+  maintenance findings. No scanner, signature feed or rule engine guarantees
+  protection against all malware. Rule updates can create brief monitoring gaps;
+  signed-but-poor rules and signed replay remain trust limitations.
+- The branch prepares daily GitHub contracts and exact-binary vulnerability checks
+  at **11:17 UTC** with read-only repository permissions. The schedule becomes
+  active only after merge to the default branch and may be delayed by GitHub.
+  It does not modify code, ship updates or autonomously innovate. No daily Codex
+  development schedule is claimed to be active.
+- Community Ironclad remains free. Core fleet integration remains a future,
+  documented interface only; no cloud agent or unsolicited telemetry was added.
+
+### Live Omarchy desktop follow-up — October 26, 2026
+
+At the owner's request, candidate `87c3bad` was exercised on an existing Omarchy
+4.0.6 desktop without rebooting. The copied plugin was backed up and exchanged
+atomically; the installed receipt and all **97 payload files** matched the reviewed
+source. This was an existing-machine test, not a clean Quattro installation.
+
+- The live Protection screen prepared the monitoring update and handed control to
+  the real OS authentication UI. Policy **0.2.34** installed successfully, retaining
+  Falco **0.45.1**. Monitoring recovered fresh metrics with zero reported drops,
+  parsing errors or asynchronous backlog. Installation left the rule timer disabled.
+- The separate live Falco control enabled the timer through the privileged helper.
+  An explicitly requested immediate refresh verified and installed **13 signed host
+  rules**. This immediate refresh invoked the authenticated helper directly; the
+  scheduled service's resource limits were tested in the disposable guest, not
+  re-established by this direct invocation.
+- The live **Turn off Falco rule updates** control disabled the timer. The 13 rules
+  remained installed and monitoring stayed healthy. The test ends with future
+  Falco rule downloads **off**, preserving the original choice. Existing ClamAV
+  automatic signature maintenance and alert-only Downloads protection were retained.
+- Omarchy's plugin rescan retained old nested QML components despite matching files.
+  Restarting only the desktop shell loaded the candidate controls; applications
+  and the sensor remained running. A rescan alone is not sufficient evidence that
+  the displayed UI matches an updated copied plugin.
+- Keyboard navigation reached a monitoring approval button below the visible
+  scroll area without revealing it. Review scrolling/focus behavior before broad
+  release. The rule result also uses the generic “Scanner setup” heading; improve
+  that wording and the initial “needs attention” state before the first scheduled
+  refresh. These issues were observed in this acceptance run; the subsequent remediation below records their fixes.
+
+Private evidence is retained locally under `.local-evidence/falco-rules/host/`:
+`install.json`, `sensor-after-install.json`, `rule-result.json`,
+`disabled-result.json`, and desktop captures. No screenshots, personal desktop
+content, credentials or raw machine reports are published. Host reboot/uninstall,
+clean-machine desktop lifecycle, extended workload calibration and independent
+review remain unperformed on this desktop. Guest reboot/uninstall evidence above
+is separate.
+
+The first 60-second coexistence attempt stopped on the verifier's workstation
+health guard. Its original error did not identify which threshold failed, so its
+cause remains unresolved and it is not counted as a pass. The verifier now saves
+its observed samples and missing-process information on that failure path. A
+subsequent **60-second** run passed with a single low-priority synthetic compilation
+worker, ClamAV detection of the standard harmless EICAR fixture, all sampled Codex
+processes alive and healthy sensor metrics throughout (`native-load-retry.json`).
+This short pass does not resolve the first failure or establish sustained-load
+reliability. The failure-reporting branch itself has not been fault-injected here.
+
+### Desktop remediation after owner review — October 26, 2026
+
+The Protection scroll view now reveals keyboard-focused controls, including a
+monitoring approval below the viewport, without activating them. Falco rule
+configuration has its own heading, cancellation/error messages and privacy text;
+subsequent scanner operations restore their scanner-specific wording. First-time
+rule enablement uses the active systemd timer timestamp to show a scheduled first
+check for a bounded 30-minute grace period. An in-progress check is identified for
+up to 10 minutes; failed, overdue and stale checks still require attention. These
+changes do not enable a timer or change privileged worker/service behavior.
+
+Investigation found a reproducible verifier defect: the old workload guard watched
+every process named `codex`, so an unrelated session exiting could abort an
+otherwise healthy run. It now watches only the invoking Codex ancestry, checks PID
+start time to reject PID reuse, rejects zombie processes and distinguishes memory
+pressure from session loss in saved evidence. Synthetic process records exercise
+unrelated exits, watched-process loss, PID reuse, zombies and both guard reasons.
+The first historical stop has insufficient evidence to prove which threshold
+triggered; that uncertainty remains recorded rather than retroactively called a
+pass. No kernel OOM/kill entry was found in the inspected failure-time window.
+
+Regression coverage includes actual Tab traversal through the production QML
+review, no activation on focus, rule-result wording, authentication restoration,
+and first-check/running/failed/stale status cases. Executed verification and live acceptance results follow.
+
+- The complete isolated verifier passed Python/JavaScript contracts, QML lint,
+  policy compilation, 36 workflow UI cases, **33 protection UI cases**, and a
+  reproducible 97-file package with fixture install/remove. That snapshot included
+  334 Python tests; the subsequent degraded-start regression adds one more, and
+  all four dedicated workload-guard tests passed. Publication checks passed for
+  169 files; raw host evidence remains excluded.
+- A 120-second diagnostic run revealed **27,162 pre-existing cumulative kernel
+  drops**, unchanged across all 59 samples, with the active session alive and
+  sufficient memory. It is correctly recorded as failed, not clean coverage.
+  The verifier previously accepted `monitoring=True` even with `state=degraded`;
+  it now requires the clean monitoring state. An actual preflight run rejected
+  that degraded state before starting the workload (`refuse-degraded.json`).
+- After recording those counters, the owner authenticated a controlled sensor
+  restart. The corrected **120-second** native run then passed all 59 samples,
+  zero kernel/output drops or asynchronous backlog, active-session liveness and
+  ClamAV EICAR detection (`fix-native-clean.json`). At least 8.6 GiB memory remained
+  available. The prior losses remain historical evidence; a restart does not
+  recover lost events or establish lossless behavior under arbitrary load.
+- The updated 97-file plugin was installed with a rollback backup and verified
+  against source. Only the shell was reloaded for QML cache invalidation. A second
+  manual keyboard takeover was avoided while the owner was actively using the
+  browser; the production-QML Tab regression above passed with real Qt focus.
+  No host reboot, root component replacement, automatic Falco timer enablement,
+  prevention-mode change, merge, release or website deployment occurred in this
+  remediation. Installed signed rules and existing ClamAV maintenance remain.
+
+The reproduced verifier defects and reported UI issues are fixed and covered by
+regressions. The exact cause of the first historical uninstrumented safety stop
+cannot be recovered. The changes can proceed to PR review; independent security
+review, clean desktop lifecycle and sustained workload calibration remain release
+considerations rather than claims established by this short acceptance run.
+
+### Owner-authorized 0.2.37 publication
+
+The owner explicitly requested merge and publication after the tests passed.
+Version 0.2.37 collects the reviewed PRs, changes the QML import directory to
+`ui0237` to avoid old component caches, and provisions locked test dependencies
+before the release workflow's offline suite. The privileged binaries and services
+are unchanged from the accepted candidate. This is a normal release with the
+limitations above, not a claim of independent certification or renewed marketplace
+verification. Customer installation, sensor upgrades and recurring Falco rule
+updates remain explicit choices. The original v0.2.36 assets remain immutable.

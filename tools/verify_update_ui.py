@@ -190,7 +190,7 @@ QtObject {
 }''')
         plugin = base/'plugin'
         plugin.mkdir()
-        shutil.copytree(ROOT/'ui0236', plugin/'ui0236')
+        shutil.copytree(ROOT/'ui0237', plugin/'ui0237')
         shutil.copyfile(ROOT/'Panel.qml', plugin/'Panel.qml')
         version = base/'version'
         second = base/'second-version'

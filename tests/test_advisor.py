@@ -44,7 +44,7 @@ class AdvisorTests(unittest.TestCase):
             text=context('Explain malware signatures')
         self.assertNotIn('BUNDLED POLICY YAML',text)
         for filename,keys in [('Protection.qml',('clamav_docs','clamav_signatures')),('Monitoring.qml',('falco_docs','falco_help'))]:
-            source=(Path(__file__).resolve().parents[1]/'ui0236'/filename).read_text()
+            source=(Path(__file__).resolve().parents[1]/'ui0237'/filename).read_text()
             for key in keys:self.assertIn(SOURCES[key],source)
 
     def test_local_protection_context_excludes_file_and_alert_details(self):

@@ -39,3 +39,44 @@ Remaining limitation:
 ```
 
 Production services, websites, email, cloud APIs and the maintainer's host are outside this acceptance plan. Do not publish raw workstation logs or snapshots.
+
+## Falco rule updater: guarded native regression tool
+
+Use a disposable KVM/QEMU guest with the candidate native package installed and
+local monitoring explicitly enabled for its test user. This is a separate test
+machine, not the workstation. The native tool requires root, detected KVM/QEMU
+virtualization and `/etc/ironclad-disposable-test`, owned by root and not writable
+by other users, containing exactly `ironclad disposable acceptance VM` plus a
+newline. Create that marker only inside a guest intended to be discarded.
+
+Inside that guest, run the repository-owned tool:
+
+```sh
+sudo python tools/verify_falco_rules_native.py --confirm-disposable-vm --owner-uid 1000
+sudo python tools/verify_falco_rules_native.py --confirm-disposable-vm --mode limits
+```
+
+It explicitly enables/disables the timer, performs public signed downloads,
+rejects missing/incorrect identity policy and unsigned operation, rejects invalid
+rules, exercises live-service rollback with an injected health failure, and
+recovers an interrupted transaction. It resets the sensor crash-loop counter
+between deliberately rapid failure fixtures; production limits remain unchanged.
+It leaves this disposable guest explicitly opted in for a separate boot check.
+It does not reboot any machine.
+
+After a separately authorized **guest-only** reboot:
+
+```sh
+sudo python tools/verify_falco_rules_native.py --confirm-disposable-vm --mode check-boot
+```
+
+Only when finished with the guest, exercise native package removal:
+
+```sh
+sudo python tools/verify_falco_rules_native.py --confirm-disposable-vm --mode remove
+```
+
+Removal stops the owned services and removes the helper while retaining evidence.
+The tool must refuse an unmarked machine. Passing headless Arch checks does not
+complete the Quattro desktop/Polkit acceptance rows above. Retain failure logs
+privately, report exact executed results, and never upload private machine reports.
