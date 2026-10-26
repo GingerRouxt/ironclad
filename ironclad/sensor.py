@@ -66,6 +66,12 @@ def parse_feed(data):
     if not isinstance(data,dict) or data.get('schema')!=1 or not isinstance(data.get('events'),list) or len(data['events'])>MAX_EVENTS:raise ValueError('invalid sensor snapshot')
     events=[];rules={v['id']:v for v in policy.RULES.values()}
     for row in data['events']:
+        if isinstance(row,dict) and isinstance(row.get('rule_id'),str) and row['rule_id'].startswith('upstream.'):
+            from .falco_rules import catalog_entry
+            priority={'critical':'CRITICAL','high':'ERROR','medium':'WARNING','low':'NOTICE','info':'INFO'}.get(row.get('severity'))
+            entry=catalog_entry(row.get('title'),priority)
+            if entry['id']!=row['rule_id']:raise ValueError('upstream rule identity mismatch')
+            rules[entry['id']]=entry
         if not isinstance(row,dict) or row.get('rule_id') not in rules or not isinstance(row.get('id'),str) or not ALERT_ID.fullmatch(row['id']):raise ValueError('invalid sensor event')
         for field,limit in [('time',64),('app',64),('event',32)]:
             if not isinstance(row.get(field),str) or len(row[field])>limit:raise ValueError('invalid sensor event text')

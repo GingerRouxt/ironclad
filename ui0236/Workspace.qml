@@ -35,6 +35,13 @@ Ui.Panel {
     property var activityData: ({entries: [], limits: []})
     property var repairFollowUp: null
     property string repairScanState: ""
+    function configureRuleUpdates(enabled) {
+        if (busy || aiBusy) return
+        malwareStage = "setup"
+        malwareMessage = "Changing automatic Falco detection updates…"
+        scannerSetupRequest.command = ["/usr/bin/python3", "-I", "-B", companionPath, enabled ? "falco-rules-enable" : "falco-rules-disable", "--json"].concat(enabled ? ["--allow-network"] : [])
+        scannerSetupRequest.running = true
+    }
     function markRepairUnknown() {
         if (!repairFollowUp) return
         repairScanState = "unknown"
@@ -1426,7 +1433,8 @@ Ui.Panel {
                         onSetupRequested: root.reviewScannerSetup(false)
                         onSignaturesRequested: root.reviewScannerSetup(true)
                         onAutomaticUpdatesRequested: enabled => root.configureProtectionUpdates(enabled)
-                        onMaintenanceRequested: root.maintainProtection()
+                        onRuleUpdatesRequested: enabled => root.configureRuleUpdates(enabled)
+                onMaintenanceRequested: root.maintainProtection()
                         onSoftwareRequested: { root.softwareMode = "Installed"; root.navigate("Software") }
                         onUpdateRequested: item => {
                             if (Model.canUpdate(item)) root.reviewUpdate(item.source + ":" + item.name)

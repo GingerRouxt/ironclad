@@ -17,3 +17,11 @@ process-local IPv4/IPv6 socket restriction. No third-party Python package, icon,
 docs/upstream retain their original authorship and repository license; they
 are development evidence, excluded from installed/release payload. No claim
 of Omarchy endorsement. Master handoff supplied by the owner.
+
+### Optional Falco rule updates
+
+The optional native sensor package additionally extracts falcoctl 0.14.2
+(Apache-2.0, https://github.com/falcosecurity/falcoctl) from the pinned Falco archive.
+The rule worker uses the OS-provided PyYAML package (MIT); tests pin PyYAML 6.0.3.
+Official Falco rules are Apache-2.0: https://github.com/falcosecurity/rules.
+Full transitive falcoctl licensing review is a release gate, not a completed claim.

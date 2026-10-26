@@ -4293,6 +4293,21 @@
       "type": "application"
     },
     {
+      "bom-ref": "external:PyYAML",
+      "name": "PyYAML",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "external requirement; not bundled"
+        },
+        {
+          "name": "ironclad:version",
+          "value": "not observed; host inventory excluded"
+        }
+      ],
+      "type": "application"
+    },
+    {
       "bom-ref": "external:Python",
       "name": "Python",
       "properties": [
@@ -4465,6 +4480,49 @@
       "scope": "optional",
       "type": "application",
       "version": "0.45.1"
+    },
+    {
+      "bom-ref": "ironclad:optional-falcoctl",
+      "externalReferences": [
+        {
+          "type": "distribution",
+          "url": "https://download.falco.org/packages/bin/x86_64/falco-0.45.1-x86_64.tar.gz"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "6c51c056a9cb27f38acee7f20c91ccd6fea04710f529ea2eb253fff5822f10af"
+        }
+      ],
+      "name": "falcoctl",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "optional pinned rule downloader; extracted from Falco archive"
+        },
+        {
+          "name": "ironclad:limitations",
+          "value": "Go transitive dependency and license closure incomplete"
+        }
+      ],
+      "scope": "optional",
+      "type": "application",
+      "version": "0.14.2"
+    },
+    {
+      "bom-ref": "test:PyYAML",
+      "name": "PyYAML",
+      "properties": [
+        {
+          "name": "ironclad:inventory",
+          "value": "locked rule-worker test dependency; runtime uses OS python-yaml"
+        }
+      ],
+      "purl": "pkg:pypi/pyyaml@6.0.3",
+      "scope": "excluded",
+      "type": "library",
+      "version": "6.0.3"
     },
     {
       "bom-ref": "test:pyside6-essentials",
@@ -5621,7 +5679,7 @@
       },
       {
         "name": "ironclad:inputs-sha256",
-        "value": "{\"ironclad/sensor_policy.py\": \"81aee762693239cd8081c8ee86b9478c1e393a9a9ea7c4e3eb2330ddad9d8475\", \"manifest.json\": \"4c0078d39a6eea45079f180dc2aec395c5259524df1fb58f01463952c2322444\", \"pyproject.toml\": \"4ec754de5ae0f006a675747bd75e7b350a371da589110711bc5afd1392d2edf0\", \"tools/build_krsi_component.py\": \"1d0ea718e2c01e6dabade04c239807973a732f38a2bee1e2effc16f28b13ad75\", \"tools/krsi-Cargo.lock\": \"7475b33f8395f80fb30ea6407b80ac3ed8d6d5904ca053c7369c1ecd973f7e37\", \"tools/ui-requirements.txt\": \"c94cfdebcb9379cabfe40d77ebc3a24894d4a0bf995b9396d6f29d33065428f9\"}"
+        "value": "{\"ironclad/falco_rules.py\": \"b565428de619e5ebd57274a6ce23a098acf740b2fb0c0c40feaa2f7a3bdafffe\", \"ironclad/sensor_policy.py\": \"6b5b84af1b36aea8449869e6ac868d83e5b877e16f032a6aef19675b5cc0993a\", \"manifest.json\": \"4c0078d39a6eea45079f180dc2aec395c5259524df1fb58f01463952c2322444\", \"pyproject.toml\": \"99064889c31719d90632883131719287a3f683a362e31245cc1bd98038621bed\", \"tools/build_krsi_component.py\": \"1d0ea718e2c01e6dabade04c239807973a732f38a2bee1e2effc16f28b13ad75\", \"tools/krsi-Cargo.lock\": \"7475b33f8395f80fb30ea6407b80ac3ed8d6d5904ca053c7369c1ecd973f7e37\", \"tools/ui-requirements.txt\": \"c94cfdebcb9379cabfe40d77ebc3a24894d4a0bf995b9396d6f29d33065428f9\", \"uv.lock\": \"4cf3cddb25f7388864e5480f86b5a42092f3595a30697e283bd2656e27a69463\"}"
       },
       {
         "name": "ironclad:inventory",
@@ -5629,7 +5687,7 @@
       },
       {
         "name": "ironclad:omissions",
-        "value": "Falco transitive dependencies, system versions, exact native link graph, full license review, vulnerability/advisory scan, signature verification"
+        "value": "Falco and falcoctl transitive dependencies, system versions, exact native link graph, full license review, vulnerability/advisory scan, signature verification"
       },
       {
         "name": "ironclad:python-runtime-dependencies",

@@ -109,7 +109,7 @@ def stop(signum,frame):raise SystemExit(130)
 signal.signal(signal.SIGTERM,stop);signal.signal(signal.SIGHUP,stop)
 from pathlib import Path
 sys.path.insert(0,{str(ROOT)!r});sys.path.insert(0,{str(base)!r})
-from ironclad import malware,maintenance,sensor,sensor_package,protection_updates,onaccess
+from ironclad import malware,maintenance,sensor,sensor_package,protection_updates,onaccess,rule_updates
 import fixture,json
 import automatic_fixture
 onaccess.status=automatic_fixture.status
@@ -121,6 +121,12 @@ def fixture_updates(state):return {{'automatic':UPDATE_FLAG.exists() and UPDATE_
 protection_updates.configure=fixture_configure
 protection_updates.status=fixture_updates
 protection_updates.maintain=lambda state,allow_network:dict(outcome='ok')
+RULE_FLAG=Path({str(base/'rule-updates')!r})
+def fixture_rules_configure(enabled,allow_network=False):
+    if enabled and not allow_network:raise ValueError('missing rule consent')
+    RULE_FLAG.write_text('on' if enabled else 'off')
+rule_updates.configure=fixture_rules_configure
+rule_updates.status=lambda:dict(installed=True,available=True,enabled=RULE_FLAG.exists() and RULE_FLAG.read_text()=='on',state='not_checked',rules=0,message='Synthetic rule health')
 sensor.status=fixture.monitor_status
 sensor.run_privileged=fixture.change_sensor
 sensor.acknowledge=fixture.acknowledge
@@ -278,6 +284,16 @@ raise SystemExit(maintenance.main(['--state',{str(base/'state')!r},*sys.argv[1:]
             wait(app,lambda:root.property('protectionData').toVariant()['updates']['automatic']==enabled,'automatic update health')
             assert (base/'auto-updates').read_text()==('on' if enabled else 'off')
         passed.append('automatic-update-enable-disable-with-health-refresh')
+        assert not (base/'rule-updates').exists(), 'signature consent enabled rule updates'
+        assert not any('falco-rules-enable' in command for command in runtime.started_commands)
+        for enabled in (True,False):
+            press('falcoRuleUpdatesButton')
+            wait(app,lambda:root.property('malwareStage')=='setup-done' and not root.property('busy'),'rule update toggle')
+            click(view,root,'closeMalwareButton')
+            wait(app,lambda:root.property('protectionData').toVariant()['rule_updates']['enabled']==enabled,'rule update health')
+            assert (base/'rule-updates').read_text()==('on' if enabled else 'off')
+        assert any('falco-rules-enable' in command and '--allow-network' in command for command in runtime.started_commands)
+        passed.append('falco-rules-off-by-default-separate-explicit-consent-and-disable')
         press('maintainProtectionButton')
         wait(app,lambda:root.property('malwareStage')=='setup-done' and not root.property('busy'),'maintenance now')
         click(view,root,'closeMalwareButton')

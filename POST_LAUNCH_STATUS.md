@@ -81,3 +81,36 @@ Known limitations remain: same-user/root/kernel compromise, shared-kernel sandbo
 ## Recommended next steps
 
 Review and merge only through the feature PR after its checks pass; decide the next version separately. Resolve native advisory disposition and perform the separate-machine matrix before expanding assurance claims. Obtain independent security/licensing review. Approve current launch copy only after confirming what version actually ships. Keep szdsecurity.com, cloud agents and other services untouched until a separate explicit task authorizes them.
+
+## Optional Falco rule-update candidate (October 25 follow-up)
+
+The feature branch adds separately consented, signed official Falco host-rule
+updates. Installation and existing ClamAV signature consent never enable the new
+timer. No customer rollout or production deployment has occurred.
+
+Executed: 326 Python tests passed, including 12 new consent/filtering/privacy/
+transaction tests. An actual signed `falco-rules:5` download verified through the
+pinned falcoctl binary in a disposable unprivileged namespace; 13 host rules
+compiled with the existing eight custom rules. The downloaded upstream snapshot
+hash and detailed workstation evidence remain local, outside the public release.
+
+Remaining: privileged timer/worker, live rule activation/rollback, fresh-VM reboot
+and uninstall acceptance, false-positive calibration, and falcoctl native dependency/
+license review. Synthetic service tests are not live acceptance. The feature remains
+off on this workstation. See [the consent and trust design](docs/FALCO_RULE_UPDATES.md).
+
+Security gate: an OSV batch query of 315 embedded Go module/toolchain versions
+reported advisories against seven entries in the pinned falcoctl 0.14.2 build.
+These version matches are not proof of reachable exploitation. Its Go 1.27.0
+includes TLS/X.509/HTTP advisories; a patched build and reachability review are
+required. The latest upstream release checked was still 0.14.2. Client and root
+helper therefore both reject enable/update while `RELEASE_READY=False`; this is
+a code-review gate with no environment bypass. Customer opt-in remains separately
+required after release approval. No timer or sensor on this machine was changed.
+
+Final isolated full verifier passed: Python and JavaScript contracts, QML lint,
+36 workflow UI cases, 32 protection UI cases (including separate Falco consent),
+pinned policy compilation, report generation and reproducible 95-file packaging
+with isolated install/remove. Publication privacy checks passed for 161 source
+files. A missing SBOM fixture input caused one intermediate test failure and was
+fixed before the successful full rerun. No live updater acceptance is claimed.

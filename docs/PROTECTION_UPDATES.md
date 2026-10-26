@@ -85,3 +85,10 @@ Remove the native sensor separately through its reviewed Protection action.
 ## Automatic ClamAV and one-off scanning
 
 Ironclad 0.2.34 adds a separate opt-in ClamAV Downloads watcher, alongside Falco behavior monitoring and sandboxed one-off file scans. Alert-only and prevention are distinct modes; verify current health before assuming coverage. No automatic deletion or quarantine. See [Automatic malware protection](AUTOMATIC_MALWARE.md) for scope, authentication, signature maintenance, limitations and stopping.
+
+## Separately gated Falco detection updates
+
+The candidate adds [optional signed Falco host-rule updates](FALCO_RULE_UPDATES.md).
+They are off by default and need a separate customer choice and OS authentication.
+Existing signature consent does not authorize rule activation. This downloads
+detection data, not new engine or plugin executables.

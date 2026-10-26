@@ -199,10 +199,20 @@ def generate(root=ROOT):
         'properties': props(inventory='optional downloaded engine; not bundled',
                             archive_sha256=pins['ARCHIVE_SHA'],
                             limitations='transitive/native dependency inventory incomplete')})
+    controller=literals(read(root,'ironclad/falco_rules.py'),{'FALCOCTL_SHA'})
+    components.append({'type':'application','bom-ref':'ironclad:optional-falcoctl','name':'falcoctl',
+                       'version':'0.14.2','scope':'optional',
+                       'hashes':[{'alg':'SHA-256','content':controller['FALCOCTL_SHA']}],
+                       'externalReferences':[{'type':'distribution','url':pins['ARCHIVE_URL']}],
+                       'properties':props(inventory='optional pinned rule downloader; extracted from Falco archive',
+                                          limitations='Go transitive dependency and license closure incomplete')})
+    components.append({'type':'library','bom-ref':'test:PyYAML','name':'PyYAML','version':'6.0.3',
+                       'scope':'excluded','purl':'pkg:pypi/pyyaml@6.0.3',
+                       'properties':props(inventory='locked rule-worker test dependency; runtime uses OS python-yaml')})
     # These names are requirements in THIRD_PARTY_NOTICES.md and docs/INSTALL.md,
     # not observations of the workstation or invented installed versions.
     for name in ('Python', 'Qt Quick/Controls', 'Quickshell', 'Omarchy', 'libseccomp',
-                 'ClamAV', 'Bubblewrap', 'polkit', 'systemd'):
+                 'ClamAV', 'Bubblewrap', 'polkit', 'systemd', 'PyYAML'):
         item = {'type': 'framework' if name in ('Qt Quick/Controls', 'Quickshell')
                 else 'application', 'bom-ref': 'external:' + name, 'name': name,
                 'properties': props(inventory='external requirement; not bundled',
@@ -232,13 +242,13 @@ def generate(root=ROOT):
                 inventory='partial source/build inventory; offline and deterministic',
                 python_runtime_dependencies='none declared',
                 dependency_graph='Cargo.lock resolution only; not target/features or linked-runtime graph',
-                omissions='Falco transitive dependencies, system versions, exact native link graph, '
+                omissions='Falco and falcoctl transitive dependencies, system versions, exact native link graph, '
                           'full license review, vulnerability/advisory scan, signature verification',
                 security='No vulnerability clearance or security certification is asserted',
                 inputs_sha256=json.dumps({name: sha(read(root, name)) for name in (
                     'pyproject.toml', 'manifest.json', 'tools/krsi-Cargo.lock',
                     'tools/ui-requirements.txt', 'ironclad/sensor_policy.py',
-                    'tools/build_krsi_component.py')}, sort_keys=True))},
+                    'tools/build_krsi_component.py','ironclad/falco_rules.py','uv.lock')}, sort_keys=True))},
         'components': sorted(components, key=lambda item: item['bom-ref']),
         'dependencies': sorted(dependencies, key=lambda item: item['ref']),
         'compositions': [{'aggregate': 'incomplete', 'assemblies': ['ironclad:project', native_ref]}],

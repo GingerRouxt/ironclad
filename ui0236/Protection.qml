@@ -51,6 +51,8 @@ ScrollView {
     signal signaturesRequested()
     signal automaticUpdatesRequested(bool enabled)
     signal maintenanceRequested()
+    signal ruleUpdatesRequested(bool enabled)
+    readonly property var ruleUpdates: capability && capability.rule_updates ? capability.rule_updates : null
     readonly property var updates: capability && capability.updates ? capability.updates : null
     signal updateRequested(var item)
     signal softwareRequested()
@@ -190,12 +192,17 @@ ScrollView {
                 Label { objectName: "automaticUpdateStatus"; text: !root.updates ? "Update health has not been verified." : root.updates.automatic ? "Automatic updates are enabled" : "Automatic updates are off or unavailable"; color: !root.updates ? root.muted : root.updates.issues.length ? root.urgent : root.ink; Layout.fillWidth: true }
                 Label { text: root.updates ? root.updates.issues.join("\n") : "Refresh protection status to check signature maintenance."; visible: !root.updates || root.updates.issues.length > 0; color: root.updates ? root.urgent : root.muted; Layout.fillWidth: true; lineHeight: 1.35 }
                 Label { text: root.updates && root.updates.last_success ? "Last successful signature refresh: " + new Date(root.updates.last_success).toLocaleString() : "No successful background signature refresh recorded."; Layout.fillWidth: true; color: root.muted; font.pixelSize: 13 }
-                Label { text: "Automatic maintenance contacts ClamAV for official signatures every four hours and GitHub for ClamAV/Falco release versions daily, while your user session is available. No files are uploaded. Engine, rule and plugin code changes require reviewed updates."; Layout.fillWidth: true; font.pixelSize: 13; lineHeight: 1.35 }
+                Label { text: "Automatic maintenance contacts ClamAV for official signatures every four hours and GitHub for ClamAV/Falco release versions daily, while your user session is available. No files are uploaded. Falco detection updates have a separate control below. Engine and plugin changes require reviewed updates."; Layout.fillWidth: true; font.pixelSize: 13; lineHeight: 1.35 }
                 Flow {
                     Layout.fillWidth: true; spacing: 8
                     Button { objectName: "automaticUpdatesButton"; text: root.updates && root.updates.automatic ? "Turn off automatic updates" : "Enable automatic updates"; enabled: !!root.scanner && root.scanner.installed && !root.working; onClicked: root.automaticUpdatesRequested(!(root.updates && root.updates.automatic)) }
                     Button { objectName: "maintainProtectionButton"; text: "Update protection now"; enabled: !!root.scanner && root.scanner.installed && !root.working; onClicked: root.maintenanceRequested() }
                 }
+                Rectangle { Layout.fillWidth: true; implicitHeight: 1; color: root.line }
+                Label { text: "Falco detection rules"; font.weight: Font.DemiBold; Layout.fillWidth: true }
+                Label { objectName: "falcoRuleUpdateStatus"; text: root.ruleUpdates ? root.ruleUpdates.message : "Rule update health has not been verified."; Layout.fillWidth: true; color: root.muted }
+                Label { text: "Opt in to signed official Falco host rules, checked every six hours. A compatible update briefly restarts monitoring; failed activation rolls back. Container-dependent rules are excluded. Existing custom rules remain. No files or alerts are uploaded. Turning updates off retains installed rules."; Layout.fillWidth: true; font.pixelSize: 13 }
+                Button { objectName: "falcoRuleUpdatesButton"; text: root.ruleUpdates && root.ruleUpdates.enabled ? "Turn off Falco rule updates" : "Enable Falco rule updates…"; enabled: !!root.ruleUpdates && root.ruleUpdates.installed && root.ruleUpdates.available && !root.working; onClicked: root.ruleUpdatesRequested(!root.ruleUpdates.enabled) }
                 Repeater {
                     model: root.updates ? root.updates.engines : []
                     delegate: Label {

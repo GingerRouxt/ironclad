@@ -91,24 +91,35 @@ def krsi_payload():
 
 def payload(body):
     if sha(body)!=policy.ARCHIVE_SHA:raise ValueError('sensor archive hash mismatch')
-    engine=None;license_files={}
+    engine=None;controller=None;license_files={}
     with tarfile.open(fileobj=io.BytesIO(body),mode='r:gz') as source:
         members=source.getmembers()
         if len(members)>5000:raise ValueError('sensor archive entry limit')
         for entry in members:
-            # Only one known binary and license notices are copied. Nothing is extracted.
+            # Only pinned binaries and license notices are copied; no archive paths are extracted.
             if entry.name=='falco-0.45.1-x86_64/usr/bin/falco':
                 if not entry.isfile() or entry.size>MAX_ARCHIVE:raise ValueError('unsafe sensor binary')
                 engine=source.extractfile(entry).read(MAX_ARCHIVE+1)
+            elif entry.name=='falco-0.45.1-x86_64/usr/bin/falcoctl':
+                if not entry.isfile() or entry.size>MAX_ARCHIVE:raise ValueError('unsafe rule downloader')
+                controller=source.extractfile(entry).read(MAX_ARCHIVE+1)
             elif entry.isfile() and '/licenses/' in entry.name and entry.size<=1048576:
                 relative=entry.name.split('/licenses/',1)[1]
                 if '..' in Path(relative).parts or relative.startswith('/'):raise ValueError('unsafe license entry')
                 license_files['usr/share/licenses/ironclad-sensor/upstream/'+relative]=source.extractfile(entry).read(1048577)
     if engine is None or sha(engine)!=policy.ENGINE_SHA:raise ValueError('sensor binary hash mismatch')
+    from . import falco_rules, rule_updates
+    if controller is None or sha(controller)!=falco_rules.FALCOCTL_SHA:raise ValueError('rule downloader hash mismatch')
     data={'version':policy.VERSION,'engine_version':policy.FALCO_VERSION,'engine_sha256':policy.ENGINE_SHA,'krsi_version':policy.KRSI_VERSION,'krsi_sha256':policy.KRSI_SHA,'rules':policy.RULES,
           'config_sha256':sha(policy.CONFIG.encode()),'rules_sha256':sha(policy.RULES_YAML.encode())}
     helper=Path(__file__).with_name('sensor_service.py').read_bytes()
-    files={'usr/lib/ironclad/falco':engine,'usr/lib/ironclad/sensor-helper':helper,
+    files={'usr/lib/ironclad/falcoctl':controller,
+           'usr/lib/ironclad/rule-helper':Path(__file__).with_name('rule_service.py').read_bytes(),
+           'usr/lib/ironclad/rule-worker':Path(__file__).with_name('falco_rules.py').read_bytes(),
+           'usr/lib/systemd/system/ironclad-rule-updates.service':rule_updates.SERVICE.encode(),
+           'usr/lib/systemd/system/ironclad-rule-updates.timer':rule_updates.TIMER.encode(),
+           'usr/share/polkit-1/actions/com.zerodaysecurity.ironclad.rules.policy':rule_updates.POLKIT.encode(),
+           'usr/lib/ironclad/falco':engine,'usr/lib/ironclad/sensor-helper':helper,
            'usr/share/ironclad-sensor/falco.yaml':policy.CONFIG.encode(),'usr/share/ironclad-sensor/rules.yaml':policy.RULES_YAML.encode(),
            'usr/share/ironclad-sensor/policy.json':json.dumps(data,sort_keys=True).encode(),
            'usr/lib/systemd/system/ironclad-sensor.service':policy.SERVICE.encode(),
@@ -133,15 +144,15 @@ def build(state,allow_network=False):
         with temporary.open('xb') as raw:
             temporary.chmod(0o600)
             with tarfile.open(fileobj=raw,mode='w',format=tarfile.USTAR_FORMAT) as package:
-                info=('pkgname = ironclad-sensor\npkgbase = ironclad-sensor\npkgver = '+policy.VERSION+'-1\npkgdesc = Ironclad embedded local sensor (Falco)\nurl = https://szdsecurity.com\nbuilddate = 1792699200\npackager = Zero Day Security local development\nsize = '+str(sum(len(v) for v in files.values()))+'\narch = x86_64\nlicense = MIT\nlicense = Apache-2.0\ndepend = python\ndepend = glibc\ndepend = gcc-libs\ndepend = systemd\ndepend = acl\ndepend = polkit\n').encode()
-                removal=b'pre_remove() { /usr/bin/systemctl disable --now ironclad-sensor.service >/dev/null 2>&1 || return 1; }\npost_remove() { /usr/bin/systemctl daemon-reload; }\n'
+                info=('pkgname = ironclad-sensor\npkgbase = ironclad-sensor\npkgver = '+policy.VERSION+'-1\npkgdesc = Ironclad embedded local sensor (Falco)\nurl = https://szdsecurity.com\nbuilddate = 1792699200\npackager = Zero Day Security local development\nsize = '+str(sum(len(v) for v in files.values()))+'\narch = x86_64\nlicense = MIT\nlicense = Apache-2.0\ndepend = python\ndepend = python-yaml\ndepend = bubblewrap\ndepend = glibc\ndepend = gcc-libs\ndepend = systemd\ndepend = acl\ndepend = polkit\n').encode()
+                removal=b'pre_remove() { /usr/bin/systemctl disable --now ironclad-rule-updates.timer ironclad-rule-updates.service ironclad-sensor.service >/dev/null 2>&1 || return 1; }\npost_remove() { /usr/bin/systemctl daemon-reload; }\n'
                 entries={'.PKGINFO':info,'.INSTALL':removal,**files}
                 # Explicit directory entries keep privileged parent paths root-owned.
                 dirs=sorted({str(parent) for name in files for parent in Path(name).parents if str(parent)!='.'},key=lambda v:(v.count('/'),v))
                 for name in dirs:
                     item=tarfile.TarInfo(name);item.type=tarfile.DIRTYPE;item.mode=0o755;item.uid=item.gid=0;package.addfile(item)
                 for name,content in sorted(entries.items()):
-                    item=tarfile.TarInfo(name);item.size=len(content);item.mode=0o755 if name in ('usr/lib/ironclad/falco','usr/lib/ironclad/sensor-helper') else 0o644;item.uid=item.gid=0;package.addfile(item,io.BytesIO(content))
+                    item=tarfile.TarInfo(name);item.size=len(content);item.mode=0o755 if name in ('usr/lib/ironclad/falco','usr/lib/ironclad/falcoctl','usr/lib/ironclad/sensor-helper','usr/lib/ironclad/rule-helper') else 0o644;item.uid=item.gid=0;package.addfile(item,io.BytesIO(content))
         result=subprocess.run([trusted('/usr/bin/zstd'),'-q','-T1','--no-progress',str(temporary),'-o',str(compressed)],stdin=subprocess.DEVNULL,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,env=environment(),timeout=60,check=False)
         if result.returncode:raise ValueError('sensor packaging did not complete')
         compressed.chmod(0o600)
