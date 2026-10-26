@@ -1,5 +1,10 @@
 name: Local contracts
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 11 * * *'
 permissions:
   contents: read
 jobs:
@@ -42,3 +47,13 @@ jobs:
           mkdir -p dist/sbom-check
           mise exec -- uv run --offline python tools/generate_sbom.py --output dist/sbom-check/inventory.cdx.json
           cmp docs/ironclad-build-inventory.cdx.json dist/sbom-check/inventory.cdx.json
+      - name: Pinned downloader vulnerability analysis (no binary execution)
+        run: |
+          mise install go@1.27.3
+          mise exec -- uv run --offline python - <<'PYCODE'
+          import os
+          from pathlib import Path
+          from ironclad.sensor_package import falcoctl_payload
+          Path(os.environ['RUNNER_TEMP'], 'ironclad-falcoctl-audit').write_bytes(falcoctl_payload()['usr/lib/ironclad/falcoctl'])
+          PYCODE
+          mise exec go@1.27.3 -- go run golang.org/x/vuln/cmd/govulncheck@v1.9.0 -mode=binary "$RUNNER_TEMP/ironclad-falcoctl-audit"

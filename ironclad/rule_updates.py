@@ -15,14 +15,12 @@ ProtectSystem=strict
 ProtectHome=true
 PrivateTmp=true
 ReadWritePaths=/var/lib/ironclad-rules
-ProtectKernelTunables=true
 ProtectKernelModules=true
 ProtectControlGroups=true
-RestrictSUIDSGID=true
 RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6 AF_NETLINK
-CapabilityBoundingSet=CAP_SETUID CAP_SETGID CAP_CHOWN CAP_DAC_OVERRIDE CAP_FOWNER CAP_SYS_ADMIN
+CapabilityBoundingSet=CAP_SETUID CAP_SETGID CAP_SETFCAP CAP_CHOWN CAP_DAC_OVERRIDE CAP_FOWNER CAP_SYS_ADMIN
 MemoryMax=2G
-CPUQuota=50%
+CPUQuota=10%
 TasksMax=64
 LimitFSIZE=16M
 LimitCORE=0
@@ -64,9 +62,6 @@ def status():
     from .rule_service import RELEASE_READY
     result={'installed':False,'available':RELEASE_READY,'enabled':False,'state':'unavailable','rules':0,
             'message':'Update the monitoring component to add automatic Falco host rules.'}
-    if not RELEASE_READY:
-        result['message']='Falco rule updates are not released: downloader security fixes and native acceptance are required. Existing monitoring is unchanged.'
-        return result
     try:
         trusted(HELPER);result['installed']=True
         try:consent=read_root(Path('/var/lib/ironclad-rules/consent.json'))
@@ -86,4 +81,6 @@ def status():
         if result['state'] in ('failed','needs_attention'):result['message']+=' Latest rule refresh needs attention; check monitoring health.'
         if result['rules']:result['message']+=f" {result['rules']} additional host rules installed."
     except (OSError,ValueError,TypeError):result['message']='Falco rule update health could not be verified.'
+    if not RELEASE_READY:
+        result['message']='New Falco rule activation is under review. Existing automatic updates can still be turned off.'
     return result

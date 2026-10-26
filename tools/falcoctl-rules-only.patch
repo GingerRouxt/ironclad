@@ -1,0 +1,356 @@
+--- a/cmd/root.go
++++ b/cmd/root.go
+@@ -21,9 +21,6 @@
+ 	"github.com/spf13/cobra"
+ 
+ 	"github.com/falcosecurity/falcoctl/cmd/artifact"
+-	"github.com/falcosecurity/falcoctl/cmd/driver"
+-	"github.com/falcosecurity/falcoctl/cmd/index"
+-	"github.com/falcosecurity/falcoctl/cmd/registry"
+ 	"github.com/falcosecurity/falcoctl/cmd/version"
+ 	"github.com/falcosecurity/falcoctl/pkg/options"
+ )
+@@ -37,7 +34,7 @@
+    |_|  \__,_|_|\___\___/ \___|\__|_|
+ 									 
+ 	
+-The official CLI tool for working with Falco and its ecosystem components
++Ironclad rules-only build of falcoctl; upstream signature verification retained
+ `
+ )
+ 
+@@ -45,7 +42,7 @@
+ func New(ctx context.Context, opt *options.Common) *cobra.Command {
+ 	rootCmd := &cobra.Command{
+ 		Use:               "falcoctl",
+-		Short:             "The official CLI tool for working with Falco and its ecosystem components",
++		Short:             "Ironclad rules-only build of falcoctl; upstream signature verification retained",
+ 		Long:              longRootCmd,
+ 		SilenceErrors:     true,
+ 		SilenceUsage:      true,
+@@ -64,10 +61,7 @@
+ 
+ 	// Commands
+ 	rootCmd.AddCommand(version.NewVersionCmd(opt))
+-	rootCmd.AddCommand(registry.NewRegistryCmd(ctx, opt))
+-	rootCmd.AddCommand(index.NewIndexCmd(ctx, opt))
+ 	rootCmd.AddCommand(artifact.NewArtifactCmd(ctx, opt))
+-	rootCmd.AddCommand(driver.NewDriverCmd(ctx, opt))
+ 
+ 	return rootCmd
+ }
+--- a/cmd/artifact/artifact.go
++++ b/cmd/artifact/artifact.go
+@@ -20,13 +20,7 @@
+ 
+ 	"github.com/spf13/cobra"
+ 
+-	artifactconfig "github.com/falcosecurity/falcoctl/cmd/artifact/config"
+-	"github.com/falcosecurity/falcoctl/cmd/artifact/follow"
+-	"github.com/falcosecurity/falcoctl/cmd/artifact/info"
+ 	"github.com/falcosecurity/falcoctl/cmd/artifact/install"
+-	"github.com/falcosecurity/falcoctl/cmd/artifact/list"
+-	"github.com/falcosecurity/falcoctl/cmd/artifact/manifest"
+-	"github.com/falcosecurity/falcoctl/cmd/artifact/search"
+ 	"github.com/falcosecurity/falcoctl/internal/config"
+ 	"github.com/falcosecurity/falcoctl/pkg/index/cache"
+ 	commonoptions "github.com/falcosecurity/falcoctl/pkg/options"
+@@ -66,13 +60,7 @@
+ 		},
+ 	}
+ 
+-	cmd.AddCommand(search.NewArtifactSearchCmd(ctx, opt))
+ 	cmd.AddCommand(install.NewArtifactInstallCmd(ctx, opt))
+-	cmd.AddCommand(list.NewArtifactListCmd(ctx, opt))
+-	cmd.AddCommand(info.NewArtifactInfoCmd(ctx, opt))
+-	cmd.AddCommand(follow.NewArtifactFollowCmd(ctx, opt))
+-	cmd.AddCommand(artifactconfig.NewArtifactConfigCmd(ctx, opt))
+-	cmd.AddCommand(manifest.NewArtifactManifestCmd(ctx, opt))
+ 
+ 	return cmd
+ }
+--- a/cmd/artifact/install/install.go
++++ b/cmd/artifact/install/install.go
+@@ -285,7 +285,10 @@
+ 
+ 		sig := signatures[name]
+ 
+-		if sig != nil && !o.noVerify {
++		if sig == nil || o.noVerify {
++ return fmt.Errorf("signature verification cannot be disabled in Ironclad")
++}
++{
+ 			repo, err := utils.RepositoryFromRef(artifact.ref)
+ 			if err != nil {
+ 				return err
+--- a/internal/signature/signature.go
++++ b/internal/signature/signature.go
+@@ -13,51 +13,62 @@
+ // See the License for the specific language governing permissions and
+ // limitations under the License.
+ 
++// Ironclad rules-only adapter: keyless public artifacts, no credentials or signing.
+ package signature
+ 
+ import (
+-	"context"
+-	"fmt"
++ "context"
++ "fmt"
++ "strings"
+ 
+-	"github.com/sigstore/cosign/v3/cmd/cosign/cli/options"
+-
+-	"github.com/falcosecurity/falcoctl/internal/cosign"
+-	"github.com/falcosecurity/falcoctl/pkg/index/index"
+-	"github.com/falcosecurity/falcoctl/pkg/oci/authn"
++ "github.com/google/go-containerregistry/pkg/authn"
++ "github.com/google/go-containerregistry/pkg/name"
++ registryremote "github.com/google/go-containerregistry/pkg/v1/remote"
++ "github.com/sigstore/cosign/v3/cmd/cosign/cli/fulcio"
++ "github.com/sigstore/cosign/v3/pkg/cosign"
++ ociremote "github.com/sigstore/cosign/v3/pkg/oci/remote"
++ "github.com/falcosecurity/falcoctl/pkg/index/index"
+ )
+ 
+-// Verify checks that a fully qualified reference is signed according to the parameters.
+-// It uses the same authentication sources as falcoctl's artifact operations.
++// Verify delegates cryptographic verification to Cosign with mandatory claims,
++// issuer, identity, certificate transparency and transparency-log verification.
+ func Verify(ctx context.Context, ref string, signature *index.Signature, plainHTTP bool) error {
+-	if signature == nil {
+-		// nothing to do
+-		return nil
+-	}
+-
+-	if signature.Cosign == nil {
+-		// we currently only support cosign
+-		return nil
+-	}
+-
+-	keychain, err := authn.NewKeychain()
+-	if err != nil {
+-		return fmt.Errorf("failed to create keychain: %w", err)
+-	}
+-
+-	v := cosign.VerifyCommand{
+-		RegistryOptions: options.RegistryOptions{
+-			AllowHTTPRegistry: plainHTTP,
+-			AllowInsecure:     plainHTTP,
+-			Keychain:          keychain,
+-		},
+-		CertVerifyOptions: options.CertVerifyOptions{
+-			CertIdentity:         signature.Cosign.CertificateIdentity,
+-			CertIdentityRegexp:   signature.Cosign.CertificateIdentityRegexp,
+-			CertOidcIssuer:       signature.Cosign.CertificateOidcIssuer,
+-			CertOidcIssuerRegexp: signature.Cosign.CertificateOidcIssuerRegexp,
+-		},
+-		KeyRef:     signature.Cosign.KeyRef,
+-		IgnoreTlog: signature.Cosign.IgnoreTlog,
+-	}
+-	return v.DoVerify(ctx, []string{ref})
++ if plainHTTP || signature == nil || signature.Cosign == nil {
++  return fmt.Errorf("HTTPS and explicit keyless signature policy are required")
++ }
++ policy := signature.Cosign
++ if policy.KeyRef != "" || policy.IgnoreTlog || policy.CertificateOidcIssuer == "" || policy.CertificateIdentityRegexp == "" {
++  return fmt.Errorf("keyless issuer, identity and transparency verification are required")
++ }
++ if !strings.HasPrefix(ref, "ghcr.io/falcosecurity/rules/falco-rules@sha256:") {
++  return fmt.Errorf("only digest-pinned official Falco rules are permitted")
++ }
++ parsed, err := name.NewDigest(ref)
++ if err != nil { return err }
++ remoteOptions := []ociremote.Option{ociremote.WithRemoteOptions(registryremote.WithContext(ctx), registryremote.WithAuth(authn.Anonymous))}
++ options := &cosign.CheckOpts{
++  RegistryClientOpts: remoteOptions,
++  ClaimVerifier: cosign.SimpleClaimVerifier,
++  Identities: []cosign.Identity{{Issuer: policy.CertificateOidcIssuer, SubjectRegExp: policy.CertificateIdentityRegexp}},
++ }
++ options.RekorPubKeys, err = cosign.GetRekorPubs(ctx)
++ if err != nil { return fmt.Errorf("Rekor trust: %w", err) }
++ options.CTLogPubKeys, err = cosign.GetCTLogPubs(ctx)
++ if err != nil { return fmt.Errorf("CT trust: %w", err) }
++ options.RootCerts, err = fulcio.GetRoots()
++ if err != nil { return err }
++ options.IntermediateCerts, err = fulcio.GetIntermediates()
++ if err != nil { return err }
++ options.TrustedMaterial, err = cosign.TrustedRoot()
++ if err != nil { return err }
++ // Preserve upstream v3 bundle verification with its legacy-signature fallback.
++ bundles, _, bundleErr := cosign.GetBundles(ctx, parsed, remoteOptions)
++ if bundleErr == nil && len(bundles) > 0 {
++  options.NewBundleFormat = true
++  options.ClaimVerifier = cosign.IntotoSubjectClaimVerifier
++  _, _, err = cosign.VerifyImageAttestations(ctx, parsed, options)
++  return err
++ }
++ _, _, err = cosign.VerifyImageSignatures(ctx, parsed, options)
++ return err
+ }
+--- a/internal/config/config.go
++++ b/internal/config/config.go
+@@ -30,7 +30,6 @@
+ 	"github.com/spf13/viper"
+ 
+ 	"github.com/falcosecurity/falcoctl/internal/utils"
+-	drivertype "github.com/falcosecurity/falcoctl/pkg/driver/type"
+ 	"github.com/falcosecurity/falcoctl/pkg/oci"
+ )
+ 
+@@ -217,7 +216,7 @@
+ 		Backend: "https",
+ 	}
+ 	DefaultDriver = Driver{
+-		Type:     []string{drivertype.TypeModernBpf, drivertype.TypeKmod},
++		Type:     []string{"modern_ebpf", "kmod"},
+ 		Name:     "falco",
+ 		Repos:    []string{"https://download.falco.org/driver"},
+ 		Version:  "",
+--- a/pkg/options/driver.go
++++ /dev/null
+@@ -1,89 +0,0 @@
+-// SPDX-License-Identifier: Apache-2.0
+-// Copyright (C) 2024 The Falco Authors
+-//
+-// Licensed under the Apache License, Version 2.0 (the "License");
+-// you may not use this file except in compliance with the License.
+-// You may obtain a copy of the License at
+-//
+-//      http://www.apache.org/licenses/LICENSE-2.0
+-//
+-// Unless required by applicable law or agreed to in writing, software
+-// distributed under the License is distributed on an "AS IS" BASIS,
+-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-// See the License for the specific language governing permissions and
+-// limitations under the License.
+-
+-package options
+-
+-import (
+-	"errors"
+-	"fmt"
+-	"net/url"
+-	"path/filepath"
+-	"sort"
+-
+-	"github.com/falcosecurity/driverkit/pkg/kernelrelease"
+-
+-	"github.com/falcosecurity/falcoctl/internal/config"
+-	driverdistro "github.com/falcosecurity/falcoctl/pkg/driver/distro"
+-	drivertype "github.com/falcosecurity/falcoctl/pkg/driver/type"
+-	"github.com/falcosecurity/falcoctl/pkg/enum"
+-)
+-
+-// DriverTypes data structure for driver types.
+-type DriverTypes struct {
+-	*enum.Enum
+-}
+-
+-// NewDriverTypes returns a new Enum configured for the driver types.
+-func NewDriverTypes() *DriverTypes {
+-	types := drivertype.GetTypes()
+-	sort.Strings(types)
+-	return &DriverTypes{
+-		// Default value is not used.
+-		// This enum is only used to print allowed values.
+-		Enum: enum.NewEnum(types, drivertype.TypeModernBpf),
+-	}
+-}
+-
+-// Driver defines options that are common while interacting with driver commands.
+-type Driver struct {
+-	Type     drivertype.DriverType
+-	Name     string
+-	Repos    []string
+-	Version  string
+-	HostRoot string
+-	Distro   driverdistro.Distro
+-	Kr       kernelrelease.KernelRelease
+-}
+-
+-// ToDriverConfig maps a Driver options to Driver config struct.
+-func (d *Driver) ToDriverConfig() *config.Driver {
+-	return &config.Driver{
+-		Type:     []string{d.Type.String()},
+-		Name:     d.Name,
+-		Repos:    d.Repos,
+-		Version:  d.Version,
+-		HostRoot: d.HostRoot,
+-	}
+-}
+-
+-// Validate runs all validators steps for Driver options.
+-func (d *Driver) Validate() error {
+-	if !filepath.IsAbs(d.HostRoot) {
+-		return fmt.Errorf("host-root must be an absolute path (%s)", d.HostRoot)
+-	}
+-
+-	if d.Version == "" {
+-		return errors.New("version is mandatory and cannot be empty")
+-	}
+-
+-	for _, repo := range d.Repos {
+-		_, err := url.ParseRequestURI(repo)
+-		if err != nil {
+-			return fmt.Errorf("repo must be a valid url (%s): %w", repo, err)
+-		}
+-	}
+-
+-	return nil
+-}
+--- a/pkg/oci/utils/utils.go
++++ b/pkg/oci/utils/utils.go
+@@ -51,26 +51,9 @@
+ // Client returns a new auth.Client.
+ // It authenticates the client if credentials are found in the system.
+ func Client(enableClientTokenCache bool) (remote.Client, error) {
+-	credentialStore, err := authn.NewCredentialStore()
+-	if err != nil {
+-		return nil, fmt.Errorf("unable to create credential store: %w", err)
+-	}
+-
+-	// create client that
+-	// 1. auto logins into registries
+-	// 2. checks basic auth credential store
+-	// 3. checks oauth2 clientcredentials
+-	// 4. checks gcp credentials if enabled
+-	ops := []func(*authn.Options){
+-		authn.WithAutoLogin(authn.NewAutoLoginHandler(credentialStore)),
+-		authn.WithStore(credentialStore),
+-		authn.WithOAuthCredentials(),
+-		authn.WithGcpCredentials(),
+-	}
+-	if enableClientTokenCache {
+-		ops = append(ops, authn.WithClientTokenCache(auth.NewCache()))
+-	}
+-	client := authn.NewClient(ops...)
++	// Only anonymous public artifact access; no host/cloud credential discovery.
++ client := &auth.Client{Credential: authn.EmptyCredentialFunc}
++ if enableClientTokenCache { client.Cache = auth.NewCache() }
+ 
+ 	return client, nil
+ }
+--- a/pkg/index/cache/cache.go
++++ b/pkg/index/cache/cache.go
+@@ -109,15 +109,11 @@
+ 		cfg := &indexes[i]
+ 		// If the index is in the local persistent cache we just load it.
+ 		ts := time.Now().Format(consts.TimeFormat)
+-		if idx, err = c.loadIndex(cfg.Name); err != nil && errors.Is(err, fs.ErrNotExist) {
+-			// If the index is not found in the local persistent cache we fetch it from the url.
+-			if idx, err = c.fetcher.Fetch(ctx, indexConf.EntryFromIndex(cfg)); err != nil {
+-				return nil, fmt.Errorf("unable to fetch index %q with URL %q: %w", cfg.Name, cfg.URL, err)
+-			}
+-			c.fetchedIndexes = append(c.fetchedIndexes, idx)
+-		} else if err != nil {
+-			return nil, fmt.Errorf("an error occurred while loading cache from disk: %w", err)
+-		}
++		// Ironclad accepts only the local reviewed trust index; never fetch a fallback.
++        if idx, err = c.loadIndex(cfg.Name); err != nil {
++            return nil, fmt.Errorf("local signature policy unavailable: %w", err)
++        }
++
+ 		c.localIndexes.Configs = append(c.localIndexes.Configs, &indexConf.Entry{
+ 			AddedTimestamp:   ts,
+ 			Name:             cfg.Name,

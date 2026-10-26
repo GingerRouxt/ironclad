@@ -1,6 +1,6 @@
 # Ironclad post-launch status
 
-Review date: **October 25, 2026 America/Chicago**; automated checks/advisory lookup continued into October 26 UTC. Scope: `GingerRouxt/ironclad`, baseline **0.2.36 / `73e2275b3bb8b83c3c7c72c570cd6adff1402779`**, branch `feat/post-launch-ironclad`. These are proposed changes, not a new release or deployment. Community Ironclad remains free and MIT licensed.
+Review date: **October 26, 2026 America/Chicago**; automated checks/advisory lookup continued into October 26 UTC. Scope: `GingerRouxt/ironclad`, baseline **0.2.36 / `73e2275b3bb8b83c3c7c72c570cd6adff1402779`**, branch `feat/gated-falco-rules`, stacked on the post-launch branch. These are proposed changes, not a new release or deployment. Community Ironclad remains free and MIT licensed.
 
 ## Verified starting state
 
@@ -82,35 +82,128 @@ Known limitations remain: same-user/root/kernel compromise, shared-kernel sandbo
 
 Review and merge only through the feature PR after its checks pass; decide the next version separately. Resolve native advisory disposition and perform the separate-machine matrix before expanding assurance claims. Obtain independent security/licensing review. Approve current launch copy only after confirming what version actually ships. Keep szdsecurity.com, cloud agents and other services untouched until a separate explicit task authorizes them.
 
-## Optional Falco rule-update candidate (October 25 follow-up)
+## Optional Falco rule maintenance — October 26 remediation
 
-The feature branch adds separately consented, signed official Falco host-rule
-updates. Installation and existing ClamAV signature consent never enable the new
-timer. No customer rollout or production deployment has occurred.
+The candidate now supports separately authenticated, **off-by-default** host-rule
+updates. Installation, a plugin update and existing ClamAV consent do not enable
+its timer. The maintainer code gate is open for this tested candidate; customer
+consent is still required. No host sensor, host timer, customer machine, website,
+release tag or protected branch was changed during this remediation.
 
-Executed: 326 Python tests passed, including 12 new consent/filtering/privacy/
-transaction tests. An actual signed `falco-rules:5` download verified through the
-pinned falcoctl binary in a disposable unprivileged namespace; 13 host rules
-compiled with the existing eight custom rules. The downloaded upstream snapshot
-hash and detailed workstation evidence remain local, outside the public release.
+### Verified fixes and evidence
 
-Remaining: privileged timer/worker, live rule activation/rollback, fresh-VM reboot
-and uninstall acceptance, false-positive calibration, and falcoctl native dependency/
-license review. Synthetic service tests are not live acceptance. The feature remains
-off on this workstation. See [the consent and trust design](docs/FALCO_RULE_UPDATES.md).
+- Bundled a rules-only falcoctl `0.14.2-ironclad.1` build using Go 1.27.3,
+  Cosign 3.1.4 and Rekor 1.5.5. Removed driver/registry-management commands and
+  credential discovery from the download path. Missing signature policy and
+  verification bypass are refused. Mandatory digest claims use Cosign's in-toto
+  verifier for v3 bundles and simple verifier for legacy signatures.
+- Fixed the default-index bug discovered by the negative issuer test: the worker
+  explicitly selects its local policy, and the compiled downloader refuses any
+  remote-index fallback. Correctly signed content cannot substitute an arbitrary
+  configured issuer/workflow policy.
+- Two local offline builds reproduced the same binary and archive. Exact input
+  and output hashes, patch/locks, audit commands and limitations are recorded in
+  [downloader provenance](docs/FALCO_DOWNLOADER_BUILD.md). All 159 recorded Go
+  modules have collected notices. This is not independent provenance or legal
+  certification.
+- Final `govulncheck@v1.9.0` source and exact-binary scans: **zero affected symbols,
+  zero vulnerable imported packages**. One module-level OpenPGP advisory remains
+  for unused packages in `x/crypto`; it is documented, not suppressed. Existing
+  Falco/native dependency limitations and KRSI unmaintained-package triage remain.
+- Deterministic CycloneDX inventory: **335 components**, schema 1.6 validation
+  passed; binary hashes and embedded locks/patches are checked. The inventory
+  remains incomplete for the separate Falco engine and exact native link graph.
+- Full local verifier: **330 Python tests, 34 JavaScript tests, 36 workflow UI
+  cases, 32 protection UI cases passed**, plus QML lint, policy compilation,
+  reproducible **97-file** packaging, and fixture install/remove. UI authentication
+  releases the overlay and restores it afterward; cancellation grants no consent.
+  A closed maintainer gate still permits disabling an already-enabled timer.
+- Publication pattern/path checks passed for **168 source files**, including the
+  nested native archives. This is a bounded privacy check, not universal secret
+  detection. Raw machine evidence and credentials remain excluded from Git.
 
-Security gate: an OSV batch query of 315 embedded Go module/toolchain versions
-reported advisories against seven entries in the pinned falcoctl 0.14.2 build.
-These version matches are not proof of reachable exploitation. Its Go 1.27.0
-includes TLS/X.509/HTTP advisories; a patched build and reachability review are
-required. The latest upstream release checked was still 0.14.2. Client and root
-helper therefore both reject enable/update while `RELEASE_READY=False`; this is
-a code-review gate with no environment bypass. Customer opt-in remains separately
-required after release approval. No timer or sensor on this machine was changed.
+### Executed disposable-guest acceptance
 
-Final isolated full verifier passed: Python and JavaScript contracts, QML lint,
-36 workflow UI cases, 32 protection UI cases (including separate Falco consent),
-pinned policy compilation, report generation and reproducible 95-file packaging
-with isolated install/remove. Publication privacy checks passed for 161 source
-files. A missing SBOM fixture input caused one intermediate test failure and was
-fixed before the successful full rerun. No live updater acceptance is claimed.
+A signed official Arch cloud image was verified with the Arch Boxes signing key
+and run in a disposable KVM guest. QEMU was privately extracted from verified
+packages; no host OS-package installation or host reboot occurred. This guest is
+headless Arch, **not full Omarchy Quattro desktop acceptance**.
+
+`tools/verify_falco_rules_native.py --confirm-disposable-vm` passed **11 checks**:
+
+1. Refuse an unconsented refresh without restarting the sensor.
+2. Real systemd service verifies/downloads rules and observes healthy live metrics.
+3. An unchanged generation does not restart monitoring.
+4. Missing local policy fails closed.
+5. Wrong workflow identity is rejected before activation.
+6. Wrong issuer is rejected before activation.
+7. Verification bypass is rejected before activation.
+8. Invalid rules fail compilation before activation.
+9. An injected health failure causes actual service restarts and successful rollback.
+10. A pending transaction recovers the prior healthy generation.
+11. Disable retains current rules and monitoring while stopping scheduled updates.
+
+The signed snapshot supplies **13 additional host rules**, with 12 disabled or
+unsupported rules excluded; the existing eight Ironclad rules remain. A harmless
+self-`PTRACE_TRACEME` fixture produced the upstream `PTRACE anti-debug attempt`
+alert with only rule identity, severity, time, application and event type retained.
+A guarded capacity test filled the private scratch filesystem, observed `ENOSPC`
+at the 32 MiB limit and confirmed unmount/cleanup. A separate sandbox probe
+verified UID 65534, zero effective capabilities, no home,
+no host state/desktop mounts and no leaked directory descriptors. That UID maps to
+host root in the new user namespace; it is not a distinct host service account.
+The worker additionally installs an inherited socket-family/io_uring seccomp filter
+to deny local Unix/Netlink/packet socket authority. A real child-process regression
+checks denial, IPv4 availability and filter inheritance across exec.
+
+A guest-only reboot changed its boot ID and passed the guarded boot check: explicit
+consent, timer enablement, selected rules and fresh zero-drop monitoring survived.
+The exact final package passed this check after a guest-only reboot; the kernel
+was 7.2.11-arch1-1. Guarded native uninstall also passed: the owned sensor/updater
+services stopped, the native helper was removed, and local evidence was retained.
+
+### Failures found and addressed
+
+The VM exposed staging ownership/mapping errors and systemd restrictions that
+prevented namespace setup. Staging now stays root-private and is mounted through
+a descriptor. Downloads/extraction use a 32 MiB private tmpfs; worker `/tmp` is
+also capped at 32 MiB, with checked persistent output limits. The supervisor grants the mapping capability needed by the kernel;
+worker capabilities remain empty. Incompatible outer `RestrictSUIDSGID` and
+`ProtectKernelTunables` settings were removed; `NoNewPrivileges`, read-only host
+mounts, separate namespaces and resource limits remain. These tradeoffs are
+explicit in [the trust design](docs/FALCO_RULE_UPDATES.md).
+
+Early downloads at a 50% CPU quota caused observed kernel drops in the small guest.
+The updater now uses **10% of one CPU**; the final signed-refresh and live-health
+checks passed without relaxing zero-drop activation checks. Monitoring retains
+its existing 25% CPU / 512 MiB limits. Workload calibration is still required;
+future drops remain visible as degraded coverage, never inferred safety.
+
+Other failed intermediate runs included a v3/simple-claim mismatch, the remote
+index bug, an authentication-panel restore failure, obsolete Go dependency API
+combinations, and a native-fixture crash-loop-limit collision during rapid injected
+restarts. Each was corrected and the relevant final checks rerun. The fixture resets
+crash-loop counters between deliberate failure scenarios; production limits are
+unchanged. The verifier's former 30-second suite limit was raised to 120 seconds
+for the larger native inventory; ignored tool-cache symlinks are excluded by
+validating the actual allowlisted release payload.
+
+### Remaining review and next steps
+
+- Review draft [PR #2](https://github.com/GingerRouxt/ironclad/pull/2), stacked on
+  PR #1. Do not merge, tag or deploy from this development run. Repository issue
+  triage on October 26 found no open issues; remaining work is recorded here.
+- Run full Quattro desktop/Polkit acceptance, long-running legitimate workloads,
+  false-positive/resource calibration and independent security/build review.
+  Headless guest results and synthetic UI authentication are not substitutes.
+- Review complete Falco native dependency/license closure and the existing KRSI
+  maintenance findings. No scanner, signature feed or rule engine guarantees
+  protection against all malware. Rule updates can create brief monitoring gaps;
+  signed-but-poor rules and signed replay remain trust limitations.
+- The branch prepares daily GitHub contracts and exact-binary vulnerability checks
+  at **11:17 UTC** with read-only repository permissions. The schedule becomes
+  active only after merge to the default branch and may be delayed by GitHub.
+  It does not modify code, ship updates or autonomously innovate. No daily Codex
+  development schedule is claimed to be active.
+- Community Ironclad remains free. Core fleet integration remains a future,
+  documented interface only; no cloud agent or unsolicited telemetry was added.

@@ -1,9 +1,8 @@
 # Optional automatic Falco host rules
 
-**Unreleased candidate:** the enable control is currently unavailable. A code-level
-release gate also refuses enable/update calls, even with OS authentication. The
-pinned downloader needs security fixes and privileged acceptance. The workflow
-below describes the implemented opt-in design after those release gates pass.
+**Unreleased feature-branch candidate:** the security fixes now use a reproducible,
+rules-only downloader build. The code permits explicit opt-in for acceptance;
+this is not a marketplace update or an automatic customer rollout.
 
 This feature is **off by default**, including after installation or a plugin or
 sensor update. Existing consent for ClamAV signatures does not enable it.
@@ -22,15 +21,42 @@ change fails visibly and can be retried after the update finishes.
 
 ## Trust and activation
 
-The optional sensor component includes falcoctl 0.14.2 from the already pinned
-official Falco 0.45.1 archive. Its binary SHA-256 is
-`6c51c056a9cb27f38acee7f20c91ccd6fea04710f529ea2eb253fff5822f10af`.
-This hash establishes expected bytes, not independent provenance or absence of
-vulnerabilities. Its native dependency and licensing closure still needs review.
+The optional sensor component includes the bundled `0.14.2-ironclad.1` rules-only
+fork of falcoctl, rebuilt with Go 1.27.3, Cosign 3.1.4 and Rekor 1.5.5. Driver,
+registry-management and signing commands are not registered. Public artifact
+requests use anonymous authentication; cloud/host credential discovery is removed
+from the download path. Missing signature policy and `--no-verify` are rejected.
+Cosign verifies the artifact digest using its in-toto claim verifier for new
+bundles and simple claim verifier for legacy signatures. Issuer, workflow identity,
+certificate transparency and transparency-log verification remain required.
 
-Each update uses a fresh, disposable Bubblewrap filesystem and user namespace,
+Pinned source, patches, Go module locks, binary/module inventory and notices are
+included with the [build recipe](FALCO_DOWNLOADER_BUILD.md). All 159 recorded Go
+modules have collected license/notice files; this is not a legal certification or
+an independent provenance attestation. A hash establishes expected bytes, not an
+absence of vulnerabilities.
+
+Each update uses a fresh, disposable Bubblewrap filesystem, PID and user namespace,
 without the user's home, credentials, desktop sockets or host state. The worker
-has network access for public registry and Sigstore verification. Its fixed local
+has network access for public registry and Sigstore verification. Its namespace
+UID is 65534 with no effective capabilities. Because the root supervisor creates
+the namespace, this maps to host UID 0; it is not a separate host service account.
+Only root-private scratch storage is writable. Downloads/extraction use a 32 MiB
+tmpfs in a private supervisor mount namespace; the worker's `/tmp` is separately
+capped at 32 MiB. These are removed after the attempt. Individual service file
+writes are capped at 16 MiB; persistent rule/metadata copies have tighter checked
+limits. An inherited libseccomp filter
+permits only IPv4/IPv6 socket creation, denies socket pairs and blocks io_uring
+syscalls. This prevents shared-network abstract Unix sockets from conveying the
+supervisor's host UID; downloaded code receives no local socket authority. A directory descriptor is
+passed to Bubblewrap (`>=0.10.0`) without exposing a traversable staging path to
+other local users. Home, host state, desktop sockets and `/sys` are not mounted.
+`NoNewPrivileges` remains set. The supervisor needs `CAP_SETFCAP` to create the
+root UID mapping. `RestrictSUIDSGID` and `ProtectKernelTunables` are deliberately
+not applied to the outer unit: their syscall/proc restrictions prevented
+Bubblewrap setup in live tests. The worker's actual namespace and capability
+restrictions are checked separately; these unit settings are not a sandbox by
+themselves. Its fixed local
 index pins the official rules repository, GitHub Actions issuer and rules-workflow
 identity; an upstream index cannot replace that trust policy. Signature and
 transparency-log checks stay enabled. Dependency resolution is disabled and only
@@ -74,17 +100,19 @@ retained locally for investigation; disabling does not delete them.
 
 ## Verification and release gates
 
-Automated tests cover separate consent, disabled-update rejection, signature-policy
-configuration, input filtering, alert redaction, identity checks, successful
-activation and failed-health rollback using synthetic services. An actual signed
-download and combined-rule compile succeeded inside an unprivileged namespace.
-No customer timer is enabled by these tests.
+See [post-launch evidence](../POST_LAUNCH_STATUS.md) for executed checks and failures.
+The reproducible native acceptance tool refuses machines without both KVM/QEMU
+virtualization and a root-owned disposable-test marker. It exercises the real
+systemd service, signed updates, negative signature/compile cases, explicit
+consent, unchanged-generation behavior, and live-service rollback with a clearly
+identified injected health failure. It never reboots a machine itself.
 
-Before broad release, test the privileged worker and timer, first enable/disable,
-actual sensor activation and rollback, reboot recovery, uninstall, resource usage,
-legitimate workloads and benign detection fixtures in an isolated Omarchy VM.
-Do not describe mocked rollback tests as live-service acceptance. Keep the feature
-off on customer machines until each customer explicitly opts in.
+The acceptance guest is headless Arch, not a complete Omarchy Quattro desktop.
+Full Quattro GUI/Polkit acceptance, independent rebuild, workload/false-positive
+calibration and external security review remain release work. Fresh metrics are
+not a guarantee of continuous lossless monitoring: counters can later show dropped
+events under load, and the UI must retain that degraded-health indication.
+No host sensor or customer timer was enabled by this development work.
 
 Official references: [Falco rule distribution](https://falco.org/docs/concepts/rules/default-custom/),
 [signature verification](https://falco.org/blog/sign-verify-plugins-rules/),

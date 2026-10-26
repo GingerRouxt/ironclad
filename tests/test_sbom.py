@@ -15,7 +15,7 @@ class SbomTests(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
         for name in ('pyproject.toml', 'uv.lock', 'manifest.json', 'ironclad/sensor_policy.py', 'ironclad/falco_rules.py',
-                     'ironclad/krsi-component.tar.gz', 'tools/build_krsi_component.py',
+                     'ironclad/krsi-component.tar.gz', 'ironclad/falcoctl-component.tar.gz', 'tools/falcoctl-go.mod', 'tools/falcoctl-go.sum', 'tools/falcoctl-rules-only.patch', 'tools/build_krsi_component.py',
                      'tools/krsi-Cargo.lock', 'tools/krsi-ironclad.patch',
                      'tools/aya-obj-aliases.patch', 'tools/ui-requirements.txt'):
             target = self.root / name
@@ -38,7 +38,7 @@ class SbomTests(unittest.TestCase):
         self.assertTrue(all(item['hashes'][0]['alg'] == 'SHA-256' for item in registry))
         self.assertEqual(components['test:shiboken6']['scope'], 'excluded')
         self.assertEqual(components['ironclad:optional-falco']['scope'], 'optional')
-        self.assertEqual(components['ironclad:optional-falcoctl']['version'],'0.14.2')
+        self.assertEqual(components['ironclad:optional-falcoctl']['version'],'0.14.2-ironclad.1')
         self.assertEqual(components['test:PyYAML']['scope'],'excluded')
         self.assertNotIn('version', components['external:ClamAV'])
         self.assertTrue(all(edge['ref'] in components and all(

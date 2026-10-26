@@ -22,6 +22,23 @@ Updates follow the repository branch. Plugin updates do not silently replace roo
 
 An alternative archive install uses `sh packaging/install.sh --dry-run`, then `--apply`. It refuses an existing destination and creates only owned plugin files. Enable that copied plugin separately with the Omarchy plugin manager. See [removal](UNINSTALL.md).
 
+## Optional Falco rule updates — unreleased candidate
+
+On the feature-branch candidate, first review the monitoring component installation
+or update in Protection and authenticate it. Monitoring must already be active.
+Then open **Protection → Updates → Enable Falco rule updates…** and authenticate
+that separate choice. The timer downloads signed official host rules every six
+hours, with jitter; an accepted changed generation briefly restarts monitoring.
+ClamAV signature consent does not enable this feature. Neither the plugin install
+nor the monitoring component install turns this timer on.
+
+To stop future downloads, choose **Turn off Falco rule updates**. Current rules
+remain installed; stopping monitoring separately prevents rule activation. Check
+both update status and monitoring health. This updates detection rules, not the
+Falco engine, the OS or customer files. See [trust and limitations](FALCO_RULE_UPDATES.md)
+and [executed acceptance](../POST_LAUNCH_STATUS.md). This candidate has not been
+merged, released or covered by the original marketplace verification.
+
 ## Record and verify what you installed
 
 The marketplace's October 25 verification covers `73e2275`, while the original `v0.2.36` release archive was built from `5b80ec2`. Git installation follows current upstream; it does not pin the marketplace snapshot. Record the installed Git commit and manifest version. Do not infer maintainer verification of later commits.

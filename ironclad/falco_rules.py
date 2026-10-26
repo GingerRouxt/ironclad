@@ -9,7 +9,9 @@ import re
 from pathlib import Path
 import subprocess
 
-FALCOCTL_SHA='6c51c056a9cb27f38acee7f20c91ccd6fea04710f529ea2eb253fff5822f10af'
+FALCOCTL_SHA='8ac0c07b90e4a437d4f44b8a360c3f6a91ae560706aea8b41627caf7019e5918'
+FALCOCTL_ARCHIVE_SHA='46b2e864cfe54cb9202b41a67f295606ec6899d0262d42019f4e08f1991048a6'
+FALCOCTL_VERSION='0.14.2-ironclad.1'
 INDEX='''- name: falco-rules
   type: rulesfile
   registry: ghcr.io
@@ -21,9 +23,50 @@ INDEX='''- name: falco-rules
       ignore-tlog: false
 '''
 
+# Explicitly select our local cache; falcoctl otherwise defaults to a remote index.
+CONFIG = 'indexes:\n  - name: ironclad\n    url: https://invalid.invalid/ironclad-local-index\n    backend: https\n'
+
 MAX_BYTES = 1048576
 PRIORITIES = {'EMERGENCY':'critical','ALERT':'critical','CRITICAL':'critical',
               'ERROR':'high','WARNING':'medium','NOTICE':'low','INFORMATIONAL':'info','INFO':'info','DEBUG':'info'}
+
+
+def restrict_worker_sockets():
+    """Keep shared-network abstract sockets from conveying the supervisor's UID.
+
+    The filter is inherited by the downloader/compiler. Only IPv4/IPv6 socket
+    creation is allowed; io_uring cannot bypass the socket syscall filter.
+    """
+    import ctypes
+    import errno
+    import platform
+    class Comparison(ctypes.Structure):
+        _fields_=[('arg',ctypes.c_uint),('op',ctypes.c_uint),('a',ctypes.c_uint64),('b',ctypes.c_uint64)]
+    machine=platform.machine()
+    if machine not in ('x86_64','aarch64'):raise ValueError('unsupported worker filter architecture')
+    paths=['/usr/lib/libseccomp.so.2','/usr/lib/'+machine+'-linux-gnu/libseccomp.so.2']
+    path=next((p for p in paths if Path(p).is_file()),None)
+    if path is None:raise ValueError('system libseccomp required')
+    lib=ctypes.CDLL(path)
+    lib.seccomp_init.argtypes=[ctypes.c_uint32];lib.seccomp_init.restype=ctypes.c_void_p
+    lib.seccomp_release.argtypes=[ctypes.c_void_p]
+    lib.seccomp_syscall_resolve_name.argtypes=[ctypes.c_char_p];lib.seccomp_syscall_resolve_name.restype=ctypes.c_int
+    lib.seccomp_rule_add_array.argtypes=[ctypes.c_void_p,ctypes.c_uint32,ctypes.c_int,ctypes.c_uint,ctypes.POINTER(Comparison)]
+    lib.seccomp_load.argtypes=[ctypes.c_void_p]
+    context=lib.seccomp_init(0x7fff0000)
+    if not context:raise ValueError('worker filter initialization failed')
+    try:
+        socket_call=lib.seccomp_syscall_resolve_name(b'socket')
+        if socket_call<0:raise ValueError('worker socket filter unavailable')
+        # Deny <=1, 3..9 and >=11: exactly AF_INET=2 / AF_INET6=10 remain.
+        for op,value in [(3,1),*[(4,n) for n in range(3,10)],(5,11)]:
+            comparison=Comparison(0,op,value,0)
+            if lib.seccomp_rule_add_array(context,0x00050000|errno.EPERM,socket_call,1,ctypes.byref(comparison))<0:raise ValueError('worker socket filter failed')
+        for name in (b'socketpair',b'io_uring_setup',b'io_uring_enter',b'io_uring_register'):
+            syscall=lib.seccomp_syscall_resolve_name(name)
+            if syscall<0 or lib.seccomp_rule_add_array(context,0x00050000|errno.EPERM,syscall,0,None)<0:raise ValueError('worker bypass filter failed')
+        if ctypes.CDLL(None).prctl(38,1,0,0,0)!=0 or lib.seccomp_load(context)<0:raise ValueError('worker filter installation failed')
+    finally:lib.seccomp_release(context)
 
 
 def catalog_entry(name, priority):
@@ -98,11 +141,12 @@ def prepare(body):
 
 def worker():
     """Fixed inputs, disposable filesystem and no host home; run by rule-service."""
+    restrict_worker_sockets()
     work=Path('/work')
     cache=work/'home/.config/falcoctl';(cache/'indexes').mkdir(parents=True)
     (cache/'indexes.yaml').write_text('configs:\n  - name: ironclad\n    url: https://falcosecurity.github.io/falcoctl/index.yaml\n')
     (cache/'indexes/ironclad.yaml').write_text(INDEX)
-    (work/'config.yaml').write_text('{}\n')
+    (work/'config.yaml').write_text(CONFIG)
     for name in ('download','state','unused'):(work/name).mkdir()
     if hashlib.sha256(Path('/usr/lib/ironclad/falcoctl').read_bytes()).hexdigest()!=FALCOCTL_SHA:
         raise ValueError('unexpected rule downloader')

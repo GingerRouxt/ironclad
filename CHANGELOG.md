@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased — opt-in Falco host-rule maintenance
+
+- Add separately authenticated, off-by-default official host-rule updates; ClamAV consent never enables them. Keep community protection free.
+- Rebuild the downloader with patched dependencies and a smaller anonymous, rules-only interface; require signature, identity, transparency and artifact-digest checks. Include reproducible build inputs, dependency inventory and notices.
+- Isolate parsing/compilation, retain private staging and atomically activate checked generations with rollback. Fix the systemd/namespace integration issues found in the disposable VM.
+- Release the panel for OS authentication and restore it afterward. Preserve the ability to disable existing updates if the maintainer release gate is closed.
+- Record executed VM and automated checks separately from pending full Quattro desktop acceptance. No marketplace release, host installation or automatic customer activation is included.
+
 ## Unreleased — native dependency follow-up
 
 - Rebuild KRSI fork .2 with anyhow 1.0.103 and Tokio 1.53.3; preserve upstream BPF instructions and the existing reviewed source patches.

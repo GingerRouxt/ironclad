@@ -33,6 +33,8 @@ Ironclad brings system findings, behavior monitoring, automatic Downloads malwar
 
 **You stay in control.** Review an observation, ignore it when appropriate, or choose a supported action. Ironclad does not automatically delete your files, quarantine applications, or execute AI suggestions.
 
+The current feature branch also adds separately approved, off-by-default [Falco host-rule updates](docs/FALCO_RULE_UPDATES.md). See [installation](docs/INSTALL.md) and [verified test status](POST_LAUNCH_STATUS.md); this is not part of the published snapshot.
+
 ## Watch the preview
 
 https://github.com/user-attachments/assets/f65ab5a7-105f-4f9a-9671-d90e7fe9a603

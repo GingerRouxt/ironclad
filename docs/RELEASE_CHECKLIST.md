@@ -15,3 +15,19 @@ Use this for a **new** version after review. It does not authorize a tag, merge,
 11. After separate release approval, verify published bytes against the approved candidate, then request marketplace review of the new exact snapshot. Do not carry the October 25 verification badge forward as assurance of changed code. Post launch copy only after separate publishing authorization.
 
 See [current status](../POST_LAUNCH_STATUS.md), [security scope](../SECURITY_REVIEW.md) and [contributor checks](CONTRIBUTOR_TESTING.md). Community Ironclad stays free; no fleet telemetry or mandatory account may be introduced by release tooling.
+
+### Opt-in Falco rule maintenance
+
+- Rebuild and audit the rules-only component using `docs/FALCO_DOWNLOADER_BUILD.md`;
+  update binary/archive pins, patch/Go locks, notices and SBOM together.
+- Run the guarded guest checks in `docs/ACCEPTANCE_TESTS.md`, including missing
+  local policy, wrong issuer/workflow, unsigned operation, invalid compilation,
+  real service activation/rollback, guest boot and removal. Retest workload gaps.
+- Verify the native package leaves consent/timer off after fresh installation.
+  ClamAV signature consent must not activate Falco rules. Verify both explicit
+  authentication cancellation and disable after a closed maintainer release gate.
+- Review PR #2 separately from its PR #1 base; merge/release only after review.
+  This branch adds daily contracts and pinned-binary vulnerability analysis at
+  11:17 UTC. GitHub schedules begin only after the workflow reaches the default
+  branch, can be delayed, and do not modify code or customer machines. No automatic
+  rollout or autonomous daily innovation is claimed.

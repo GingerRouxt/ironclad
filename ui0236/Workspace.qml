@@ -40,7 +40,8 @@ Ui.Panel {
         malwareStage = "setup"
         malwareMessage = "Changing automatic Falco detection updates…"
         scannerSetupRequest.command = ["/usr/bin/python3", "-I", "-B", companionPath, enabled ? "falco-rules-enable" : "falco-rules-disable", "--json"].concat(enabled ? ["--allow-network"] : [])
-        scannerSetupRequest.running = true
+        scannerSetupRequest.reopenPanel = true
+        root.close(); scannerAuthenticationDelay.restart()
     }
     function markRepairUnknown() {
         if (!repairFollowUp) return
@@ -491,6 +492,7 @@ Ui.Panel {
         id: scannerSetupRequest
         objectName: "scannerSetupRequest"
         property bool received: false
+        property bool reopenPanel: false
         onRunningChanged: if (running) received = false
         stdout: SplitParser { onRead: data => {
             try {
@@ -508,7 +510,10 @@ Ui.Panel {
             if (!received || (exitCode !== 0 || exitStatus !== 0) && root.malwareStage !== "error") {
                 root.malwareStage = "error"; root.malwareMessage = "Scanner setup cancelled or incomplete. Check readiness and try again."
             }
-            Qt.callLater(function() { root.loadProtection() })
+            Qt.callLater(function() {
+                if (scannerSetupRequest.reopenPanel) { scannerSetupRequest.reopenPanel = false; root.open() }
+                root.loadProtection()
+            })
         }
     }
     // Native dialogs are regular windows. Release the shell overlay/grab first,

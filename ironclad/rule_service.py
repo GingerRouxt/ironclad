@@ -1,6 +1,7 @@
 #!/usr/bin/python3 -I
 """Root-owned rule maintenance. Fixed verbs, fixed signed upstream, no shell."""
 import fcntl
+from contextlib import contextmanager
 import hashlib
 import json
 import os
@@ -20,9 +21,9 @@ TIMER='ironclad-rule-updates.timer'
 SENSOR='ironclad-sensor.service'
 ENV={'PATH':'/usr/bin','LANG':'C','LC_ALL':'C','HOME':'/'}
 ROOT_UID=0
-# Review gate, not a user setting. The pinned downloader has known dependency
-# advisories and privileged acceptance is incomplete. No environment override.
-RELEASE_READY=False
+# Maintainer release gate; customer consent remains separately off by default.
+# No environment override. See docs/FALCO_RULE_UPDATES.md for acceptance evidence.
+RELEASE_READY=True
 
 
 def directory(path):
@@ -127,15 +128,30 @@ def recover():
     (BASE/'pending.json').unlink()
 
 
-def sandbox(work):
+def sandbox(work,work_fd=None):
+    binding=['--bind',str(work),'/work'] if work_fd is None else ['--bind-fd',str(work_fd),'/work']
     args=['/usr/bin/bwrap','--unshare-all','--share-net','--die-with-parent','--new-session',
           '--unshare-user','--uid','65534','--gid','65534','--cap-drop','ALL','--clearenv',
           '--setenv','HOME','/work/home','--setenv','PATH','/usr/bin','--setenv','LANG','C',
           '--ro-bind','/usr','/usr','--symlink','usr/lib','/lib','--symlink','usr/lib','/lib64',
-          '--proc','/proc','--dev','/dev','--tmpfs','/tmp','--bind',str(work),'/work']
+          '--proc','/proc','--dev','/dev','--size','33554432','--tmpfs','/tmp']+binding
     for name in ('/etc/ssl','/etc/ca-certificates','/etc/resolv.conf','/etc/hosts'):
         if Path(name).exists():args+=['--ro-bind',name,name]
     return args+['--chdir','/work','/usr/bin/python3','-I','-B','/usr/lib/ironclad/rule-worker']
+
+
+@contextmanager
+def scratch(work):
+    """Bound downloads/extraction in RAM, in a private supervisor mount namespace."""
+    directory(work)
+    os.unshare(os.CLONE_NEWNS)
+    def mount(*args):
+        subprocess.run(args,env=ENV,cwd='/',stdin=subprocess.DEVNULL,stdout=subprocess.DEVNULL,
+                       stderr=subprocess.DEVNULL,timeout=10,check=True)
+    mount('/usr/bin/mount','--make-rprivate','/')
+    mount('/usr/bin/mount','-t','tmpfs','-o','size=32M,nodev,nosuid,noexec,mode=0700','ironclad-rules',str(work))
+    try:yield
+    finally:mount('/usr/bin/umount',str(work))
 
 
 def update():
@@ -148,12 +164,19 @@ def update():
     atomic('status.json',{'state':'checking','attempted_at':int(time.time())})
     try:
         with tempfile.TemporaryDirectory(prefix='.stage-',dir=BASE) as temp:
-            work=Path(temp);os.chown(work,65534,65534);os.chmod(work,0o700)
-            with tempfile.TemporaryFile() as log:
-                r=subprocess.run(sandbox(work),env=ENV,cwd='/',stdin=subprocess.DEVNULL,stdout=log,stderr=log,timeout=240)
-            if r.returncode:raise ValueError('signed rule download or isolated compilation failed')
-            data=validate(json.loads(read(work/'result.json',65536,65534)))
-            rules=read(work/'host-rules.yaml',1048576,65534)
+            # Keep the enclosing directory root-only. Host processes running as
+            # nobody must not be able to forge the isolated worker's results.
+            work=Path(temp)/'work';work.mkdir(mode=0o700)
+            with scratch(work):
+                work_fd=os.open(work,os.O_RDONLY|os.O_DIRECTORY|os.O_NOFOLLOW)
+                try:
+                    with tempfile.TemporaryFile() as log:
+                        r=subprocess.run(sandbox(work,work_fd),env=ENV,cwd='/',stdin=subprocess.DEVNULL,
+                            stdout=log,stderr=log,timeout=240,pass_fds=(work_fd,))
+                finally:os.close(work_fd)
+                if r.returncode:raise ValueError('signed rule download or isolated compilation failed')
+                data=validate(json.loads(read(work/'result.json',65536)))
+                rules=read(work/'host-rules.yaml',1048576)
             if hashlib.sha256(rules).hexdigest()!=data['rules_sha256']:raise ValueError('prepared rules changed')
             folder=BASE/data['rules_sha256']
             if not folder.exists():

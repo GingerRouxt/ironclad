@@ -23,13 +23,13 @@ def sha(body):
     return hashlib.sha256(body).hexdigest()
 
 
-def read(root, name):
+def read(root, name, limit=MAX_SOURCE):
     path = root / name
-    if path.is_symlink() or not path.is_file() or path.stat().st_size > MAX_SOURCE:
+    if path.is_symlink() or not path.is_file() or path.stat().st_size > limit:
         raise ValueError('unsafe or oversized inventory source: ' + name)
     with path.open('rb') as stream:
-        body = stream.read(MAX_SOURCE + 1)
-    if len(body) > MAX_SOURCE:
+        body = stream.read(limit + 1)
+    if len(body) > limit:
         raise ValueError('oversized inventory source: ' + name)
     return body
 
@@ -49,9 +49,9 @@ def literals(body, names):
     return result
 
 
-def members(body):
+def members(body, compressed_limit=MAX_SOURCE, expanded_limit=MAX_EXPANDED, member_limit=4*1024*1024, count_limit=512):
     """Read bounded regular members, without extracting native code or links."""
-    if len(body) > MAX_SOURCE:
+    if len(body) > compressed_limit:
         raise ValueError('native archive too large')
     result = {}
     total = 0
@@ -59,8 +59,8 @@ def members(body):
         for entry in archive:
             parts = PurePosixPath(entry.name).parts
             total += entry.size
-            if (len(result) >= 512 or not entry.isfile() or entry.size < 0
-                    or entry.size > 4 * 1024 * 1024 or total > MAX_EXPANDED
+            if (len(result) >= count_limit or not entry.isfile() or entry.size < 0
+                    or entry.size > member_limit or total > expanded_limit
                     or not parts or entry.name.startswith('/') or '..' in parts
                     or entry.name in result or '\\' in entry.name
                     or str(PurePosixPath(entry.name)) != entry.name):
@@ -199,13 +199,29 @@ def generate(root=ROOT):
         'properties': props(inventory='optional downloaded engine; not bundled',
                             archive_sha256=pins['ARCHIVE_SHA'],
                             limitations='transitive/native dependency inventory incomplete')})
-    controller=literals(read(root,'ironclad/falco_rules.py'),{'FALCOCTL_SHA'})
+    controller=literals(read(root,'ironclad/falco_rules.py'),{'FALCOCTL_SHA','FALCOCTL_ARCHIVE_SHA','FALCOCTL_VERSION'})
+    archive=read(root,'ironclad/falcoctl-component.tar.gz',64*1024*1024)
+    if sha(archive)!=controller['FALCOCTL_ARCHIVE_SHA']:raise ValueError('downloader archive pin mismatch')
+    downloader=members(archive,64*1024*1024,128*1024*1024,96*1024*1024,10000)
+    info=json.loads(downloader['build-info.json'])
+    if sha(downloader['falcoctl'])!=controller['FALCOCTL_SHA'] or info['binary_sha256']!=controller['FALCOCTL_SHA'] or info['version']!=controller['FALCOCTL_VERSION']:raise ValueError('downloader provenance mismatch')
+    for embedded,source_name in (('go.mod','falcoctl-go.mod'),('go.sum','falcoctl-go.sum'),('ironclad.patch','falcoctl-rules-only.patch')):
+        if downloader[embedded]!=read(root,'tools/'+source_name) or sha(downloader[embedded])!=info['inputs'][embedded]:raise ValueError('downloader embedded provenance differs')
     components.append({'type':'application','bom-ref':'ironclad:optional-falcoctl','name':'falcoctl',
-                       'version':'0.14.2','scope':'optional',
+                       'version':controller['FALCOCTL_VERSION'],'scope':'optional',
                        'hashes':[{'alg':'SHA-256','content':controller['FALCOCTL_SHA']}],
-                       'externalReferences':[{'type':'distribution','url':pins['ARCHIVE_URL']}],
-                       'properties':props(inventory='optional pinned rule downloader; extracted from Falco archive',
-                                          limitations='Go transitive dependency and license closure incomplete')})
+                       'externalReferences':[{'type':'vcs','url':info['source_url']}],
+                       'properties':props(inventory='bundled rules-only build; Go binary module inventory',
+                                          archive_sha256=controller['FALCOCTL_ARCHIVE_SHA'], toolchain=info['toolchain'],
+                                          repeated_build_identical=info['repeated_build_identical'],
+                                          limitations='self-recorded provenance; independent reproducibility and license review not asserted')})
+    module_refs=[]
+    for module in info['modules']:
+        ref='go:'+module['path']+'@'+module['version'];module_refs.append(ref)
+        components.append({'type':'library','bom-ref':ref,'name':module['path'],'version':module['version'],
+                           'scope':'optional','purl':'pkg:golang/'+quote(module['path'],safe='/')+'@'+module['version'],
+                           'properties':props(inventory='falcoctl Go binary module metadata; not function reachability',go_sum=module['sum'])})
+    dependencies.append({'ref':'ironclad:optional-falcoctl','dependsOn':sorted(module_refs)})
     components.append({'type':'library','bom-ref':'test:PyYAML','name':'PyYAML','version':'6.0.3',
                        'scope':'excluded','purl':'pkg:pypi/pyyaml@6.0.3',
                        'properties':props(inventory='locked rule-worker test dependency; runtime uses OS python-yaml')})
@@ -241,8 +257,8 @@ def generate(root=ROOT):
             'properties': props(
                 inventory='partial source/build inventory; offline and deterministic',
                 python_runtime_dependencies='none declared',
-                dependency_graph='Cargo.lock resolution only; not target/features or linked-runtime graph',
-                omissions='Falco and falcoctl transitive dependencies, system versions, exact native link graph, '
+                dependency_graph='Cargo.lock resolution and Go binary modules; not target/features or full linked-runtime graph',
+                omissions='Falco transitive dependencies, system versions, exact native link graph, '
                           'full license review, vulnerability/advisory scan, signature verification',
                 security='No vulnerability clearance or security certification is asserted',
                 inputs_sha256=json.dumps({name: sha(read(root, name)) for name in (

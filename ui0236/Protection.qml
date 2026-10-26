@@ -202,7 +202,7 @@ ScrollView {
                 Label { text: "Falco detection rules"; font.weight: Font.DemiBold; Layout.fillWidth: true }
                 Label { objectName: "falcoRuleUpdateStatus"; text: root.ruleUpdates ? root.ruleUpdates.message : "Rule update health has not been verified."; Layout.fillWidth: true; color: root.muted }
                 Label { text: "Opt in to signed official Falco host rules, checked every six hours. A compatible update briefly restarts monitoring; failed activation rolls back. Container-dependent rules are excluded. Existing custom rules remain. No files or alerts are uploaded. Turning updates off retains installed rules."; Layout.fillWidth: true; font.pixelSize: 13 }
-                Button { objectName: "falcoRuleUpdatesButton"; text: root.ruleUpdates && root.ruleUpdates.enabled ? "Turn off Falco rule updates" : "Enable Falco rule updates…"; enabled: !!root.ruleUpdates && root.ruleUpdates.installed && root.ruleUpdates.available && !root.working; onClicked: root.ruleUpdatesRequested(!root.ruleUpdates.enabled) }
+                Button { objectName: "falcoRuleUpdatesButton"; text: root.ruleUpdates && root.ruleUpdates.enabled ? "Turn off Falco rule updates" : "Enable Falco rule updates…"; enabled: !!root.ruleUpdates && root.ruleUpdates.installed && (root.ruleUpdates.available || root.ruleUpdates.enabled) && !root.working; onClicked: root.ruleUpdatesRequested(!root.ruleUpdates.enabled) }
                 Repeater {
                     model: root.updates ? root.updates.engines : []
                     delegate: Label {
