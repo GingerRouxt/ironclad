@@ -1,0 +1,39 @@
+{
+  "inventory_sha256": "46acac9493291136375b86eae90cd6ec607842e8adc9ea81504e8e675ca8ef5b",
+  "cargo_lock_sha256": "7475b33f8395f80fb30ea6407b80ac3ed8d6d5904ca053c7369c1ecd973f7e37",
+  "queried_at": "2026-10-26T03:35:02.256356+00:00",
+  "endpoint": "https://api.osv.dev/v1/querybatch",
+  "query_count": 150,
+  "scope": "148 registry Cargo lock entries and 2 test-only PyPI packages; excludes 12 local/patched crates, native Falco transitive and system dependencies",
+  "matches": [
+    {
+      "package": "pkg:cargo/bincode@2.0.1",
+      "advisories": [
+        {
+          "id": "RUSTSEC-2025-0141",
+          "modified": "2026-01-16T11:07:28.867553Z"
+        }
+      ]
+    },
+    {
+      "package": "pkg:cargo/paste@1.0.15",
+      "advisories": [
+        {
+          "id": "RUSTSEC-2024-0436",
+          "modified": "2026-01-27T22:03:15.694766Z"
+        }
+      ]
+    },
+    {
+      "package": "pkg:cargo/proc-macro-error@1.0.4",
+      "advisories": [
+        {
+          "id": "RUSTSEC-2024-0370",
+          "modified": "2026-06-07T20:00:03.923932Z"
+        }
+      ]
+    }
+  ],
+  "complete_response": true,
+  "clearance": false
+}

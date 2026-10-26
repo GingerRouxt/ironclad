@@ -52,7 +52,7 @@ https://falco.org/docs/concepts/rules/style-guide/
 ## Asynchronous open coverage in 0.2.33
 
 The bundled component combines official dynamic Falco 0.45.1 with a pinned local
-KRSI 0.2.0-ironclad.1 fork. It rebuilds against the SDK's real event schema 4.5.0;
+KRSI 0.2.0-ironclad.2 candidate fork. It rebuilds against the SDK's real event schema 4.5.0;
 no compatibility check is bypassed. The upstream official 0.2.0 binary failed its
 schema check and remains a rejected artifact, not the deployed integration.
 

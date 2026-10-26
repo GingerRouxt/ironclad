@@ -14,7 +14,9 @@ from ironclad.storage import open_dir, private_dir
 ID = 'com.zerodaysecurity.ironclad'
 FILES = ['zds-ironclad', 'companion.py', 'packaging/manage.py', 'packaging/install.sh', 'packaging/uninstall.sh', 'ui0236/State.js', 'ui0236/Design.js', 'ui0236/NavIcon.qml', 'ui0236/BodyText.qml', 'ui0236/ControlButton.qml', 'ui0236/Dashboard.qml', 'ui0236/Workspace.qml', 'ui0236/Protection.qml', 'ui0236/Monitoring.qml', 'ui0236/AutomaticMalware.qml', 'ui0236/Overview.qml', 'ironclad/FALCO-LICENSE', 'ironclad/krsi-component.tar.gz', 'manifest.json', 'BarWidget.qml', 'Panel.qml', 'engine.py', 'README.md', 'LICENSE', 'SECURITY.md', 'THIRD_PARTY_NOTICES.md', 'CHANGELOG.md', 'TEST_RESULTS.md', 'SECURITY_REVIEW.md']
 FILES += ['ironclad/'+p.name for p in sorted((SOURCE/'ironclad').glob('*.py'))]
-FILES += ['docs/'+name for name in ('INSTALL.md', 'CHECK_CATALOG.md', 'AUTOMATIC_MALWARE.md', 'UNINSTALL.md', 'PRIVACY.md', 'PROTECTION_UPDATES.md', 'DETECTION_COVERAGE.md', 'RELEASING.md', 'FEATURES.md', 'ARCHITECTURE.md', 'THREAT_MODEL.md', 'RULES.md', 'AI_INTEGRATION.md', 'BUSINESS.md')]
+FILES += ['POST_LAUNCH_STATUS.md', 'CONTRIBUTING.md']
+FILES += ['docs/'+name for name in ('INSTALL.md', 'CHECK_CATALOG.md', 'AUTOMATIC_MALWARE.md', 'UNINSTALL.md', 'PRIVACY.md', 'PROTECTION_UPDATES.md', 'DETECTION_COVERAGE.md', 'RELEASING.md', 'FEATURES.md', 'ARCHITECTURE.md', 'THREAT_MODEL.md', 'RULES.md', 'AI_INTEGRATION.md', 'BUSINESS.md', 'ACCEPTANCE_TESTS.md', 'RELEASE_CHECKLIST.md', 'CONTRIBUTOR_TESTING.md', 'CORE_INTERFACE_PROPOSAL.md', 'LANDING_PAGE_BRIEF.md', 'SUPPLY_CHAIN_REVIEW.md', 'NATIVE_BUILD.md')]
+FILES += ['docs/'+name for name in ('ROADMAP.md', 'LAUNCH_ANNOUNCEMENT.md', 'ironclad-build-inventory.cdx.json', 'dependency-advisories.json')]
 
 
 def digest(data): return hashlib.sha256(data).hexdigest()
@@ -72,6 +74,9 @@ def remove(root):
         from ironclad.protection_updates import UNITS, unit_directory
         if any((unit_directory()/name).exists() or (unit_directory()/name).is_symlink() for name in UNITS):
             raise ValueError('turn off automatic protection updates in Protection before removing the plugin')
+        from ironclad import scheduling
+        if any((scheduling.unit_directory()/name).exists() or (scheduling.unit_directory()/name).is_symlink() for name in scheduling.UNITS):
+            raise ValueError('disable the diagnostic schedule and remove its owned units before removing the plugin')
     dest=target_path(root)
     if Path(root)==Path.home()/'.config' and Path('/usr/lib/ironclad/sensor-helper').exists():
         raise ValueError('remove the embedded sensor through Protection before removing its controls')

@@ -1,4 +1,4 @@
-# Threat model — Ironclad 0.2.30
+# Threat model — Ironclad post-launch branch
 
 Ironclad protects diagnostic privacy, reviewed-action boundaries and desktop
 availability. It provides bounded observations and selected detections; it is not
@@ -18,8 +18,10 @@ an assurance that the workstation is free of malware or every application is pat
   contact configured tool sources, OSV and the CISA catalog with disclosed package
   metadata. Enabled maintenance refreshes official ClamAV signatures and checks
   public engine-release versions. It does not automatically install code.
-- GUI scans start a disclosed explanation request through the existing signed-in
-  Codex/Claude client; CLI scans do not. Advice is plain text, bounded and has no
+- On this branch GUI scans remain local until an explicit AI action through the
+  signed-in Codex/Claude client; CLI scans do not invoke AI. Published 0.2.36
+  automatically requested GUI explanations; see the version-specific privacy note.
+  Advice is plain text, bounded and has no
   execution/approval authority. Client tools/extensions are disabled. No Ironclad
   provider key storage; unknown private strings cannot be universally redacted.
 - Reviewed repairs have a fixed action registry, expiring exact plans, revalidation
@@ -73,5 +75,7 @@ unverified sources, unsupported software and retained versions.
 Independent security review, a clean-machine lifecycle/recovery run, broader
 accessibility/resource testing, native authentication-focus acceptance and complete
 static sensor dependency/SBOM/license review remain outstanding. No signed public
-code-update channel is claimed. See TEST_RESULTS.md for the sanitized validation summary;
+code-update channel is claimed. The partial SBOM and matched dependency advisories are
+documented in [supply-chain review](SUPPLY_CHAIN_REVIEW.md); they are not dependency clearance.
+See [test results](../TEST_RESULTS.md) for the sanitized validation summary;
 passing tests are not a security certification.

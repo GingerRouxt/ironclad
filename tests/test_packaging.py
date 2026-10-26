@@ -5,6 +5,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 ROOT=Path(__file__).resolve().parents[1]
 spec=importlib.util.spec_from_file_location('manage',ROOT/'packaging/manage.py')
@@ -60,6 +61,34 @@ class InstallTests(unittest.TestCase):
     def test_state_retained(self):
         state=Path(self.tmp.name)/'history'; state.write_text('retain')
         manage.install(self.root); manage.remove(self.root); self.assertEqual(state.read_text(),'retain')
+
+    def test_diagnostic_schedule_blocks_removal_until_owned_units_removed(self):
+        home=Path(self.tmp.name)/'home'
+        root=home/'.config'
+        units=root/'systemd/user'
+        units.mkdir(parents=True)
+        target=manage.install(root)
+        exists=Path.exists
+        def fixture_exists(path):
+            if str(path) in ('/usr/lib/ironclad/antimalware-helper','/usr/lib/ironclad/sensor-helper'):
+                return False
+            return exists(path)
+        with patch.object(Path,'home',return_value=home), patch.object(Path,'exists',fixture_exists), \
+                patch('ironclad.scheduling.unit_directory',return_value=units), \
+                patch('ironclad.protection_updates.unit_directory',return_value=units):
+            for name in ('zds-ironclad.service','zds-ironclad.timer'):
+                for linked in (False,True):
+                    with self.subTest(name=name,linked=linked):
+                        unit=units/name
+                        if linked: unit.symlink_to(units/'missing')
+                        else: unit.write_text('synthetic schedule')
+                        with self.assertRaisesRegex(ValueError,'diagnostic schedule'):
+                            manage.remove(root)
+                        self.assertTrue((target/'engine.py').exists())
+                        self.assertTrue(unit.exists() or unit.is_symlink())
+                        unit.unlink()
+            manage.remove(root)
+            self.assertFalse(target.exists())
 
     def test_existing_safe_shared_plugin_parent(self):
         parent=manage.target_path(self.root).parent; parent.mkdir(parents=True,mode=0o755)

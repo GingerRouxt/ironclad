@@ -2,7 +2,7 @@
   <img src="assets/brand/hero.png" alt="Ironclad — Your machine. Your call. Local-first security for Omarchy." width="100%">
 </p>
 
-> **BETA — 0.2.36.** Installable source with explicit coverage limits. Marketplace approval is pending; this is not security certification.
+> **Published beta — 0.2.36.** [Available in the Omarchy marketplace](https://omarchyplugins.com/plugin.html?id=com.zerodaysecurity.ironclad), maintainer-verified October 25, 2026 at snapshot `73e2275`. Verification is a scoped marketplace review, not a security audit or certification. Changes on this branch are proposed post-launch fixes, not part of that verified snapshot.
 
 <p align="center">
   <strong>Know what needs attention. Understand why. Choose what happens next.</strong><br>
@@ -37,7 +37,7 @@ Ironclad brings system findings, behavior monitoring, automatic Downloads malwar
 
 https://github.com/user-attachments/assets/f65ab5a7-105f-4f9a-9671-d90e7fe9a603
 
-A 73-second walkthrough of the development build on the real Omarchy desktop. The film predates this beta; its coming-soon wording describes the preview stage. Current installation instructions are below.
+A historical 73-second development walkthrough on the real Omarchy desktop. Ironclad is now published; any coming-soon wording in the film is obsolete. The film is not acceptance evidence for the current release or its native binaries. Use the installation instructions and [current verification status](POST_LAUNCH_STATUS.md) below.
 
 ## See it in action
 
@@ -68,7 +68,7 @@ The preview uses a fixture response. No AI request was made to create this scree
 
 - **Built around your machine.** Review findings and supported actions from the Omarchy desktop.
 - **Optional components are visible.** Monitoring, malware scanning, maintenance, and AI have their own setup and status.
-- **AI is optional.** It can use your existing Codex or Claude Code account, subject to that provider's limits. Selected, redacted context is sent to the chosen provider when you request assistance.
+- **AI is optional.** On this post-launch branch, scans stay local until you choose **Explain all checks** or another explicit AI action. It uses your existing Codex or Claude Code account, subject to provider limits. The published 0.2.36 GUI automatically requests explanations after scans when a signed-in client is available; this branch removes that automatic request.
 - **Evidence before action.** AI answers explain or propose; they do not execute changes on their own.
 
 Local-first does not mean every optional feature is offline. Advisory lookups, protection updates, and AI requests require network access when used.
@@ -81,7 +81,7 @@ Requires **Omarchy Quattro, Python 3.12+ and libseccomp**. Native monitoring cur
 omarchy plugin add https://github.com/GingerRouxt/ironclad.git --enable
 ```
 
-Review optional engines and maintenance in Protection; installing the widget does not enable them. GUI scans request explanations through an available signed-in agent and send bounded redacted findings to its provider. Read [privacy](docs/PRIVACY.md) first.
+Review optional engines and maintenance in Protection; installing the widget does not enable them. AI actions send bounded redacted findings to the selected provider. Read the [version-specific privacy behavior](docs/PRIVACY.md) first.
 
 **Update:** `omarchy plugin update com.zerodaysecurity.ironclad`.
 
@@ -91,13 +91,15 @@ See [test results](TEST_RESULTS.md), [security review scope](SECURITY_REVIEW.md)
 
 ## What protection means here
 
-Ironclad combines focused checks and optional detection engines. It is not a guarantee that a machine is malware-free. Behavior rules cover selected activity. Automatic scanning shown in the development build scans and alerts on accessed files inside Downloads; it does not block or delete files in that mode. One-off scans cover the file you choose. Software checks cover supported inventory and available advisory data. Catalog totals include observations and explicit unavailable/not-applicable outcomes; they are not a security score. A missing or unhealthy engine must be treated as a coverage gap.
+Ironclad combines focused checks and optional detection engines. It is not a guarantee that a machine is malware-free. Behavior rules cover selected activity. Optional automatic Downloads scanning in alert-only mode scans and alerts on accessed files; it does not block or delete files in that mode. One-off scans cover the file you choose. Software checks cover supported inventory and available advisory data. Catalog totals include observations and explicit unavailable/not-applicable outcomes; they are not a security score. A missing or unhealthy engine must be treated as a coverage gap.
 
 Read the [security policy](SECURITY.md) for reporting guidance. Learn about the underlying tools in the official [Falco documentation](https://falco.org/docs/) and [ClamAV documentation](https://docs.clamav.net/).
 
 ## Built with the community
 
 Useful bug reports, clear documentation, accessible UI feedback, and reproducible test cases all help. Start with [contributing](CONTRIBUTING.md).
+
+Community Ironclad is free and MIT licensed. Optional AI providers may charge under their own terms. Any future ZDS Core fleet integration is separate, opt-in and [not implemented](docs/CORE_INTERFACE_PROPOSAL.md).
 
 ## From Zero Day Security
 

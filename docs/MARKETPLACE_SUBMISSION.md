@@ -1,3 +1,7 @@
+# Historical marketplace submission — 0.2.36
+
+This preserves the submission wording and historical test totals for snapshot `73e2275`, published and maintainer-verified October 25, 2026. It is not the current post-launch behavior or an outstanding approval request. See [current status](../POST_LAUNCH_STATUS.md) and [privacy](PRIVACY.md) for proposed explicit AI consent. The maintainer review is scoped to the exact snapshot, not a security audit.
+
 ### Repository URL
 
 https://github.com/GingerRouxt/ironclad
