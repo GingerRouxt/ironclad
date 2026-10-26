@@ -193,9 +193,10 @@ validating the actual allowlisted release payload.
 - Review draft [PR #2](https://github.com/GingerRouxt/ironclad/pull/2), stacked on
   PR #1. Do not merge, tag or deploy from this development run. Repository issue
   triage on October 26 found no open issues; remaining work is recorded here.
-- Run full Quattro desktop/Polkit acceptance, long-running legitimate workloads,
+- Complete the remaining desktop lifecycle cases, long-running legitimate workloads,
   false-positive/resource calibration and independent security/build review.
-  Headless guest results and synthetic UI authentication are not substitutes.
+  The live desktop acceptance below covers component installation and rule opt-in/disable;
+  it does not establish full fresh-machine lifecycle or independent assurance.
 - Review complete Falco native dependency/license closure and the existing KRSI
   maintenance findings. No scanner, signature feed or rule engine guarantees
   protection against all malware. Rule updates can create brief monitoring gaps;
@@ -207,3 +208,51 @@ validating the actual allowlisted release payload.
   development schedule is claimed to be active.
 - Community Ironclad remains free. Core fleet integration remains a future,
   documented interface only; no cloud agent or unsolicited telemetry was added.
+
+### Live Omarchy desktop follow-up — October 26, 2026
+
+At the owner's request, candidate `87c3bad` was exercised on an existing Omarchy
+4.0.6 desktop without rebooting. The copied plugin was backed up and exchanged
+atomically; the installed receipt and all **97 payload files** matched the reviewed
+source. This was an existing-machine test, not a clean Quattro installation.
+
+- The live Protection screen prepared the monitoring update and handed control to
+  the real OS authentication UI. Policy **0.2.34** installed successfully, retaining
+  Falco **0.45.1**. Monitoring recovered fresh metrics with zero reported drops,
+  parsing errors or asynchronous backlog. Installation left the rule timer disabled.
+- The separate live Falco control enabled the timer through the privileged helper.
+  An explicitly requested immediate refresh verified and installed **13 signed host
+  rules**. This immediate refresh invoked the authenticated helper directly; the
+  scheduled service's resource limits were tested in the disposable guest, not
+  re-established by this direct invocation.
+- The live **Turn off Falco rule updates** control disabled the timer. The 13 rules
+  remained installed and monitoring stayed healthy. The test ends with future
+  Falco rule downloads **off**, preserving the original choice. Existing ClamAV
+  automatic signature maintenance and alert-only Downloads protection were retained.
+- Omarchy's plugin rescan retained old nested QML components despite matching files.
+  Restarting only the desktop shell loaded the candidate controls; applications
+  and the sensor remained running. A rescan alone is not sufficient evidence that
+  the displayed UI matches an updated copied plugin.
+- Keyboard navigation reached a monitoring approval button below the visible
+  scroll area without revealing it. Review scrolling/focus behavior before broad
+  release. The rule result also uses the generic “Scanner setup” heading; improve
+  that wording and the initial “needs attention” state before the first scheduled
+  refresh. These are outstanding UI issues, not completed fixes.
+
+Private evidence is retained locally under `.local-evidence/falco-rules/host/`:
+`install.json`, `sensor-after-install.json`, `rule-result.json`,
+`disabled-result.json`, and desktop captures. No screenshots, personal desktop
+content, credentials or raw machine reports are published. Host reboot/uninstall,
+clean-machine desktop lifecycle, extended workload calibration and independent
+review remain unperformed on this desktop. Guest reboot/uninstall evidence above
+is separate.
+
+The first 60-second coexistence attempt stopped on the verifier's workstation
+health guard. Its original error did not identify which threshold failed, so its
+cause remains unresolved and it is not counted as a pass. The verifier now saves
+its observed samples and missing-process information on that failure path. A
+subsequent **60-second** run passed with a single low-priority synthetic compilation
+worker, ClamAV detection of the standard harmless EICAR fixture, all sampled Codex
+processes alive and healthy sensor metrics throughout (`native-load-retry.json`).
+This short pass does not resolve the first failure or establish sustained-load
+reliability. The failure-reporting branch itself has not been fault-injected here.

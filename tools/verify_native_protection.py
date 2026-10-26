@@ -71,7 +71,9 @@ def main():
                             'available_bytes':memory_available(),'codex_alive':all(Path('/proc',str(pid)).exists() for pid in codex)}
                     samples.append(sample)
                     if not sample['codex_alive'] or sample['available_bytes']<2*1024**3:
-                        raise RuntimeError('workstation health threshold failed; stopping test workload')
+                        args.output.parent.mkdir(parents=True,exist_ok=True)
+                        args.output.write_text(json.dumps({'passed':False,'failure':'workstation health threshold','samples':samples,'codex_process_ids':codex,'missing_codex_process_ids':[pid for pid in codex if not Path('/proc',str(pid)).exists()]},indent=2)+'\n')
+                        raise RuntimeError('workstation health threshold failed; evidence recorded; stopping test workload')
                     time.sleep(2)
                 worker.wait(timeout=10)
                 scanner.wait(timeout=160)

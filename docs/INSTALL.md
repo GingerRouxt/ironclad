@@ -18,7 +18,7 @@ Update a git-managed installation:
 omarchy plugin update com.zerodaysecurity.ironclad
 ```
 
-Updates follow the repository branch. Plugin updates do not silently replace root components. Review any separate sensor update in Protection. Existing copied development installs are not git-managed; preserve the plugin folder and state before a deliberate migration. Do not overwrite shell configuration or restart the desktop to install this plugin.
+Updates follow the repository branch. Plugin updates do not silently replace root components. Review any separate sensor update in Protection. Existing copied development installs are not git-managed; preserve the plugin folder and state before a deliberate migration. Do not overwrite shell configuration. A reboot is not required. If a copied development update still displays old controls after `omarchy-shell shell rescanPlugins`, finish or cancel any authentication operation, then use `omarchy restart shell` to clear the observed QML cache. This briefly reloads the bar and panels; it does not reboot or close your applications. Verify the displayed controls afterward.
 
 An alternative archive install uses `sh packaging/install.sh --dry-run`, then `--apply`. It refuses an existing destination and creates only owned plugin files. Enable that copied plugin separately with the Omarchy plugin manager. See [removal](UNINSTALL.md).
 
